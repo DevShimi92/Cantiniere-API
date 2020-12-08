@@ -1,7 +1,8 @@
 import app from "./config/app";
+import { log } from "./config/log_config";
 
 const port = process.env.PORT || 8080;
 
 app.listen(port, () => {
-  console.log(`server started at http://localhost:${port}`);
+  log.info(`Server started at http://localhost:${port}`);
 });
