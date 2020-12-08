@@ -2,11 +2,11 @@
   "name": "cantiniere_api",
   "version": "0.0.1",
   "description": "",
-  "main": "index.ts",
+  "main": "server.ts",
   "scripts": {
     "lint": "eslint ./src/*.ts",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/server.js"
   },
   "repository": {
     "type": "git",
