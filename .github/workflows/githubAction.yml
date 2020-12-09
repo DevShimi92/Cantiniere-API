@@ -1,4 +1,4 @@
-name: Eslint
+name: Check Code Quality
 
 on:
   push:
@@ -27,4 +27,24 @@ jobs:
     
     - name: Check with Eslint...
       run: npm run lint
+  Mocha:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Build...
+      run: npm run build
+
+    - name: Running test...
+      run: npm run test
+ 
  
