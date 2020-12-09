@@ -7,6 +7,7 @@
     "lint": "eslint ./src/*.ts",
     "build": "tsc",
     "test": "mocha dist/test/test.js --exit",
+    "coverage": "nyc  --reporter=text --reporter=lcov npm run test",
     "start": "node dist/server.js"
   },
   "repository": {
@@ -33,6 +34,7 @@
     "@typescript-eslint/parser": "^4.9.0",
     "eslint": "^7.14.0",
     "mocha": "^8.2.1",
+    "nyc": "^15.1.0",
     "supertest": "^6.0.1",
     "typescript": "^4.1.2"
   }
