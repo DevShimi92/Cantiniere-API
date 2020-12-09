@@ -47,6 +47,14 @@ jobs:
     - name: Build...
       run: npm run build
 
-    - name: Running test...
+    - name: Running test with coverage...
       run: npm run coverage
+
+    - name: Send to SonarCloud 
+      uses: sonarsource/sonarcloud-github-action@master
+      with:
+        projectBaseDir: /github/workspace/
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
  
