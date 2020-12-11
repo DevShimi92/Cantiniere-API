@@ -11,6 +11,9 @@
 <img alt="Sonarcloud Quality Gate Status" src="https://sonarcloud.io/api/project_badges/measure?project=DevShimi92_Cantiniere-API&metric=alert_status
 "></a>
 <a href="https://sonarcloud.io/dashboard?id=DevShimi92_Cantiniere-API">
-<img alt="Sonarcloud Coverage" src="https://sonarcloud.io/api/project_badges/measure?project=DevShimi92_Cantiniere-API&metric=coverage"></a></p><br>
+<img alt="Sonarcloud Coverage" src="https://sonarcloud.io/api/project_badges/measure?project=DevShimi92_Cantiniere-API&metric=coverage"></a>
+
+
+</p><br>
 
 
