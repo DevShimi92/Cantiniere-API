@@ -7,5 +7,6 @@ export class Routes {
 
   public routes(app: Application): void {
     app.route("/").get(this.Controller.index);
+    app.route("/user").get(this.Controller.user);
   }
 }
