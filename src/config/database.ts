@@ -4,8 +4,6 @@ import { log } from "./log_config";
 
 dotenv.config();
 
-console.log(process.env.DATABASE_URL);
-
 export const database  = new Sequelize(process.env.DATABASE_URL,{
     dialect: 'postgres',
     protocol: 'postgres',
