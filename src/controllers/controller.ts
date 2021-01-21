@@ -21,15 +21,15 @@ export class Controller {
       }
     else
       {
-       
         const emailFound = await User.findAll<User>({
               attributes : ['email'],
               raw: true,
               where: {
                 email: req.body.email
               }
-            }).then(function(data) { return data ;} );
-          
+            }).then(function(data) { 
+              return data;
+            });
           
         if (emailFound.length > 0)
             {
@@ -38,16 +38,16 @@ export class Controller {
               log.error("Create User : Fail - Account already exist");      
             }
         else
-          {
-            User.create<User>({ last_name: req.body.last_name,
-                first_name: req.body.first_name,
-                password: req.body.password,
-                email: req.body.email, })
-              .then(() => res.status(200).json())
-              .catch((err: Error) => res.status(400).json(err));
+            {
+              User.create<User>({ last_name: req.body.last_name,
+                  first_name: req.body.first_name,
+                  password: req.body.password,
+                  email: req.body.email, })
+                .then(() => res.status(200).json().end())
+                .catch((err: Error) => res.status(400).json(err));
 
-              log.info("Create User : OK");
-          }
+                log.info("Create User : OK");
+            }
 
       }
     

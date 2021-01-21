@@ -5,15 +5,16 @@ import { log } from "../config/log_config";
 
 describe('Test of API', function() {
 
-    before(async function(){
-          await sequelize.sync({force: true}).then(() => {
-            log.info('Synchronisation de la base réussi !');
-            
-            }).catch(err => {
-            log.error('Erreur lors de la synchronisation de la base de donnée !');
-            log.error(err);
-          });
-   });
+    /*before(function(done){
+          sequelize.sync({force: true}).then(() => {
+          log.info('Synchronisation de la base réussi !');
+          
+          }).catch(err => {
+          log.error('Erreur lors de la synchronisation de la base de donnée !');
+          log.error(err);
+        });
+        done();
+    });*/
     
     it("Ping on api", function (done) {
         this.timeout(15000);
@@ -39,8 +40,10 @@ describe('Test of API', function() {
             .expect(200)
             .end((err) => {
                 if (err) return done(err);
+                done();
             });
-            done();
+            
+            
     });
 
     it("Create User - Missing Fields", function (done) {
@@ -57,12 +60,13 @@ describe('Test of API', function() {
             .expect(400,{ error : "Missing Fields"})
             .end((err) => {
                 if (err) return done(err);
+                done();
             });
-            done();
+            
     });
 
     it("Create User - Account already exist", function (done) {
-        this.timeout(30000);
+        this.timeout(15000);
         const data = {
             "last_name": 'Name',
             "first_name": 'FirstName',
@@ -78,9 +82,22 @@ describe('Test of API', function() {
                 if (err) return done(err);
                 done();
             });
+            
+            
     });
 
     
+    after(function(done) {
 
+        sequelize.sync({force: true}).then(() => {
+            log.info('Synchronisation de la base réussi !');
+            done();
+            }).catch(err => {
+            log.error('Erreur lors de la synchronisation de la base de donnée !');
+            log.error(err);
+            done();
+          });
 
+        
+    });
   });
