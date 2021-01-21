@@ -4,7 +4,7 @@ import { log } from "./log_config";
 
 dotenv.config();
 
-export const database  = new Sequelize(process.env.DATABASE_URL,{
+export const sequelize  = new Sequelize(process.env.DATABASE_URL,{
     dialect: 'postgres',
     protocol: 'postgres',
     logging: msg => log.trace(msg),
@@ -13,7 +13,7 @@ export const database  = new Sequelize(process.env.DATABASE_URL,{
     }
 });
 
-database.authenticate().then(() => {
+sequelize.authenticate().then(() => {
     log.info('Connexion a la base réussi ! ');
     
     }).catch(err => {
@@ -21,7 +21,7 @@ database.authenticate().then(() => {
     log.error(err);
   });
 
-database.sync().then(() => {
+  sequelize.sync({}).then(() => {
     log.info('Synchronisation de la base réussi !');
     
     }).catch(err => {
