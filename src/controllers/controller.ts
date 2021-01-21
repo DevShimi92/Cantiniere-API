@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { log } from "../config/log_config";
 import { User } from "../models/user";
+import { TypeArticle } from "../models/type_article";
 
 export class Controller {
   public index(req: Request, res: Response) : void {
@@ -33,7 +34,7 @@ export class Controller {
           
         if (emailFound.length > 0)
             {
-              res.status(400).json({ error : 'Account already exist' });
+              res.status(409).json({ error : 'Account already exist' });
               res.end();
               log.error("Create User : Fail - Account already exist");      
             }
@@ -141,12 +142,112 @@ export class Controller {
             {
               res.status(200).json({ msg : countOK + ' update done' });
               res.end();
+              log.info("Update User : OK");
             }
           else
             {
               res.status(500).json({ msg : countOK + ' update done only' });
               res.end();
+              log.warn("Update User : OK with error");
             }
+
+         
+         
+        }
+
+    }
+
+  }
+
+  public async createTypeArticle(req: Request, res: Response) : Promise<void> {
+    log.info("Create Type of Article");
+
+    if (req.body.name == null ) // Si il manque un champ, on renvoi bad request
+      {
+            res.status(400).json({ error : 'Missing Fields' });
+            res.end();
+            log.error("Create Type of Article : Fail - Missing Fields");      
+      }
+    else
+      {
+        const articleFound = await TypeArticle.findAll<TypeArticle>({
+              attributes : ['name'],
+              raw: true,
+              where: {
+                name: req.body.name
+              }
+            }).then(function(data) { 
+              return data;
+            });
+          
+        if (articleFound.length > 0)
+            {
+              res.status(409).json({ error : 'Article already exist' });
+              res.end();
+              log.error("Create Type of Article : Fail - Article already exist");      
+            }
+        else
+            {
+              await TypeArticle.create<TypeArticle>({ name: req.body.name })
+                .then(() => res.status(200).json().end())
+                .catch((err: Error) => res.status(400).json(err));
+
+                log.info("Create Type of Article : OK");
+
+            }
+
+      }
+    
+  }
+
+  public async updateTypeArticle(req: Request, res: Response) : Promise<void> {
+    log.info("Update Type of Article");
+
+    if ( req.body.code_type == null || req.body.name == null ) // Si il manque un champ, on renvoi bad request
+      {
+            res.status(400).json({ error : "Missing Fields" });
+            res.end();
+            log.error("Update Type of Article : Fail - Missing Fields");      
+      }
+    else
+    {
+      const idSearch = await TypeArticle.findAll<TypeArticle>({
+        attributes : ['code_type'],
+        raw: true,
+        where: {
+          code_type: req.body.code_type
+        }
+          }).then(function(data) { 
+        return data;
+      });
+
+      if (idSearch.length == 0)
+        {
+          res.status(400).json({ error : 'Type of Article not exist' });
+          res.end();
+          log.error("Update Type of Article : Fail - Type of Article not exist");      
+        }
+      else
+        {
+         
+            await TypeArticle.update({ name: req.body.name }, {
+              where: {
+                code_type: req.body.code_type
+              }
+            }).then(() => {
+                  res.status(200);
+                  res.end();
+                  log.info("Update Type of Article : OK");
+                })
+            .catch((err: Error,) => {
+                res.status(500).json({ msg : "can't update type of article" });
+                res.end();
+                log.error('Error with field name of type_Article : ' + err);
+                });
+          
+
+
+          
 
          
          

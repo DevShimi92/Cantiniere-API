@@ -9,6 +9,8 @@ export class Routes {
     app.route("/").get(this.Controller.index);
     app.route("/user").post(this.Controller.createUser);
     app.route("/user").put(this.Controller.updateUser);
+    app.route("/type_article").post(this.Controller.createTypeArticle);
+    app.route("/type_article").put(this.Controller.updateTypeArticle);
 
   }
 }

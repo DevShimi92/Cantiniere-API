@@ -66,7 +66,7 @@ describe('Test of API', function() {
             .post('/user')
             .send(data)
             .set('Accept', 'application/json')
-            .expect(400,{ error : "Account already exist"})
+            .expect(409,{ error : "Account already exist"})
             .end((err) => {
                 if (err) return done(err);
                 done();
@@ -122,6 +122,79 @@ describe('Test of API', function() {
             .send(data)
             .set('Accept', 'application/json')
             .expect(200,{ msg : "4 update done"})
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Create Type of Article - OK", function (done) {
+        this.timeout(15000);
+        const data = {
+            "name": 'coca'
+        }
+        request(app)
+            .post('/type_article')
+            .send(data)
+            .set('Accept', 'application/json')
+            .expect(200)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Create Type of Article - Article already exist", function (done) {
+        this.timeout(15000);
+        const data = {
+            "name": 'coca'
+        }
+        request(app)
+            .post('/type_article')
+            .send(data)
+            .set('Accept', 'application/json')
+            .expect(409,{ error : 'Article already exist' })
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Create Type of Article - Missing Fields", function (done) {
+        this.timeout(15000);
+        request(app)
+            .post('/type_article')
+            .set('Accept', 'application/json')
+            .expect(400,{ error : "Missing Fields"})
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Update Type of Article - Missing Fields", function (done) {
+        this.timeout(15000);
+        request(app)
+            .put('/type_article')
+            .set('Accept', 'application/json')
+            .expect(400,{ error : "Missing Fields"})
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Update Type of Article - OK", function (done) {
+        this.timeout(15000);
+        const data = {
+            "code_type": 1,
+            "name" : 'Boisson'
+        }
+        request(app)
+            .put('/type_article')
+            .send(data)
+            .set('Accept', 'application/json')
+            .expect(200)
             .end((err) => {
                 if (err) return done(err);
                 done();
