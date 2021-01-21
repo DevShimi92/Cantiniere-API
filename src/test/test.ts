@@ -51,25 +51,6 @@ describe('Test of API', function() {
             done();
     });
 
-    it("Create User - Account already exist", function (done) {
-        this.timeout(15000);
-        const data = {
-            "last_name": 'Name',
-            "first_name": 'FirstName',
-            "email":  'email@email.com',
-            "password": '1234',
-        }
-        request(app)
-            .post('/user')
-            .send(data)
-            .set('Accept', 'application/json')
-            .expect(400,{ error : "Account already exist"})
-            .end((err) => {
-                if (err) return done(err);
-            });
-            done();
-    });
-
     it("Create User - Missing Fields", function (done) {
         this.timeout(15000);
         const data = {
@@ -87,6 +68,27 @@ describe('Test of API', function() {
             });
             done();
     });
+
+    it("Create User - Account already exist", function (done) {
+        this.timeout(30000);
+        const data = {
+            "last_name": 'Name',
+            "first_name": 'FirstName',
+            "email":  'email@email.com',
+            "password": '1234',
+        }
+        request(app)
+            .post('/user')
+            .send(data)
+            .set('Accept', 'application/json')
+            .expect(400,{ error : "Account already exist"})
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    
 
 
   });
