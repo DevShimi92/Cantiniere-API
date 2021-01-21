@@ -6,14 +6,6 @@ import { log } from "../config/log_config";
 describe('Test of API', function() {
 
     before(async function(){
-        await sequelize.authenticate().then(() => {
-            log.info('Connexion a la base réussi ! ');
-            
-            }).catch(err => {
-            log.error('Erreur lors de la connexion à la base de donnée !');
-            log.error(err);
-          });
-        
           await sequelize.sync({force: true}).then(() => {
             log.info('Synchronisation de la base réussi !');
             
