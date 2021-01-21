@@ -4,17 +4,6 @@ import { sequelize } from "../config/database";
 import { log } from "../config/log_config";
 
 describe('Test of API', function() {
-
-    /*before(function(done){
-          sequelize.sync({force: true}).then(() => {
-          log.info('Synchronisation de la base réussi !');
-          
-          }).catch(err => {
-          log.error('Erreur lors de la synchronisation de la base de donnée !');
-          log.error(err);
-        });
-        done();
-    });*/
     
     it("Ping on api", function (done) {
         this.timeout(15000);
@@ -81,12 +70,64 @@ describe('Test of API', function() {
             .end((err) => {
                 if (err) return done(err);
                 done();
-            });
-            
-            
+            });   
     });
 
-    
+    it("Update User - Missing Fields", function (done) {
+        this.timeout(15000);
+        const data = {
+            "last_name": 'avvv',
+            "first_name": 'zz',
+        }
+        request(app)
+            .put('/user')
+            .send(data)
+            .set('Accept', 'application/json')
+            .expect(400,{ error : "Missing Fields"})
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Update User - Account not exist", function (done) {
+        this.timeout(15000);
+        const data = {
+            "id": 5,
+            "last_name": 'avvv',
+            "first_name": 'zz',
+        }
+        request(app)
+            .put('/user')
+            .send(data)
+            .set('Accept', 'application/json')
+            .expect(400,{ error : 'Account not exist'})
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Update User - OK", function (done) {
+        this.timeout(15000);
+        const data = {
+            "id": 1,
+            "last_name": 'avvv',
+            "first_name": 'zz',
+            "email":  'emailE@POemail.com',
+            "password": '12345',
+        }
+        request(app)
+            .put('/user')
+            .send(data)
+            .set('Accept', 'application/json')
+            .expect(200,{ msg : "4 update done"})
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
     after(function(done) {
 
         sequelize.sync({force: true}).then(() => {
@@ -98,6 +139,5 @@ describe('Test of API', function() {
             done();
           });
 
-        
     });
   });
