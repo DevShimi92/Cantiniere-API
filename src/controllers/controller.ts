@@ -229,7 +229,6 @@ export class Controller {
         }
       else
         {
-         
             await TypeArticle.update({ name: req.body.name }, {
               where: {
                 code_type: req.body.code_type
@@ -244,16 +243,11 @@ export class Controller {
                 res.end();
                 log.error('Error with field name of type_Article : ' + err);
                 });
-          
-
-
-          
-
-         
-         
+        
         }
 
     }
 
   }
+  
 }
