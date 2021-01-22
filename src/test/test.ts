@@ -254,6 +254,23 @@ describe('Test of API', function() {
             });
     });
 
+    it("Update Type of Article - Type of Article not exist", function (done) {
+        this.timeout(15000);
+        const data = {
+            "code_type": 99,
+            "name" : 'Boisson'
+        }
+        request(app)
+            .put('/type_article')
+            .send(data)
+            .set('Accept', 'application/json')
+            .expect(404)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
     it("Update Type of Article - OK", function (done) {
         this.timeout(15000);
         const data = {
@@ -366,6 +383,26 @@ describe('Test of API', function() {
             .put('/article')
             .set('Accept', 'application/json')
             .expect(400,{ error : "Missing Fields"})
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Update Article - Article not exist", function (done) {
+        this.timeout(15000);
+        const data = {
+            "id" : 99,
+            "name": 'teteandcocori',
+            "price": 10,
+            "picture" : "One_picture.html",
+            "description" : 'idk'
+        }
+        request(app)
+            .put('/article')
+            .send(data)
+            .set('Accept', 'application/json')
+            .expect(404)
             .end((err) => {
                 if (err) return done(err);
                 done();
