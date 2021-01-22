@@ -14,6 +14,18 @@ describe('Test of API', function() {
             
     });
 
+    it("Read All User - No Content", function (done) {
+        this.timeout(15000);
+        request(app)
+            .get('/user')
+            .set('Accept', 'application/json')
+            .expect(204)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
     it("Create User - OK", function (done) {
         this.timeout(15000);
         const data = {
@@ -33,6 +45,23 @@ describe('Test of API', function() {
             });
             
             
+    });
+
+    it("Read All User - Found", function (done) {
+        this.timeout(15000);
+        request(app)
+            .get('/user')
+            .set('Accept', 'application/json')
+            .expect(200,[{
+                "id" : 1,
+                "last_name": 'Name',
+                "first_name": 'FirstName',
+                "money": 0,
+            }])
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
     });
 
     it("Create User - Missing Fields", function (done) {
@@ -128,6 +157,35 @@ describe('Test of API', function() {
             });
     });
 
+    it("Read All User - Check Update User", function (done) {
+        this.timeout(15000);
+        request(app)
+            .get('/user')
+            .set('Accept', 'application/json')
+            .expect(200,[{
+                "id" : 1,
+                "last_name": 'avvv',
+                "first_name": 'zz',
+                "money": 0,
+            }])
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Read All Type of Article - No Content", function (done) {
+        this.timeout(15000);
+        request(app)
+            .get('/type_article')
+            .set('Accept', 'application/json')
+            .expect(204)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
     it("Create Type of Article - OK", function (done) {
         this.timeout(15000);
         const data = {
@@ -138,6 +196,18 @@ describe('Test of API', function() {
             .send(data)
             .set('Accept', 'application/json')
             .expect(200)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Read All Type of Article - Found ", function (done) {
+        this.timeout(15000);
+        request(app)
+            .get('/type_article')
+            .set('Accept', 'application/json')
+            .expect(200,[{ code_type: 1, name: 'coca' }])
             .end((err) => {
                 if (err) return done(err);
                 done();
@@ -195,6 +265,18 @@ describe('Test of API', function() {
             .send(data)
             .set('Accept', 'application/json')
             .expect(200)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Read All Type of Article - Check Update Type of Article ", function (done) {
+        this.timeout(15000);
+        request(app)
+            .get('/type_article')
+            .set('Accept', 'application/json')
+            .expect(200,[{ code_type: 1, name: 'Boisson' }])
             .end((err) => {
                 if (err) return done(err);
                 done();

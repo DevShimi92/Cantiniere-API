@@ -28,6 +28,7 @@ export class TypeArticle extends Model {
     {
       tableName: "type_article",
       sequelize: sequelize , 
+      timestamps: false
     }
   );
 

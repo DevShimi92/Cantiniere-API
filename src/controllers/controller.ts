@@ -54,6 +54,29 @@ export class Controller {
     
   }
   
+  public async getAllUser(req: Request,res: Response) : Promise<void> {
+    log.info("Get all User");
+
+    await User.findAll<User>({
+      attributes : ['id','first_name','last_name','money'],
+      raw: true,
+    }).then(function(data) { 
+
+      if(data.length == 0)
+        {
+          res.status(204).end();
+        }
+      else
+        {
+          res.status(200).json(data).end();
+        }
+
+      log.info("Get all User : OK");
+    
+    });
+
+  }
+
   public async updateUser(req: Request, res: Response) : Promise<void> {
     log.info("Update User");
 
@@ -189,8 +212,8 @@ export class Controller {
         else
             {
               await TypeArticle.create<TypeArticle>({ name: req.body.name })
-                .then(() => res.status(200).json().end())
-                .catch((err: Error) => res.status(400).json(err));
+                .then(() => res.status(200).end())
+                .catch((err: Error) => res.status(400).json(err).end());
 
                 log.info("Create Type of Article : OK");
 
@@ -198,6 +221,28 @@ export class Controller {
 
       }
     
+  }
+
+  public async getAllTypeArticle(req: Request,res: Response) : Promise<void> {
+    log.info("Get all Type of Article");
+
+    await TypeArticle.findAll<TypeArticle>({
+      raw: true,
+    }).then(function(data) { 
+
+      if(data.length == 0)
+        {
+          res.status(204).end();
+        }
+      else
+        {
+          res.status(200).json(data).end();
+        }
+
+      log.info("Get all Type of Article : OK");
+    
+    });
+
   }
 
   public async updateTypeArticle(req: Request, res: Response) : Promise<void> {
