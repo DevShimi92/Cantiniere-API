@@ -112,8 +112,8 @@ export class Controller {
         }
       else
         {
-          let countOK = 0;
-          let countError = 0;
+          let Number_of_OK = 0;
+          let Number_ofError = 0;
 
           if(req.body.first_name != null)
           {
@@ -121,9 +121,9 @@ export class Controller {
               where: {
                 id: req.body.id
               }
-            }).then(() => countOK++)
+            }).then(() => Number_of_OK++)
             .catch((err: Error,) => {
-              countError++;
+              Number_ofError++;
               log.error('Error with field first_name of user : ' + err);
                 });
             }
@@ -134,9 +134,9 @@ export class Controller {
               where: {
                 id: req.body.id
               }
-            }).then(() => countOK++)
+            }).then(() => Number_of_OK++)
             .catch((err: Error,) => {
-              countError++;
+              Number_ofError++;
               log.error('Error with field last_name of user : ' + err);
                 });
           }
@@ -147,9 +147,9 @@ export class Controller {
               where: {
                 id: req.body.id
               }
-            }).then(() => countOK++)
+            }).then(() => Number_of_OK++)
             .catch((err: Error,) => {
-              countError++;
+              Number_ofError++;
               log.error('Error with field email of user : ' + err);
                 });
           }
@@ -160,24 +160,22 @@ export class Controller {
               where: {
                 id: req.body.id
               }
-            }).then(() => countOK++)
+            }).then(() => Number_of_OK++)
             .catch((err: Error,) => {
-              countError++;
+              Number_ofError++;
               log.error('Error with field password of user : ' + err);
                 });
           }
 
-          if(countError == 0)
+          if(Number_ofError == 0)
             {
-              res.status(204);
-              res.end();
+              res.status(204).end();
               log.info("Update User : OK");
             }
           else
             {
-              res.status(409);
-              res.end();
-              log.warn("Update User : OK with error - "+countOK+' update done only');
+              res.status(409).end();
+              log.warn("Update User : OK with error - "+Number_of_OK+' update done only');
             }
 
         }
