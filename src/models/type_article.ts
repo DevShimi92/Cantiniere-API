@@ -1,5 +1,6 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../config/database";
+import { Article } from "./article";
 
 export interface TypeArticleInterface {
     code_type: number;
@@ -33,3 +34,9 @@ export class TypeArticle extends Model {
   );
 
 
+  TypeArticle.hasMany(Article, {
+    sourceKey: "code_type",
+    foreignKey: "code_type_src",
+    as: "linkFKey",
+  });
+  

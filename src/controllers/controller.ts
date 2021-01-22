@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { log } from "../config/log_config";
 import { User } from "../models/user";
 import { TypeArticle } from "../models/type_article";
+import { Article } from "../models/article";
 
 export class Controller {
   public index(req: Request, res: Response) : void {
@@ -34,7 +35,7 @@ export class Controller {
           
         if (emailFound.length > 0)
             {
-              res.status(409).json({ error : 'Account already exist' });
+              res.status(409);
               res.end();
               log.error("Create User : Fail - Account already exist");      
             }
@@ -44,10 +45,15 @@ export class Controller {
                   first_name: req.body.first_name,
                   password: req.body.password,
                   email: req.body.email, })
-                .then(() => res.status(200).json().end())
-                .catch((err: Error) => res.status(400).json(err));
+                .then(() => {
+                  res.status(201).end();
+                  log.info("Create User : OK");
+                }).catch((err: Error) => {
+                  res.status(500);
+                  log.error("Create User : Fail - ERROR");
+                  log.error(err);
+                });
 
-                log.info("Create User : OK");
             }
 
       }
@@ -100,7 +106,7 @@ export class Controller {
 
       if (idSearch.length == 0)
         {
-          res.status(400).json({ error : 'Account not exist' });
+          res.status(404).json({ error : 'Account not exist' });
           res.end();
           log.error("Update User : Fail - Account not exist");      
         }
@@ -163,19 +169,17 @@ export class Controller {
 
           if(countError == 0)
             {
-              res.status(200).json({ msg : countOK + ' update done' });
+              res.status(204);
               res.end();
               log.info("Update User : OK");
             }
           else
             {
-              res.status(500).json({ msg : countOK + ' update done only' });
+              res.status(409);
               res.end();
-              log.warn("Update User : OK with error");
+              log.warn("Update User : OK with error - "+countOK+' update done only');
             }
 
-         
-         
         }
 
     }
@@ -205,17 +209,23 @@ export class Controller {
           
         if (articleFound.length > 0)
             {
-              res.status(409).json({ error : 'Article already exist' });
+              res.status(409);
               res.end();
               log.error("Create Type of Article : Fail - Article already exist");      
             }
         else
             {
               await TypeArticle.create<TypeArticle>({ name: req.body.name })
-                .then(() => res.status(200).end())
-                .catch((err: Error) => res.status(400).json(err).end());
+                .then(() => {
+                  res.status(204).end();
+                  log.info("Create Type of Article : OK");
+                })
+                .catch((err: Error) => {
+                  res.status(500).json(err).end();
+                  log.error("Create Type of Article : FAIL");
+                });
 
-                log.info("Create Type of Article : OK");
+                
 
             }
 
@@ -268,7 +278,7 @@ export class Controller {
 
       if (idSearch.length == 0)
         {
-          res.status(400).json({ error : 'Type of Article not exist' });
+          res.status(404).json();
           res.end();
           log.error("Update Type of Article : Fail - Type of Article not exist");      
         }
@@ -279,14 +289,15 @@ export class Controller {
                 code_type: req.body.code_type
               }
             }).then(() => {
-                  res.status(200);
+                  res.status(204);
                   res.end();
                   log.info("Update Type of Article : OK");
                 })
             .catch((err: Error,) => {
-                res.status(500).json({ msg : "can't update type of article" });
+                res.status(500);
                 res.end();
-                log.error('Error with field name of type_Article : ' + err);
+                log.error('Update Type of Article : Fail - ERROR' + err);
+                log.error(err);
                 });
         
         }
@@ -294,5 +305,170 @@ export class Controller {
     }
 
   }
+
+  public async createArticle(req: Request, res: Response) : Promise<void> {
+    log.info("Create Article");
+
+    if (req.body.name == null ||req.body.code_type_src == null) // Si il manque un champ, on renvoi bad request
+      {
+            res.status(400).json({ error : 'Missing Fields' });
+            res.end();
+            log.error("Create Type of Article : Fail - Missing Fields");      
+      }
+    else
+      {
+              await Article.create<Article>({ name: req.body.name, code_type_src: req.body.code_type_src})
+                .then(() => {
+                  res.status(204).end();
+                  log.info("Create Article : OK");
+                })
+                .catch((err: Error) => {
+                  res.status(500).end();
+                  log.error("Create Article : Fail - ERROR");
+                  log.error(err);
+                });
+
+                
+      }
+    
+  }
   
+  public async getAllArticle(req: Request,res: Response) : Promise<void> {
+    log.info("Get all article");
+
+    await Article.findAll<Article>({
+      attributes : ['name','code_type_src','price','picture','description'],
+      raw: true,
+    }).then(function(data) { 
+
+      if(data.length == 0)
+        {
+          res.status(204).end();
+        }
+      else
+        {
+          res.status(200).json(data).end();
+        }
+
+      log.info("Get all article : OK");
+    
+    });
+
+  }
+
+  public async updateArticle(req: Request, res: Response) : Promise<void> {
+    log.info("Update Article");
+
+    if ( req.body.id == null )
+      {
+            res.status(400).json({ error : "Missing Fields" });
+            res.end();
+            log.error("Update Article : Fail - Missing Fields");      
+      }
+    else
+    {
+      const idSearch = await Article.findAll<Article>({
+        attributes : ['id'],
+        raw: true,
+        where: {
+          id: req.body.id
+        }
+          }).then(function(data) { 
+        return data;
+      });
+
+      if (idSearch.length == 0)
+        {
+          res.status(404).json();
+          res.end();
+          log.error("Update Article : Fail - Article not exist");      
+        }
+      else
+      {
+        let countOK = 0;
+        let countError = 0;
+
+        if(req.body.name != null)
+        {
+          await Article.update({ name: req.body.name }, {
+            where: {
+              id: req.body.id
+            }
+          }).then(() => countOK++)
+          .catch((err: Error,) => {
+            countError++;
+            log.error('Error with field name of Article : ' + err);
+              });
+          }
+
+        if(req.body.code_type_src != null)
+        {
+          await Article.update({ code_type_src: req.body.code_type_src }, {
+            where: {
+              id: req.body.id
+            }
+          }).then(() => countOK++)
+          .catch((err: Error,) => {
+            countError++;
+            log.error('Error with field code_type_src of Article : ' + err);
+              });
+        }
+
+        if(req.body.price != null)
+        {
+          await Article.update({ price: req.body.price }, {
+            where: {
+              id: req.body.id
+            }
+          }).then(() => countOK++)
+          .catch((err: Error,) => {
+            countError++;
+            log.error('Error with field price of Article : ' + err);
+              });
+        }
+
+        if(req.body.picture != null)
+        {
+          await Article.update({ picture: req.body.picture }, {
+            where: {
+              id: req.body.id
+            }
+          }).then(() => countOK++)
+          .catch((err: Error,) => {
+            countError++;
+            log.error('Error with field picture of Article : ' + err);
+              });
+        }
+
+        if(req.body.description != null)
+        {
+          await Article.update({ description: req.body.description }, {
+            where: {
+              id: req.body.id
+            }
+          }).then(() => countOK++)
+          .catch((err: Error,) => {
+            countError++;
+            log.error('Error with field description of Article : ' + err);
+              });
+        }
+
+        if(countError == 0)
+          {
+            res.status(204);
+            res.end();
+            log.info("Update Article : OK");
+          }
+        else
+          {
+            res.status(409);
+            res.end();
+            log.warn("Update Article : OK with error - "+countOK+' update done only');
+          }
+
+      }
+
+    }
+
+  }
 }
