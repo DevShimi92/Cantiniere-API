@@ -24,7 +24,7 @@ sequelize.authenticate().then(() => {
     log.error(err);
   });
 
-  sequelize.sync({}).then(() => {
+  sequelize.sync().then(() => {
     log.info('Synchronisation de la base réussi !');
     
     }).catch(err => {
