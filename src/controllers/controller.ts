@@ -49,7 +49,7 @@ export class Controller {
                   res.status(201).end();
                   log.info("Create User : OK");
                 }).catch((err: Error) => {
-                  res.status(500);
+                  res.status(500).end();
                   log.error("Create User : Fail - ERROR");
                   log.error(err);
                 });
@@ -184,6 +184,41 @@ export class Controller {
 
   }
 
+  public async deleteUser(req: Request,res: Response) : Promise<void> {
+    log.info("Delete User");
+
+    if ( req.body.id == null ) // Si il manque un champ, on renvoi bad request
+      {
+            res.status(400).json({ error : "Missing Fields" });
+            res.end();
+            log.error("Delete User : Fail - Missing Fields");      
+      }
+    else
+      {
+        await User.destroy<User>({
+          where: {
+            id: req.body.id
+          }
+        }).then(function(data) { 
+          if(data == 0)
+            {
+              res.status(404).end();
+              log.info("Delete User : Fail - Not found");
+            }
+          else
+          {
+              res.status(204).end();
+              log.info("Delete User : OK");
+          }
+            
+        }).catch((err: Error) => {
+          res.status(500).end();
+          log.error("Delete User : Fail - ERROR");
+          log.error(err);
+        });
+      }
+  }
+
   public async createTypeArticle(req: Request, res: Response) : Promise<void> {
     log.info("Create Type of Article");
 
@@ -219,8 +254,9 @@ export class Controller {
                   log.info("Create Type of Article : OK");
                 })
                 .catch((err: Error) => {
-                  res.status(500).json(err).end();
-                  log.error("Create Type of Article : FAIL");
+                  res.status(500).end();
+                  log.error("Create Type of Article : Fail - ERROR");
+                  log.error(err);
                 });
 
                 
@@ -294,7 +330,7 @@ export class Controller {
             .catch((err: Error,) => {
                 res.status(500);
                 res.end();
-                log.error('Update Type of Article : Fail - ERROR' + err);
+                log.error('Update Type of Article : Fail - ERROR');
                 log.error(err);
                 });
         
@@ -302,6 +338,41 @@ export class Controller {
 
     }
 
+  }
+
+  public async deleteTypeArticle(req: Request,res: Response) : Promise<void> {
+    log.info("Delete Type of Article");
+
+    if ( req.body.code_type == null ) // Si il manque un champ, on renvoi bad request
+      {
+            res.status(400).json({ error : "Missing Fields" });
+            res.end();
+            log.error("Delete Type of Article : Fail - Missing Fields");      
+      }
+    else
+      {
+        await TypeArticle.destroy<TypeArticle>({
+          where: {
+            code_type: req.body.code_type
+          }
+        }).then(function(data) { 
+          if(data == 0)
+            {
+              res.status(404).end();
+              log.info("Delete Type of Article : Fail - Not found");
+            }
+          else
+          {
+              res.status(204).end();
+              log.info("Delete Type of Article : OK");
+          }
+            
+        }).catch((err: Error) => {
+          res.status(500).end();
+          log.error("Delete Type of Article : Fail - ERROR");
+          log.error(err);
+        });
+      }
   }
 
   public async createArticle(req: Request, res: Response) : Promise<void> {
@@ -468,5 +539,40 @@ export class Controller {
 
     }
 
+  }
+
+  public async deleteArticle(req: Request,res: Response) : Promise<void> {
+    log.info("Delete Article");
+
+    if ( req.body.id == null ) // Si il manque un champ, on renvoi bad request
+      {
+            res.status(400).json({ error : "Missing Fields" });
+            res.end();
+            log.error("Delete Article : Fail - Missing Fields");      
+      }
+    else
+      {
+        await Article.destroy<Article>({
+          where: {
+            id: req.body.id
+          }
+        }).then(function(data) { 
+          if(data == 0)
+            {
+              res.status(404).end();
+              log.info("Delete Article : Fail - Not found");
+            }
+          else
+          {
+              res.status(204).end();
+              log.info("Delete Article : OK");
+          }
+            
+        }).catch((err: Error) => {
+          res.status(500).end();
+          log.error("Delete Article : Fail - ERROR");
+          log.error(err);
+        });
+      }
   }
 }

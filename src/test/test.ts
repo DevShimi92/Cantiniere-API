@@ -444,6 +444,174 @@ describe('Test of API', function() {
             });
     });
 
+    it("Delete User - Missing Fields", function (done) {
+        this.timeout(15000);
+        request(app)
+            .delete('/user')
+            .set('Accept', 'application/json')
+            .expect(400)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Delete User - Not Found", function (done) {
+        this.timeout(15000);
+        const data = {
+            "id" : 99
+        }
+        request(app)
+            .delete('/user')
+            .set('Accept', 'application/json')
+            .send(data)
+            .expect(404)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Delete User - OK", function (done) {
+        this.timeout(15000);
+        const data = {
+            "id" : 1
+        }
+        request(app)
+            .delete('/user')
+            .set('Accept', 'application/json')
+            .send(data)
+            .expect(204)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Read All User - Check Delete", function (done) {
+        this.timeout(15000);
+        request(app)
+            .get('/user')
+            .set('Accept', 'application/json')
+            .expect(204)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Delete Article - Missing Fields", function (done) {
+        this.timeout(15000);
+        request(app)
+            .delete('/article')
+            .set('Accept', 'application/json')
+            .expect(400)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Delete Article - Not Found", function (done) {
+        this.timeout(15000);
+        const data = {
+            "id" : 99
+        }
+        request(app)
+            .delete('/article')
+            .set('Accept', 'application/json')
+            .send(data)
+            .expect(404)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Delete Article - OK", function (done) {
+        this.timeout(15000);
+        const data = {
+            "id" : 2
+        }
+        request(app)
+            .delete('/article')
+            .set('Accept', 'application/json')
+            .send(data)
+            .expect(204)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Read All Article - Check Delete Article", function (done) {
+        this.timeout(15000);
+        request(app)
+            .get('/article')
+            .set('Accept', 'application/json')
+            .expect(204)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Delete Type of Article - Missing Fields", function (done) {
+        this.timeout(15000);
+        request(app)
+            .delete('/type_article')
+            .set('Accept', 'application/json')
+            .expect(400)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Delete Type of Article - Not Found", function (done) {
+        this.timeout(15000);
+        const data = {
+            "code_type" : 99
+        }
+        request(app)
+            .delete('/type_article')
+            .set('Accept', 'application/json')
+            .send(data)
+            .expect(404)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Delete Type of Article - OK", function (done) {
+        this.timeout(15000);
+        const data = {
+            "code_type" : 1
+        }
+        request(app)
+            .delete('/type_article')
+            .set('Accept', 'application/json')
+            .send(data)
+            .expect(204)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Read All Type of Article - Check Delete Type of Article ", function (done) {
+        this.timeout(15000);
+        request(app)
+            .get('/type_article')
+            .set('Accept', 'application/json')
+            .expect(204)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
     after(function(done) {
 
         sequelize.sync({force: true}).then(() => {
