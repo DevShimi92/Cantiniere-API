@@ -23,5 +23,7 @@ export class Routes {
     app.route("/menu").get(this.Controller.getAllMenu);
     app.route("/menu").put(this.Controller.updateMenu);
     app.route("/menu").delete(this.Controller.deleteMenu);
+    app.route("/menu/content").post(this.Controller.addToMenu);
+    app.route("/menu/content").delete(this.Controller.deleteToMenu);
   }
 }

@@ -548,6 +548,91 @@ describe('Test of API', function() {
             });
     });
 
+    it("Add Article to Menu - Missing Fields", function (done) {
+        this.timeout(15000);
+        const data = {
+            "id_article": 1,
+        }
+        request(app)
+            .post('/menu/content')
+            .send(data)
+            .set('Accept', 'application/json')
+            .expect(400)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
+
+    it("Add Article to Menu - OK", function (done) {
+        this.timeout(15000);
+        const data = {
+            "id_article": 2,
+            "id_menu": 1
+        }
+        request(app)
+            .post('/menu/content')
+            .send(data)
+            .set('Accept', 'application/json')
+            .expect(204)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
+
+    it("Delete Article to Menu - Missing Fields", function (done) {
+        this.timeout(15000);
+        const data = {
+            "id_article": 2,
+        }
+        request(app)
+            .delete('/menu/content')
+            .send(data)
+            .set('Accept', 'application/json')
+            .expect(400)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Delete Article to Menu - Not found", function (done) {
+        this.timeout(15000);
+        const data = {
+            "id_article": 1,
+            "id_menu": 1
+        }
+        request(app)
+            .delete('/menu/content')
+            .send(data)
+            .set('Accept', 'application/json')
+            .expect(404)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Delete Article to Menu - OK", function (done) {
+        this.timeout(15000);
+        const data = {
+            "id_article": 2,
+            "id_menu": 1
+        }
+        request(app)
+            .delete('/menu/content')
+            .send(data)
+            .set('Accept', 'application/json')
+            .expect(204)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
     it("Delete Menu - Missing Fields", function (done) {
         this.timeout(15000);
         request(app)

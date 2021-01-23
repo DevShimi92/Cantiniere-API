@@ -1,5 +1,6 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../config/database";
+import { MenuContent } from "./menu_content";
 
 export interface ArticleInterface {
     id: number;
@@ -54,3 +55,9 @@ export class Article extends Model {
       timestamps: false
     }
   );
+
+  Article.hasMany(MenuContent, {
+    sourceKey: "id",
+    foreignKey: "id_article",
+    onDelete: "SET NULL"
+  });
