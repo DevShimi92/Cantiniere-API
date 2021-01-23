@@ -355,8 +355,8 @@ export class Controller {
           where: {
             code_type: req.body.code_type
           }
-        }).then(function(data) { 
-          if(data == 0)
+        }).then(function(dataType) { 
+          if(dataType == 0)
             {
               res.status(404).end();
               log.info("Delete Type of Article : Fail - Not found");
@@ -367,10 +367,10 @@ export class Controller {
               log.info("Delete Type of Article : OK");
           }
             
-        }).catch((err: Error) => {
+        }).catch((errType: Error) => {
           res.status(500).end();
           log.error("Delete Type of Article : Fail - ERROR");
-          log.error(err);
+          log.error(errType);
         });
       }
   }
@@ -556,8 +556,8 @@ export class Controller {
           where: {
             id: req.body.id
           }
-        }).then(function(data) { 
-          if(data == 0)
+        }).then(function(dataArticle) { 
+          if(dataArticle == 0)
             {
               res.status(404).end();
               log.info("Delete Article : Fail - Not found");
@@ -568,10 +568,10 @@ export class Controller {
               log.info("Delete Article : OK");
           }
             
-        }).catch((err: Error) => {
+        }).catch((errArticle: Error) => {
           res.status(500).end();
           log.error("Delete Article : Fail - ERROR");
-          log.error(err);
+          log.error(errArticle);
         });
       }
   }
