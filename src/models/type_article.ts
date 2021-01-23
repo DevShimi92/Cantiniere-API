@@ -37,6 +37,6 @@ export class TypeArticle extends Model {
   TypeArticle.hasMany(Article, {
     sourceKey: "code_type",
     foreignKey: "code_type_src",
-    as: "linkFKey",
+    onDelete: "SET NULL"
   });
   
