@@ -19,5 +19,9 @@ export class Routes {
     app.route("/article").get(this.Controller.getAllArticle);
     app.route("/article").put(this.Controller.updateArticle);
     app.route("/article").delete(this.Controller.deleteArticle);
+    app.route("/menu").post(this.Controller.createMenu);
+    app.route("/menu").get(this.Controller.getAllMenu);
+    app.route("/menu").put(this.Controller.updateMenu);
+    app.route("/menu").delete(this.Controller.deleteMenu);
   }
 }
