@@ -11,7 +11,7 @@
 <img alt="Heroku" src="https://img.shields.io/badge/%E2%86%91_Deploy_to-Heroku-7056bf.svg?style=flat-square"></a>
 <a href="https://sonarcloud.io/dashboard?id=DevShimi92_Cantiniere-API">
 <img alt="Sonarcloud QGS" src="https://sonarcloud.io/api/project_badges/measure?project=DevShimi92_Cantiniere-API&metric=alert_status"></a>
-<a href="https://sonarcloud.io/dashboard?id=DevShimi92_Cantiniere-API">
+<a href="https://sonarcloud.io/dashboard?id=DevShimi92_Cantiniere-API" target="_blank">
 <img alt="Sonarcloud Coverage" src="https://sonarcloud.io/api/project_badges/measure?project=DevShimi92_Cantiniere-API&metric=coverage"></a>
 
 
