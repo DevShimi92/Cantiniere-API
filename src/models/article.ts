@@ -61,3 +61,10 @@ export class Article extends Model {
     foreignKey: "id_article",
     onDelete: "SET NULL"
   });
+  
+  
+  MenuContent.belongsTo(Article, {
+    foreignKey: {
+      name: 'id_article'
+    }
+  });

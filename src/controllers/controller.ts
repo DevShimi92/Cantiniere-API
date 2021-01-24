@@ -7,6 +7,7 @@ import { MenuInfo } from "../models/menu_info";
 import { MenuContent } from "../models/menu_content";
 
 export class Controller {
+
   public index(req: Request, res: Response) : void {
     log.info("Ping on api");
     res.status(200).json({
@@ -607,7 +608,7 @@ export class Controller {
     log.info("Get all Menu");
 
     await MenuInfo.findAll<MenuInfo>({
-      attributes : ['name','description','price_final'],
+      attributes : ['id','name','description','price_final'],
       raw: true,
     }).then(function(data) { 
 
@@ -622,7 +623,45 @@ export class Controller {
 
       log.info("Get all Menu : OK");
     
+    }).catch((err: Error) => {
+      res.status(500).end();
+      log.error("Get Menu : Fail - ERROR");
+      log.error(err);
     });
+
+  }
+
+  public async getMenu(req: Request,res: Response) : Promise<void> {
+    log.info("Get Menu")
+
+    await MenuContent.findAll<MenuContent>({
+      attributes : ['id_menu','id_article'],
+      raw: true,
+     include: [
+      {model: MenuInfo, attributes: ['name','description','price_final']}, 
+      {model: Article, attributes: ['name','code_type_src','price']} 
+    ],
+     where: {
+      id_menu: req.params.id
+    },
+    }).then(function(data) { 
+
+      if(data.length == 0)
+        {
+          res.status(204).end();
+        }
+      else
+        {
+          res.status(200).json(data).end();
+        }
+
+      log.info("Get Menu : OK");
+    
+    }).catch((err: Error) => {
+              res.status(500).end();
+              log.error("Get Menu : Fail - ERROR");
+              log.error(err);
+            });
 
   }
 
@@ -685,6 +724,7 @@ export class Controller {
         });
       }
   }
+
   public async updateMenu(req: Request, res: Response) : Promise<void> {
     log.info("Update Menu");
 
@@ -809,4 +849,5 @@ export class Controller {
         });
       }
   }
+
 }

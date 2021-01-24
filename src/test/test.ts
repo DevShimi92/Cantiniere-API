@@ -491,7 +491,7 @@ describe('Test of API', function() {
         request(app)
             .get('/menu')
             .set('Accept', 'application/json')
-            .expect(200,[{ "name": 'menu1', "price_final": 0, "description": null}])
+            .expect(200,[{ "id": 1, "name": 'menu1', "price_final": 0, "description": null}])
             .end((err) => {
                 if (err) return done(err);
                 done();
@@ -548,6 +548,19 @@ describe('Test of API', function() {
             });
     });
 
+    it("Get One menu full - Not found", function (done) {
+        this.timeout(15000);
+        request(app)
+            .get('/menu/1')
+            .set('Accept', 'application/json')
+            .expect(204)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
+
     it("Add Article to Menu - Missing Fields", function (done) {
         this.timeout(15000);
         const data = {
@@ -576,6 +589,28 @@ describe('Test of API', function() {
             .send(data)
             .set('Accept', 'application/json')
             .expect(204)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
+
+    it("Get One menu full - OK", function (done) {
+        this.timeout(15000);
+        request(app)
+            .get('/menu/1')
+            .set('Accept', 'application/json')
+            .expect(200,[{
+                "id_menu": 1,
+                "id_article": 2,
+                "MenuInfo.name": "menu_the_1",
+                "MenuInfo.description": null,
+                "MenuInfo.price_final": 0,
+                "Article.name": "teteandcocori",
+                "Article.code_type_src": 1,
+                "Article.price": 10
+            }])
             .end((err) => {
                 if (err) return done(err);
                 done();
