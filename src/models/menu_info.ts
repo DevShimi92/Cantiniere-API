@@ -1,7 +1,6 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../config/database";
 import { MenuContent } from "./menu_content";
-import { Article } from "./article";
 
 export interface MenuInfoInterface {
     id: number;
