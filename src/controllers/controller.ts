@@ -831,8 +831,8 @@ export class Controller {
           where: {
             id: req.body.id
           }
-        }).then(function(dataMenu) { 
-          if(dataMenu == 0)
+        }).then(function(dataDeletMenu) { 
+          if(dataDeletMenu == 0)
             {
               res.status(404).end();
               log.info("Delete Menu : Fail - Not found");
@@ -884,15 +884,15 @@ export class Controller {
       where: {
         id_client: req.params.id
       },
-    }).then(function(data) { 
+    }).then(function(dataOrder) { 
 
-      if(data.length == 0)
+      if(dataOrder.length == 0)
         {
           res.status(204).end();
         }
       else
         {
-          res.status(200).json(data).end();
+          res.status(200).json(dataOrder).end();
         }
 
       log.info("Get Order : OK");
@@ -911,8 +911,8 @@ export class Controller {
           where: {
             id: req.params.id
           }
-        }).then(function(dataMenu) { 
-          if(dataMenu == 0)
+        }).then(function(dataOrder) { 
+          if(dataOrder == 0)
             {
               res.status(404).end();
               log.info("Delete Order : Fail - Not found");
@@ -923,10 +923,10 @@ export class Controller {
               log.info("Delete Order : OK");
           }
             
-        }).catch((errMenu: Error) => {
+        }).catch((errOrder: Error) => {
           res.status(500).end();
           log.error("Delete Order : Fail - ERROR");
-          log.error(errMenu);
+          log.error(errOrder);
         });
       
   }
