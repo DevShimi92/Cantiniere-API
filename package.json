@@ -1,13 +1,13 @@
 {
   "name": "cantiniere_api",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "",
   "main": "server.ts",
   "scripts": {
     "lint": "eslint ./src/*.ts",
     "build": "tsc",
-    "test": "mocha dist/test/test.js --exit",
-    "coverage": "nyc  --reporter=text --reporter=lcov --exclude dist/test/test.js npm run test",
+    "test": "mocha dist/test --exit",
+    "coverage": "nyc  --reporter=text --reporter=lcov --exclude dist/test/**/*.js npm run test",
     "start": "node dist/server.js"
   },
   "repository": {
