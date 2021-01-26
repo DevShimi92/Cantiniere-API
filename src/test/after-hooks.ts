@@ -1,6 +1,8 @@
 import { sequelize } from "../config/database";
 import { log } from "../config/log_config";
 
+// Not work on github action only.... i look in for later...
+
 after(function() {
 /*
     log.info('Cleaning the test base');

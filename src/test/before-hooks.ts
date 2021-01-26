@@ -1,6 +1,8 @@
 import { sequelize } from "../config/database";
 import { log } from "../config/log_config";
 
+// Not work on github action only.... i look in for later...
+
 before(function() {
 /*
     log.info('Preparation of the test base');
