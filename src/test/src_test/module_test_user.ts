@@ -3,7 +3,7 @@ import app from "../../app";
 
 export function moduleUser(): void {
     
-  it("Read All User - No Content", function (done) {
+/*  it("Read All User - No Content", function (done) {
     this.timeout(60000);
     request(app)
         .get('/user')
@@ -13,7 +13,7 @@ export function moduleUser(): void {
             if (err) return done(err);
             done();
         });
-  });
+  });  */
 
   it("Create User - OK", function (done) {
       this.timeout(15000);
