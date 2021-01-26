@@ -3,7 +3,7 @@ import app from "../../app";
 
 export function moduleUser(): void {
     
-/*  it("Read All User - No Content", function (done) {
+it("Read All User - No Content", function (done) {
     this.timeout(60000);
     request(app)
         .get('/user')
@@ -13,10 +13,10 @@ export function moduleUser(): void {
             if (err) return done(err);
             done();
         });
-  });  */
+  }); 
 
   it("Create User - OK", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       const data = {
           "last_name": 'Name',
           "first_name": 'FirstName',
@@ -35,7 +35,7 @@ export function moduleUser(): void {
   });
 
   it("Read All User - Found", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       request(app)
           .get('/user')
           .set('Accept', 'application/json')
@@ -52,7 +52,7 @@ export function moduleUser(): void {
   });
 
   it("Create User - Missing Fields", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       const data = {
           "last_name": 'Name',
           "first_name": 'FirstName',
@@ -70,7 +70,7 @@ export function moduleUser(): void {
   });
 
   it("Create User - Account already exist", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       const data = {
           "last_name": 'Name',
           "first_name": 'FirstName',
@@ -89,7 +89,7 @@ export function moduleUser(): void {
   });
 
   it("Update User - Missing Fields", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       const data = {
           "last_name": 'avvv',
           "first_name": 'zz',
@@ -106,7 +106,7 @@ export function moduleUser(): void {
   });
 
   it("Update User - Account not exist", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       const data = {
           "id": 5,
           "last_name": 'avvv',
@@ -124,7 +124,7 @@ export function moduleUser(): void {
   });
 
   it("Update User - OK", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       const data = {
           "id": 1,
           "last_name": 'avvv',
@@ -144,7 +144,7 @@ export function moduleUser(): void {
   });
 
   it("Read All User - Check Update User", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       request(app)
           .get('/user')
           .set('Accept', 'application/json')
@@ -165,7 +165,7 @@ export function moduleUser(): void {
 export function moduleDeleteUser(): void {
 
     it("Delete User - Missing Fields", function (done) {
-        this.timeout(15000);
+        this.timeout(60000);
         request(app)
             .delete('/user')
             .set('Accept', 'application/json')
@@ -177,7 +177,7 @@ export function moduleDeleteUser(): void {
     });
 
     it("Delete User - Not Found", function (done) {
-        this.timeout(15000);
+        this.timeout(60000);
         const data = {
             "id" : 99
         }
@@ -193,7 +193,7 @@ export function moduleDeleteUser(): void {
     });
 
     it("Delete User - OK", function (done) {
-        this.timeout(15000);
+        this.timeout(60000);
         const data = {
             "id" : 1
         }
@@ -209,7 +209,7 @@ export function moduleDeleteUser(): void {
     });
 
     it("Read All User - Check Delete User", function (done) {
-        this.timeout(15000);
+        this.timeout(60000);
         request(app)
             .get('/user')
             .set('Accept', 'application/json')

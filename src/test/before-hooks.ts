@@ -3,8 +3,8 @@ import { log } from "../config/log_config";
 
 // Not work on github action only.... i look in for later...
 
-before(function() {
-/*
+before(function(done) {
+
     log.info('Preparation of the test base');
 
     sequelize.sync().then(() => {
@@ -15,6 +15,6 @@ before(function() {
       log.error(err);
       done();
     });
-*/
+
   });
 
