@@ -1,8 +1,8 @@
 import { sequelize } from "../config/database";
 import { log } from "../config/log_config";
 
-after(function(done) {
-
+after(function() {
+/*
     log.info('Cleaning the test base');
 
     sequelize.sync({force: true}).then(() => {
@@ -13,5 +13,5 @@ after(function(done) {
       log.error(err);
       done();
     });
-
+*/
   });
