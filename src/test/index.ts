@@ -11,6 +11,7 @@ import { log } from "../config/log_config";
     
 before(function(done) {
 
+    this.timeout(60000);
     log.info('Preparation of the test base');
 
     sequelize.sync().then(() => {
