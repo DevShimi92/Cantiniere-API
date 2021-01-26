@@ -4,7 +4,7 @@ import app from "../../app";
 export function moduleMenuInfo(): void {
 
   it("Read All Menu - No Content", function (done) {
-    this.timeout(15000);
+    this.timeout(60000);
     request(app)
         .get('/menu')
         .set('Accept', 'application/json')
@@ -16,7 +16,7 @@ export function moduleMenuInfo(): void {
   });
 
   it("Create Menu - Missing Fields", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       request(app)
           .post('/menu')
           .set('Accept', 'application/json')
@@ -29,7 +29,7 @@ export function moduleMenuInfo(): void {
   });
 
   it("Create Menu - OK", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       const data = {
           "name": 'menu1',
       }
@@ -46,7 +46,7 @@ export function moduleMenuInfo(): void {
   });
 
   it("Read All Menu - Found", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       request(app)
           .get('/menu')
           .set('Accept', 'application/json')
@@ -58,7 +58,7 @@ export function moduleMenuInfo(): void {
   });
 
   it("Update Menu - Missing Fields", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       request(app)
           .put('/menu')
           .set('Accept', 'application/json')
@@ -70,7 +70,7 @@ export function moduleMenuInfo(): void {
   });
 
   it("Update Menu - Menu not exist", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       const data = {
           "id" : 99,
           "name": 'menu_the_1',
@@ -89,7 +89,7 @@ export function moduleMenuInfo(): void {
   });
 
   it("Update Menu - Menu not exist", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       const data = {
           "id" : 1,
           "name": 'menu_the_1',
@@ -112,7 +112,7 @@ export function moduleMenuInfo(): void {
 export function moduleDeleteMenuInfo(): void {
 
     it("Delete Menu - Missing Fields", function (done) {
-        this.timeout(15000);
+        this.timeout(60000);
         request(app)
             .delete('/menu')
             .set('Accept', 'application/json')
@@ -124,7 +124,7 @@ export function moduleDeleteMenuInfo(): void {
     });
 
     it("Delete Menu - Not Found", function (done) {
-        this.timeout(15000);
+        this.timeout(60000);
         const data = {
             "id" : 99
         }
@@ -140,7 +140,7 @@ export function moduleDeleteMenuInfo(): void {
     });
 
     it("Delete Menu - OK", function (done) {
-        this.timeout(15000);
+        this.timeout(60000);
         const data = {
             "id" : 1
         }

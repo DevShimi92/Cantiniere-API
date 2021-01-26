@@ -4,7 +4,7 @@ import app from "../../app";
 export function moduleArticle(): void {
   
   it("Read All Article - No Content", function (done) {
-    this.timeout(15000);
+    this.timeout(60000);
     request(app)
         .get('/article')
         .set('Accept', 'application/json')
@@ -16,7 +16,7 @@ export function moduleArticle(): void {
   });
 
   it("Create article - Missing Fields", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       const data = {
           "name": 'tete',
       }
@@ -33,7 +33,7 @@ export function moduleArticle(): void {
   });
 
   it("Create article - Bad code_type", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       const data = {
           "name": 'tete',
           "code_type_src" : 99
@@ -51,7 +51,7 @@ export function moduleArticle(): void {
   });
 
   it("Create article - OK", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       const data = {
           "name": 'tete',
           "code_type_src" : 1
@@ -69,7 +69,7 @@ export function moduleArticle(): void {
   });
 
   it("Read All Article - Found", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       request(app)
           .get('/article')
           .set('Accept', 'application/json')
@@ -81,7 +81,7 @@ export function moduleArticle(): void {
   });
 
   it("Update Article - Missing Fields", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       request(app)
           .put('/article')
           .set('Accept', 'application/json')
@@ -93,7 +93,7 @@ export function moduleArticle(): void {
   });
 
   it("Update Article - Article not exist", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       const data = {
           "id" : 99,
           "name": 'teteandcocori',
@@ -113,7 +113,7 @@ export function moduleArticle(): void {
   });
 
   it("Update Article - OK", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       const data = {
           "id" : 2,
           /*
@@ -136,7 +136,7 @@ export function moduleArticle(): void {
   });
 
   it("Read All Article - Check Update Article", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       request(app)
           .get('/article')
           .set('Accept', 'application/json')
@@ -152,7 +152,7 @@ export function moduleArticle(): void {
 export function moduleDeleteArticle(): void {
 
     it("Delete Article - Missing Fields", function (done) {
-        this.timeout(15000);
+        this.timeout(60000);
         request(app)
             .delete('/article')
             .set('Accept', 'application/json')
@@ -164,7 +164,7 @@ export function moduleDeleteArticle(): void {
     });
 
     it("Delete Article - Not Found", function (done) {
-        this.timeout(15000);
+        this.timeout(60000);
         const data = {
             "id" : 99
         }
@@ -180,7 +180,7 @@ export function moduleDeleteArticle(): void {
     });
 
     it("Delete Article - OK", function (done) {
-        this.timeout(15000);
+        this.timeout(60000);
         const data = {
             "id" : 2
         }
@@ -196,7 +196,7 @@ export function moduleDeleteArticle(): void {
     });
 
     it("Read All Article - Check Delete Article", function (done) {
-        this.timeout(15000);
+        this.timeout(60000);
         request(app)
             .get('/article')
             .set('Accept', 'application/json')

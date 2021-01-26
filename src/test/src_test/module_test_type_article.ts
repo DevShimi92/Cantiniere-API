@@ -4,7 +4,7 @@ import app from "../../app";
 export function moduleTypeArticle(): void {
 
   it("Read All Type of Article - No Content", function (done) {
-    this.timeout(15000);
+    this.timeout(60000);
     request(app)
         .get('/type_article')
         .set('Accept', 'application/json')
@@ -16,7 +16,7 @@ export function moduleTypeArticle(): void {
   });
 
   it("Create Type of Article - OK", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       const data = {
           "name": 'coca'
       }
@@ -32,7 +32,7 @@ export function moduleTypeArticle(): void {
   });
 
   it("Read All Type of Article - Found ", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       request(app)
           .get('/type_article')
           .set('Accept', 'application/json')
@@ -44,7 +44,7 @@ export function moduleTypeArticle(): void {
   });
 
   it("Create Type of Article - Article already exist", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       const data = {
           "name": 'coca'
       }
@@ -60,7 +60,7 @@ export function moduleTypeArticle(): void {
   });
 
   it("Create Type of Article - Missing Fields", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       request(app)
           .post('/type_article')
           .set('Accept', 'application/json')
@@ -72,7 +72,7 @@ export function moduleTypeArticle(): void {
   });
 
   it("Update Type of Article - Missing Fields", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       request(app)
           .put('/type_article')
           .set('Accept', 'application/json')
@@ -84,7 +84,7 @@ export function moduleTypeArticle(): void {
   });
 
   it("Update Type of Article - Type of Article not exist", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       const data = {
           "code_type": 99,
           "name" : 'Boisson'
@@ -101,7 +101,7 @@ export function moduleTypeArticle(): void {
   });
 
   it("Update Type of Article - OK", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       const data = {
           "code_type": 1,
           "name" : 'Boisson'
@@ -118,7 +118,7 @@ export function moduleTypeArticle(): void {
   });
 
   it("Read All Type of Article - Check Update Type of Article ", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       request(app)
           .get('/type_article')
           .set('Accept', 'application/json')
@@ -134,7 +134,7 @@ export function moduleTypeArticle(): void {
 export function moduleDeleteTypeArticle(): void {
 
     it("Delete Type of Article - Missing Fields", function (done) {
-        this.timeout(15000);
+        this.timeout(60000);
         request(app)
             .delete('/type_article')
             .set('Accept', 'application/json')
@@ -146,7 +146,7 @@ export function moduleDeleteTypeArticle(): void {
     });
 
     it("Delete Type of Article - Not Found", function (done) {
-        this.timeout(15000);
+        this.timeout(60000);
         const data = {
             "code_type" : 99
         }
@@ -162,7 +162,7 @@ export function moduleDeleteTypeArticle(): void {
     });
 
     it("Delete Type of Article - OK", function (done) {
-        this.timeout(15000);
+        this.timeout(60000);
         const data = {
             "code_type" : 1
         }
@@ -178,7 +178,7 @@ export function moduleDeleteTypeArticle(): void {
     });
 
     it("Read All Type of Article - Check Delete Type of Article ", function (done) {
-        this.timeout(15000);
+        this.timeout(60000);
         request(app)
             .get('/type_article')
             .set('Accept', 'application/json')

@@ -3,8 +3,8 @@ import app from "../../app";
 
 export function moduleOrderInfo(): void {
 
-    it("Get One Order - Not found", function (done) {
-      this.timeout(15000);
+  it("Get One Order - Not found", function (done) {
+      this.timeout(60000);
       request(app)
           .get('/order/1')
           .set('Accept', 'application/json')
@@ -17,7 +17,7 @@ export function moduleOrderInfo(): void {
   });
 
   it("Create Order - Missing Fields", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       const data = {
           "id_client": 1,
           "sold_before_order": 10,
@@ -35,7 +35,7 @@ export function moduleOrderInfo(): void {
   });
 
   it("Create Order - OK", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       const data = {
           "id_client": 1,
           "sold_before_order": 10,
@@ -54,7 +54,7 @@ export function moduleOrderInfo(): void {
   });
 
   it("Get One Order - Check Create Order", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       request(app)
           .get('/order/1')
           .set('Accept', 'application/json')
@@ -76,7 +76,7 @@ export function moduleOrderInfo(): void {
 export function moduleDeleteOrderInfo(): void {
 
     it("Delete Order - OK", function (done) {
-        this.timeout(15000);
+        this.timeout(60000);
         request(app)
             .delete('/order/1')
             .set('Accept', 'application/json')
@@ -88,7 +88,7 @@ export function moduleDeleteOrderInfo(): void {
     });
 
     it("Delete Order - Not Found", function (done) {
-        this.timeout(15000);
+        this.timeout(60000);
         request(app)
             .delete('/order/1')
             .set('Accept', 'application/json')

@@ -4,7 +4,7 @@ import app from "../../app";
 export function moduleMenuContent(): void {
   
     it("Get One menu full - Not found", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       request(app)
           .get('/menu/1')
           .set('Accept', 'application/json')
@@ -17,7 +17,7 @@ export function moduleMenuContent(): void {
   });
 
   it("Add Article to Menu - Missing Fields", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       const data = {
           "id_article": 1,
       }
@@ -34,7 +34,7 @@ export function moduleMenuContent(): void {
   });
 
   it("Add Article to Menu - OK", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       const data = {
           "id_article": 2,
           "id_menu": 1
@@ -52,7 +52,7 @@ export function moduleMenuContent(): void {
   });
 
   it("Get One menu full - OK", function (done) {
-      this.timeout(15000);
+      this.timeout(60000);
       request(app)
           .get('/menu/1')
           .set('Accept', 'application/json')
@@ -78,7 +78,7 @@ export function moduleMenuContent(): void {
 export function moduleDeleteMenuContent(): void {
 
     it("Delete Article to Menu - Missing Fields", function (done) {
-        this.timeout(15000);
+        this.timeout(60000);
         const data = {
             "id_article": 2,
         }
@@ -94,7 +94,7 @@ export function moduleDeleteMenuContent(): void {
     });
 
     it("Delete Article to Menu - Not found", function (done) {
-        this.timeout(15000);
+        this.timeout(60000);
         const data = {
             "id_article": 1,
             "id_menu": 1
@@ -111,7 +111,7 @@ export function moduleDeleteMenuContent(): void {
     });
 
     it("Delete Article to Menu - OK", function (done) {
-        this.timeout(15000);
+        this.timeout(60000);
         const data = {
             "id_article": 2,
             "id_menu": 1

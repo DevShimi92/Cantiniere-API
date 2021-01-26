@@ -33,7 +33,7 @@ describe('Test of API', function() {
 
         describe('Checking method of User model', moduleUser.bind(this));
   
-       /* describe('Checking method of Type of Article model', moduleTypeArticle.bind(this));
+        describe('Checking method of Type of Article model', moduleTypeArticle.bind(this));
 
         describe('Checking method of Article model', moduleArticle.bind(this));
 
@@ -41,7 +41,7 @@ describe('Test of API', function() {
 
         describe('Checking method of Menu Content model', moduleMenuContent.bind(this));
 
-        describe('Checking method of Order Info model', moduleOrderInfo.bind(this));*/
+        describe('Checking method of Order Info model', moduleOrderInfo.bind(this));
 
     });
 
@@ -62,3 +62,18 @@ describe('Test of API', function() {
     });*/
 
 });
+
+after(function(done) {
+    
+        log.info('Cleaning the test base');
+    
+        sequelize.sync({force: true}).then(() => {
+          log.info('Synchronisation de la base réussi !');
+          done();
+          }).catch(err => {
+          log.error('Erreur lors de la synchronisation de la base de donnée !');
+          log.error(err);
+          done();
+        });
+    
+      });
