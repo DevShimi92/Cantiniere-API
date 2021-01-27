@@ -14,7 +14,7 @@ before(function(done) {
     this.timeout(60000);
     log.info('Preparation of the test base');
 
-    sequelize.sync().then(() => {
+    sequelize.sync({force: true}).then(() => {
       log.info('Synchronisation de la base réussi !');
       done();
       }).catch(err => {
@@ -64,7 +64,8 @@ describe('Test of API', function() {
 });
 
 after(function(done) {
-    
+
+        this.timeout(60000);    
         log.info('Cleaning the test base');
     
         sequelize.sync({force: true}).then(() => {
