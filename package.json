@@ -7,7 +7,7 @@
     "lint": "eslint ./src/*.ts",
     "build": "tsc",
     "test": "mocha dist/test --exit",
-    "coverage": "nyc  --reporter=text --reporter=lcov --exclude dist/test/src_test/*.js npm run test",
+    "coverage": "nyc npm run test",
     "start": "node dist/server.js"
   },
   "repository": {
