@@ -48,7 +48,7 @@ jobs:
       run: npm run build
 
     - name: Running test with coverage...
-      run: npm run test
+      run: npm run coverage
       env:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
