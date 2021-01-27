@@ -45,7 +45,7 @@ describe('Test of API', function() {
 
     });
 
-    /*describe('Checking all delete method of models', function() { 
+    describe('Checking all delete method of models', function() { 
 
         describe('Checking delete method of Order Info model', moduleDeleteOrderInfo.bind(this));
 
@@ -59,7 +59,7 @@ describe('Test of API', function() {
   
         describe('Checking delete method of Type of Article model', moduleDeleteTypeArticle.bind(this));
 
-    });*/
+    });
 
 });
 
