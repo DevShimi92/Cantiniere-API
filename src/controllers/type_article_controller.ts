@@ -140,8 +140,8 @@ export class TypeArticleController {
           where: {
             code_type: req.body.code_type
           }
-        }).then(function(data) { 
-          if(data == 0)
+        }).then(function(dataTypeItem) { // dataTypeItem beacause sonarcloud logic
+          if(dataTypeItem == 0)
             {
               res.status(404).end();
               log.info("Delete Type of Article : Fail - Not found");
