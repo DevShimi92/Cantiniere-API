@@ -1,33 +1,52 @@
 import { Application } from "express";
-import { Controller } from "../controllers/controller";
+import { DefaultController } from "../controllers/default_controller";
+import { UserController } from "../controllers/user_controller";
+import { TypeArticleController } from "../controllers/type_article_controller";
+import { ArticleController } from "../controllers/article_controller";
+import { MenuInfoController } from "../controllers/menu_info_controller";
+import { MenuContentController } from "../controllers/menu_content_controller";
+import { OrderInfoController } from "../controllers/order_info_controller";
 
 export class Routes {
   
-  private Controller: Controller = new Controller();
+  private DefaultController: DefaultController = new DefaultController();
+  private UserController: UserController = new UserController();
+  private TypeArticleController: TypeArticleController = new TypeArticleController();
+  private ArticleController: ArticleController = new ArticleController();
+  private MenuInfoController: MenuInfoController = new MenuInfoController();
+  private MenuContentController: MenuContentController = new MenuContentController();
+  private OrderInfoController: OrderInfoController = new OrderInfoController();
 
   public routes(app: Application): void {
-    app.route("/").get(this.Controller.index);
-    app.route("/user").post(this.Controller.createUser);
-    app.route("/user").get(this.Controller.getAllUser);
-    app.route("/user").put(this.Controller.updateUser);
-    app.route("/user").delete(this.Controller.deleteUser);
-    app.route("/type_article").post(this.Controller.createTypeArticle);
-    app.route("/type_article").get(this.Controller.getAllTypeArticle);
-    app.route("/type_article").put(this.Controller.updateTypeArticle);
-    app.route("/type_article").delete(this.Controller.deleteTypeArticle);
-    app.route("/article").post(this.Controller.createArticle);
-    app.route("/article").get(this.Controller.getAllArticle);
-    app.route("/article").put(this.Controller.updateArticle);
-    app.route("/article").delete(this.Controller.deleteArticle);
-    app.route("/menu").post(this.Controller.createMenu);
-    app.route("/menu").get(this.Controller.getAllMenu);
-    app.route("/menu/:id").get(this.Controller.getMenu);
-    app.route("/menu").put(this.Controller.updateMenu);
-    app.route("/menu").delete(this.Controller.deleteMenu);
-    app.route("/menu/content").post(this.Controller.addToMenu);
-    app.route("/menu/content").delete(this.Controller.deleteToMenu);
-    app.route("/order").post(this.Controller.createOrder);
-    app.route("/order/:id").get(this.Controller.getOrder);
-    app.route("/order/:id").delete(this.Controller.deleteOrder);
+
+    app.route("/").get(this.DefaultController.index);
+
+    app.route("/user").post(this.UserController.createUser);
+    app.route("/user").get(this.UserController.getAllUser);
+    app.route("/user").put(this.UserController.updateUser);
+    app.route("/user").delete(this.UserController.deleteUser);
+
+    app.route("/type_article").post(this.TypeArticleController.createTypeArticle);
+    app.route("/type_article").get(this.TypeArticleController.getAllTypeArticle);
+    app.route("/type_article").put(this.TypeArticleController.updateTypeArticle);
+    app.route("/type_article").delete(this.TypeArticleController.deleteTypeArticle);
+
+    app.route("/article").post(this.ArticleController.createArticle);
+    app.route("/article").get(this.ArticleController.getAllArticle);
+    app.route("/article").put(this.ArticleController.updateArticle);
+    app.route("/article").delete(this.ArticleController.deleteArticle);
+
+    app.route("/menu").post(this.MenuInfoController.createMenu);
+    app.route("/menu").get(this.MenuInfoController.getAllMenu);
+    app.route("/menu").put(this.MenuInfoController.updateMenu);
+    app.route("/menu").delete(this.MenuInfoController.deleteMenu);
+
+    app.route("/menu/:id").get(this.MenuContentController.getMenu);
+    app.route("/menu/content").post(this.MenuContentController.addToMenu);
+    app.route("/menu/content").delete(this.MenuContentController.deleteToMenu);
+
+    app.route("/order").post(this.OrderInfoController.createOrder);
+    app.route("/order/:id").get(this.OrderInfoController.getOrder);
+    app.route("/order/:id").delete(this.OrderInfoController.deleteOrder);
   }
 }
