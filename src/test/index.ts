@@ -6,9 +6,6 @@ import {moduleMenuInfo, moduleDeleteMenuInfo} from './src_test/module_test_menu_
 import {moduleMenuContent, moduleDeleteMenuContent} from './src_test/module_test_menu_content';
 import {moduleOrderInfo, moduleDeleteOrderInfo}  from './src_test/module_test_order_info';
 
-import { sequelize } from "../config/database";
-import { log } from "../config/log_config";
-
 describe('Test of API', function() {
 
     describe('Ping on api', moduleTestPing.bind(this));
@@ -46,19 +43,3 @@ describe('Test of API', function() {
     });
 
 });
-
-after(function(done) {
-
-        this.timeout(60000);    
-        log.info('Cleaning the test base');
-    
-        sequelize.sync({force: true}).then(() => {
-          log.info('Synchronisation de la base réussi !');
-          done();
-          }).catch(err => {
-          log.error('Erreur lors de la synchronisation de la base de donnée !');
-          log.error(err);
-          done();
-        });
-    
-      });
