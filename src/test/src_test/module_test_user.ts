@@ -105,6 +105,22 @@ it("Read All User - No Content", function (done) {
           });
   });
 
+  it("Update User - ID IS NOT A NUMBER", function (done) {
+    this.timeout(60000);
+    const data = {
+        "id" : "NO"
+    }
+    request(app)
+        .put('/user')
+        .set('Accept', 'application/json')
+        .send(data)
+        .expect(400,{ error : "Number only" })
+        .end((err) => {
+            if (err) return done(err);
+            done();
+        });
+});
+
   it("Update User - Account not exist", function (done) {
       this.timeout(60000);
       const data = {
@@ -186,6 +202,22 @@ export function moduleDeleteUser(): void {
             .set('Accept', 'application/json')
             .send(data)
             .expect(404)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Delete User - ID IS NOT A NUMBER", function (done) {
+        this.timeout(60000);
+        const data = {
+            "id" : "NO"
+        }
+        request(app)
+            .delete('/user')
+            .set('Accept', 'application/json')
+            .send(data)
+            .expect(400,{ error : "Number only" })
             .end((err) => {
                 if (err) return done(err);
                 done();
