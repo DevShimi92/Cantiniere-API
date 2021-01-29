@@ -46,7 +46,7 @@ export class Routes {
     app.route("/menu/content").delete(this.MenuContentController.deleteToMenu);
 
     app.route("/order").post(this.OrderInfoController.createOrder);
-    app.route("/order/:id").get(this.OrderInfoController.getOrder);
-    app.route("/order/:id").delete(this.OrderInfoController.deleteOrder);
+    app.route("/order/").get(this.OrderInfoController.getOrder);
+    app.route("/order/").delete(this.OrderInfoController.deleteOrder);
   }
 }

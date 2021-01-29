@@ -13,6 +13,12 @@ export class OrderInfoController {
             res.end();
             log.error("Create Order : Fail - Missing Fields");      
       }
+    else if ( isNaN(req.body.id_client) || isNaN(req.body.sold_before_order) || isNaN(req.body.total))
+      {
+            res.status(400).json({ error : "Number only" });
+            res.end();
+            log.error("Create Order : Fail - The value is not number"); 
+      }
     else
     {
         await OrderInfo.create<OrderInfo>({  id_client: req.body.id_client, sold_before_order: req.body.sold_before_order, total: req.body.total})
@@ -31,57 +37,86 @@ export class OrderInfoController {
   public async getOrder(req: Request,res: Response) : Promise<void> {
     log.info("Get Order")
 
-    await OrderInfo.findAll<OrderInfo>({
-      attributes : ['id','id_client','sold_before_order','total'],
-      raw: true,
-      where: {
-        id_client: req.params.id
-      },
-    }).then(function(dataOrder) { 
-
-      if(dataOrder.length == 0)
-        {
-          res.status(204).end();
-        }
-      else
-        {
-          res.status(200).json(dataOrder).end();
-        }
-
-      log.info("Get Order : OK");
-    
-    }).catch((err: Error) => {
-              res.status(500).end();
-              log.error("Get Order : Fail - ERROR");
-              log.error(err);
-            });
-
+    if ( req.body.id == null ) 
+      {
+            res.status(400).json({ error : "Missing Fields" });
+            res.end();
+            log.error("Get Order : Fail - Missing Fields");      
+      }
+    else if ( isNaN(req.body.id))
+      {
+            res.status(400).json({ error : "Number only" });
+            res.end();
+            log.error("Get Order : Fail - The value is not number"); 
+      }
+    else
+      {
+            await OrderInfo.findAll<OrderInfo>({
+              attributes : ['id','id_client','sold_before_order','total'],
+              raw: true,
+              where: {
+                id_client: req.body.id
+              },
+            }).then(function(dataOrder) { 
+        
+              if(dataOrder.length == 0)
+                {
+                  res.status(204).end();
+                }
+              else
+                {
+                  res.status(200).json(dataOrder).end();
+                }
+        
+              log.info("Get Order : OK");
+            
+            }).catch((err: Error) => {
+                      res.status(500).end();
+                      log.error("Get Order : Fail - ERROR");
+                      log.error(err);
+                    });
+      }
   }
 
   public async deleteOrder(req: Request,res: Response) : Promise<void> {
     log.info("Delete Order");
-        await OrderInfo.destroy<OrderInfo>({
-          where: {
-            id: req.params.id
-          }
-        }).then(function(data) { 
-          if(data == 0)
-            {
-              res.status(404).end();
-              log.info("Delete Order : Fail - Not found");
-            }
-          else
-          {
-              res.status(204).end();
-              log.info("Delete Order : OK");
-          }
-            
-        }).catch((err: Error) => {
-          res.status(500).end();
-          log.error("Delete Order : Fail - ERROR");
-          log.error(err);
-        });
-      
+
+    if ( req.body.id == null )
+      {
+            res.status(400).json({ error : "Missing Fields" });
+            res.end();
+            log.error("Delete Order : Fail - Missing Fields");      
+      }
+    else if ( isNaN(req.body.id) )
+      {
+            res.status(400).json({ error : "Number only" });
+            res.end();
+            log.error("Delete Order : Fail - The value is not number"); 
+      }
+    else
+      {
+            await OrderInfo.destroy<OrderInfo>({
+              where: {
+                id: req.body.id
+              }
+            }).then(function(data) { 
+              if(data == 0)
+                {
+                  res.status(404).end();
+                  log.info("Delete Order : Fail - Not found");
+                }
+              else
+              {
+                  res.status(204).end();
+                  log.info("Delete Order : OK");
+              }
+                
+            }).catch((err: Error) => {
+              res.status(500).end();
+              log.error("Delete Order : Fail - ERROR");
+              log.error(err);
+            });
+      } 
   }
 
 }
