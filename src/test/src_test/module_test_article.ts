@@ -32,6 +32,24 @@ export function moduleArticle(): void {
           
   });
 
+  it("Create article - code_type_src IS NOT A NUMBER", function (done) {
+    this.timeout(60000);
+    const data = {
+        "name": 'tete',
+        "code_type_src" : 'NO'
+    }
+    request(app)
+        .post('/article')
+        .send(data)
+        .set('Accept', 'application/json')
+        .expect(400,{ error : "Number only"})
+        .end((err) => {
+            if (err) return done(err);
+            done();
+        });
+        
+});
+
   it("Create article - Bad code_type", function (done) {
       this.timeout(60000);
       const data = {
@@ -91,6 +109,26 @@ export function moduleArticle(): void {
               done();
           });
   });
+
+  it("Update Article - ID IS NOT A NUMBER", function (done) {
+    this.timeout(60000);
+    const data = {
+        "id" : 'NO',
+        "name": 'teteandcocori',
+        "price": 10,
+        "picture" : "One_picture.html",
+        "description" : 'idk'
+    }
+    request(app)
+        .put('/article')
+        .send(data)
+        .set('Accept', 'application/json')
+        .expect(400,{ error : "Number only" })
+        .end((err) => {
+            if (err) return done(err);
+            done();
+        });
+});
 
   it("Update Article - Article not exist", function (done) {
       this.timeout(60000);
@@ -156,7 +194,23 @@ export function moduleDeleteArticle(): void {
         request(app)
             .delete('/article')
             .set('Accept', 'application/json')
-            .expect(400)
+            .expect(400,{ error : "Missing Fields" })
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Delete Article - ID IS NOT A NUMBER", function (done) {
+        this.timeout(60000);
+        const data = {
+            "id" : 'NO'
+        }
+        request(app)
+            .delete('/article')
+            .set('Accept', 'application/json')
+            .send(data)
+            .expect(400,{ error : "Number only" })
             .end((err) => {
                 if (err) return done(err);
                 done();
