@@ -88,7 +88,26 @@ export function moduleMenuInfo(): void {
           });
   });
 
-  it("Update Menu - Menu not exist", function (done) {
+  it("Update Menu - ID IS NOT NUMBER", function (done) {
+    this.timeout(60000);
+    const data = {
+        "id" : 'NO',
+        "name": 'menu_the_1',
+        "price_final": 10,
+        "description" : 'idk'
+    }
+    request(app)
+        .put('/menu')
+        .send(data)
+        .set('Accept', 'application/json')
+        .expect(400)
+        .end((err) => {
+            if (err) return done(err);
+            done();
+        });
+});
+
+  it("Update Menu - OK", function (done) {
       this.timeout(60000);
       const data = {
           "id" : 1,
@@ -116,6 +135,22 @@ export function moduleDeleteMenuInfo(): void {
         request(app)
             .delete('/menu')
             .set('Accept', 'application/json')
+            .expect(400)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Delete Menu - ID IS NOT NUMBER", function (done) {
+        this.timeout(60000);
+        const data = {
+            "id" : 'NO'
+        }
+        request(app)
+            .delete('/menu')
+            .set('Accept', 'application/json')
+            .send(data)
             .expect(400)
             .end((err) => {
                 if (err) return done(err);
