@@ -83,6 +83,23 @@ export function moduleTypeArticle(): void {
           });
   });
 
+  it("Update Type of Article - CODE TYPE IS NOT A NUMBER", function (done) {
+    this.timeout(60000);
+    const data = {
+        "code_type": "NO",
+        "name" : 'Boisson'
+    }
+    request(app)
+        .put('/type_article')
+        .send(data)
+        .set('Accept', 'application/json')
+        .expect(400,{ error : "Number only for code_type"})
+        .end((err) => {
+            if (err) return done(err);
+            done();
+        });
+});
+
   it("Update Type of Article - Type of Article not exist", function (done) {
       this.timeout(60000);
       const data = {
@@ -138,7 +155,7 @@ export function moduleDeleteTypeArticle(): void {
         request(app)
             .delete('/type_article')
             .set('Accept', 'application/json')
-            .expect(400)
+            .expect(400,{ error : "Missing Fields" })
             .end((err) => {
                 if (err) return done(err);
                 done();
@@ -161,7 +178,7 @@ export function moduleDeleteTypeArticle(): void {
             });
     });
 
-    it("Delete Type of Article - ERROR 500 WITH BAD ID", function (done) {
+    it("Delete Type of Article - CODE TYPE IS NOT A NUMBER", function (done) {
         this.timeout(60000);
         const data = {
             "code_type" : "NO"
@@ -170,7 +187,7 @@ export function moduleDeleteTypeArticle(): void {
             .delete('/type_article')
             .set('Accept', 'application/json')
             .send(data)
-            .expect(500)
+            .expect(400,{ error : "Number only" })
             .end((err) => {
                 if (err) return done(err);
                 done();
