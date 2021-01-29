@@ -85,6 +85,12 @@ export class UserController {
             res.end();
             log.error("Update User : Fail - Missing Fields");      
       }
+    else if (isNaN(req.body.id))
+      {
+            res.status(400).json({ error : "Number only" });
+            res.end();
+            log.error("Update User : Fail - The value is not number"); 
+      }
     else
     {
       const idSearch = await User.findAll<User>({
@@ -186,14 +192,20 @@ export class UserController {
             res.end();
             log.error("Delete User : Fail - Missing Fields");      
       }
+    else if (isNaN(req.body.id))
+      {
+            res.status(400).json({ error : "Number only" });
+            res.end();
+            log.error("Delete User : Fail - The value is not number"); 
+      }
     else
       {
         await User.destroy<User>({
           where: {
             id: req.body.id
           }
-        }).then(function(data) { 
-          if(data == 0)
+        }).then(function(dataUser) {  // dataUser beacause sonarcloud logic
+          if(dataUser == 0)
             {
               res.status(404).end();
               log.info("Delete User : Fail - Not found");
