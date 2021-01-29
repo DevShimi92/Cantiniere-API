@@ -3,17 +3,51 @@ import app from "../../app";
 
 export function moduleMenuContent(): void {
   
-    it("Get One menu full - Not found", function (done) {
+  it("Get One menu full - Not found", function (done) {
       this.timeout(60000);
+      const data = {
+        "id_menu": 1,
+        }
       request(app)
-          .get('/menu/1')
+          .get('/menu/content')
           .set('Accept', 'application/json')
+          .send(data)
           .expect(204)
           .end((err) => {
               if (err) return done(err);
               done();
           });
           
+  });
+
+  it("Get One menu full - Missing Fields", function (done) {
+    this.timeout(60000);
+    request(app)
+        .get('/menu/content')
+        .set('Accept', 'application/json')
+        .expect(400)
+        .end((err) => {
+            if (err) return done(err);
+            done();
+        });
+        
+  });
+
+  it("Get One menu full - ID MENU IS NOT A NUMBER", function (done) {
+    this.timeout(60000);
+    const data = {
+      "id_menu": 'NO',
+      }
+    request(app)
+        .get('/menu/content')
+        .set('Accept', 'application/json')
+        .send(data)
+        .expect(400)
+        .end((err) => {
+            if (err) return done(err);
+            done();
+        });
+        
   });
 
   it("Add Article to Menu - Missing Fields", function (done) {
@@ -34,16 +68,34 @@ export function moduleMenuContent(): void {
   });
 
   it("Add Article to Menu - OK", function (done) {
+    this.timeout(60000);
+    const data = {
+        "id_article": 2,
+        "id_menu": 1
+    }
+    request(app)
+        .post('/menu/content')
+        .send(data)
+        .set('Accept', 'application/json')
+        .expect(204)
+        .end((err) => {
+            if (err) return done(err);
+            done();
+        });
+        
+});
+
+  it("Add Article to Menu - ID MENU AND ARTICLE IS NOT A NUMBER", function (done) {
       this.timeout(60000);
       const data = {
-          "id_article": 2,
-          "id_menu": 1
+          "id_article": 'NO',
+          "id_menu": 'NO'
       }
       request(app)
           .post('/menu/content')
           .send(data)
           .set('Accept', 'application/json')
-          .expect(204)
+          .expect(400,{ error : "Number only" })
           .end((err) => {
               if (err) return done(err);
               done();
@@ -53,9 +105,13 @@ export function moduleMenuContent(): void {
 
   it("Get One menu full - OK", function (done) {
       this.timeout(60000);
+      const data = {
+        "id_menu": 1,
+        }
       request(app)
-          .get('/menu/1')
+          .get('/menu/content')
           .set('Accept', 'application/json')
+          .send(data)
           .expect(200,[{
               "id_menu": 1,
               "id_article": 2,
@@ -81,6 +137,24 @@ export function moduleDeleteMenuContent(): void {
         this.timeout(60000);
         const data = {
             "id_article": 2,
+        }
+        request(app)
+            .delete('/menu/content')
+            .send(data)
+            .set('Accept', 'application/json')
+            .expect(400)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Delete Article to Menu - ID MENU AND ARTICLE IS NOT A NUMBER", function (done) {
+        this.timeout(60000);
+        const data = {
+            "id_article": 'NO',
+            "id_menu" : 'NO'
+            
         }
         request(app)
             .delete('/menu/content')
