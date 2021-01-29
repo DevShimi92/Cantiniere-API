@@ -65,8 +65,14 @@ export class MenuInfoController {
             res.end();
             log.error("Update Menu : Fail - Missing Fields");      
       }
+      else if ( isNaN(req.body.id) )
+      {
+            res.status(400).json({ error : "Number only" });
+            res.end();
+            log.error("Update Menu : Fail - The value is not number"); 
+      }
     else
-    {
+      {
       const idSearch = await MenuInfo.findAll<MenuInfo>({
         attributes : ['id'],
         raw: true,
@@ -155,13 +161,19 @@ export class MenuInfoController {
             res.end();
             log.error("Delete Menu : Fail - Missing Fields");      
       }
+    else if ( isNaN(req.body.id) )
+      {
+            res.status(400).json({ error : "Number only" });
+            res.end();
+            log.error("Delete Menu : Fail - The value is not number"); 
+      }
     else
       {
         await MenuInfo.destroy<MenuInfo>({
           where: {
             id: req.body.id
           }
-        }).then(function(dataDeletMenu) { 
+        }).then(function(dataDeletMenu) { // dataDeletMenu beacause sonarcloud logic
           if(dataDeletMenu == 0)
             {
               res.status(404).end();
