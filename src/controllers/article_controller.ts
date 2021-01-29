@@ -13,6 +13,12 @@ export class ArticleController {
             res.end();
             log.error("Create Type of Article : Fail - Missing Fields");      
       }
+    else if (isNaN(req.body.code_type_src))
+      {
+            res.status(400).json({ error : "Number only" });
+            res.end();
+            log.error("Create Type of Article : Fail - The value is not number"); 
+      }
     else
       {
               await Article.create<Article>({ name: req.body.name, code_type_src: req.body.code_type_src})
@@ -62,6 +68,12 @@ export class ArticleController {
             res.status(400).json({ error : "Missing Fields" });
             res.end();
             log.error("Update Article : Fail - Missing Fields");      
+      }
+    else if (isNaN(req.body.id))
+      {
+            res.status(400).json({ error : "Number only" });
+            res.end();
+            log.error("Update Article  : Fail - The value is not number"); 
       }
     else
     {
@@ -179,14 +191,20 @@ export class ArticleController {
             res.end();
             log.error("Delete Article : Fail - Missing Fields");      
       }
+    else if (isNaN(req.body.id))
+      {
+            res.status(400).json({ error : "Number only" });
+            res.end();
+            log.error("Delete Article : Fail - The value is not number"); 
+      }
     else
       {
         await Article.destroy<Article>({
           where: {
             id: req.body.id
           }
-        }).then(function(data) { 
-          if(data == 0)
+        }).then(function(dataArticle) { // dataArticle beacause sonarcloud logic
+          if(dataArticle == 0)
             {
               res.status(404).end();
               log.info("Delete Article : Fail - Not found");
