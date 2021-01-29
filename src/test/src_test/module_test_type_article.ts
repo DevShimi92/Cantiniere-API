@@ -164,7 +164,7 @@ export function moduleDeleteTypeArticle(): void {
     it("Delete Type of Article - ERROR 500 WITH BAD ID", function (done) {
         this.timeout(60000);
         const data = {
-            "id" : "NO"
+            "code_type" : "NO"
         }
         request(app)
             .delete('/type_article')
