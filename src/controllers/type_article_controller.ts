@@ -43,13 +43,8 @@ export class TypeArticleController {
                   log.error("Create Type of Article : Fail - ERROR");
                   log.error(err);
                 });
-
-                
-
             }
-
       }
-    
   }
 
   public async getAllTypeArticle(req: Request,res: Response) : Promise<void> {
@@ -82,6 +77,12 @@ export class TypeArticleController {
             res.status(400).json({ error : "Missing Fields" });
             res.end();
             log.error("Update Type of Article : Fail - Missing Fields");      
+      }
+    else if (isNaN(req.body.code_type))
+      {
+            res.status(400).json({ error : "Number only for code_type" });
+            res.end();
+            log.error("Delete Type of Article : Fail - The value is not number"); 
       }
     else
     {
@@ -133,6 +134,12 @@ export class TypeArticleController {
             res.status(400).json({ error : "Missing Fields" });
             res.end();
             log.error("Delete Type of Article : Fail - Missing Fields");      
+      }
+    else if (isNaN(req.body.code_type))
+      {
+            res.status(400).json({ error : "Number only" });
+            res.end();
+            log.error("Delete Type of Article : Fail - The value is not number"); 
       }
     else
       {
