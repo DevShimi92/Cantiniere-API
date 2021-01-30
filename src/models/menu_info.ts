@@ -43,6 +43,7 @@ export class MenuInfo extends Model {
       timestamps: false
     }
   );
+  
   MenuInfo.hasMany(MenuContent, {
     sourceKey: "id",
     foreignKey: "id_menu",
@@ -54,4 +55,3 @@ export class MenuInfo extends Model {
       name: 'id_menu'
     }
   });
-  

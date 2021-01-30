@@ -1,5 +1,6 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../config/database";
+import { OrderContent } from "./order_content";
 
 export interface OrderInfoInterface {
     id: number;
@@ -46,3 +47,15 @@ export class OrderInfo extends Model {
       updatedAt: false
     }
   );
+
+  OrderInfo.hasMany(OrderContent, {
+    sourceKey: "id",
+    foreignKey: "id_order",
+    onDelete: "CASCADE"
+  });
+
+  OrderContent.belongsTo(OrderInfo, {
+    foreignKey: {
+      name: 'id_order'
+    }
+  });

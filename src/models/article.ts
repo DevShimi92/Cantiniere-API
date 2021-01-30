@@ -1,6 +1,7 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../config/database";
 import { MenuContent } from "./menu_content";
+import { OrderContent } from "./order_content";
 
 export interface ArticleInterface {
     id: number;
@@ -62,8 +63,19 @@ export class Article extends Model {
     onDelete: "SET NULL"
   });
   
-  
   MenuContent.belongsTo(Article, {
+    foreignKey: {
+      name: 'id_article'
+    }
+  });
+
+  Article.hasMany(OrderContent, {
+    sourceKey: "id",
+    foreignKey: "id_article",
+    onDelete: "SET NULL"
+  });
+
+  OrderContent.belongsTo(Article, {
     foreignKey: {
       name: 'id_article'
     }

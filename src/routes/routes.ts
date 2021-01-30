@@ -6,6 +6,8 @@ import { ArticleController } from "../controllers/article_controller";
 import { MenuInfoController } from "../controllers/menu_info_controller";
 import { MenuContentController } from "../controllers/menu_content_controller";
 import { OrderInfoController } from "../controllers/order_info_controller";
+import { OrderContentController } from "../controllers/order_content_controller";
+
 
 export class Routes {
   
@@ -16,6 +18,7 @@ export class Routes {
   private MenuInfoController: MenuInfoController = new MenuInfoController();
   private MenuContentController: MenuContentController = new MenuContentController();
   private OrderInfoController: OrderInfoController = new OrderInfoController();
+  private OrderContentController: OrderContentController = new OrderContentController();
 
   public routes(app: Application): void {
 
@@ -48,5 +51,9 @@ export class Routes {
     app.route("/order").post(this.OrderInfoController.createOrder);
     app.route("/order/").get(this.OrderInfoController.getOrder);
     app.route("/order/").delete(this.OrderInfoController.deleteOrder);
+
+    app.route("/order/content").get(this.OrderContentController.getOrderContent);
+    app.route("/order/content").post(this.OrderContentController.addToOrder);
+    app.route("/order/content").delete(this.OrderContentController.deleteToOrder);
   }
 }

@@ -5,7 +5,7 @@ import {moduleArticle, moduleDeleteArticle} from './src_test/module_test_article
 import {moduleMenuInfo, moduleDeleteMenuInfo} from './src_test/module_test_menu_info';
 import {moduleMenuContent, moduleDeleteMenuContent} from './src_test/module_test_menu_content';
 import {moduleOrderInfo, moduleDeleteOrderInfo}  from './src_test/module_test_order_info';
-
+import {moduleOrderContent, moduleDeleteOrderContent} from './src_test/module_test_order_content';
 describe('Test of API', function() {
 
     describe('Ping on api', moduleTestPing.bind(this));
@@ -24,9 +24,13 @@ describe('Test of API', function() {
 
         describe('Checking method of Order Info model', moduleOrderInfo.bind(this));
 
+        describe('Checking method of Order Content model', moduleOrderContent.bind(this));
+
     });
 
     describe('Checking all delete method of models', function() { 
+
+        describe('Checking delete method of Order Content model', moduleDeleteOrderContent.bind(this));
 
         describe('Checking delete method of Order Info model', moduleDeleteOrderInfo.bind(this));
 
