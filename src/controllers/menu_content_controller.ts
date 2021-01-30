@@ -58,14 +58,12 @@ export class MenuContentController {
 
     if ( req.body.id_article == null || req.body.id_menu == null) 
       {
-            res.status(400).json({ error : "Missing Fields" });
-            res.end();
+            res.status(400).json({ error : "Missing Fields" }).end();
             log.error("Add Article to Menu : Fail - Missing Fields");      
       }
     else if ( isNaN(req.body.id_article) || isNaN(req.body.id_menu) )
       {
-            res.status(400).json({ error : "Number only" });
-            res.end();
+            res.status(400).json({ error : "Number only" }).end();
             log.error("Add Article to Menu : Fail - The value is not number"); 
       }
     else
