@@ -32,15 +32,15 @@ export class OrderContentController {
         where: {
           id_order: req.body.id_order
         },
-      }).then(function(data) { 
+      }).then(function(dataOrderContent) { 
 
-      if(data.length == 0)
+      if(dataOrderContent.length == 0) // dataOrderContent beacause sonarcloud logic
         {
           res.status(204).end();
         }
       else
         {
-          res.status(200).json(data).end();
+          res.status(200).json(dataOrderContent).end();
         }
 
       log.info("Get Order Content : OK");
