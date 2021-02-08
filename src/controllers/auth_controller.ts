@@ -15,9 +15,7 @@ export class AuthController {
       {
         if( req.body.email == 'test@test.com' && req.body.password == 'test')
           {
-            res.status(200).json({
-              token: "FAKETOKEN"
-           }).end;
+            res.status(200).json({token: "FAKETOKEN"}).end;
           }
         else
           {
