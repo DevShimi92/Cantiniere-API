@@ -7,7 +7,7 @@ import { MenuInfoController } from "../controllers/menu_info_controller";
 import { MenuContentController } from "../controllers/menu_content_controller";
 import { OrderInfoController } from "../controllers/order_info_controller";
 import { OrderContentController } from "../controllers/order_content_controller";
-
+import { AuthController } from "../controllers/auth_controller";
 
 export class Routes {
   
@@ -19,10 +19,12 @@ export class Routes {
   private MenuContentController: MenuContentController = new MenuContentController();
   private OrderInfoController: OrderInfoController = new OrderInfoController();
   private OrderContentController: OrderContentController = new OrderContentController();
+  private AuthController: AuthController = new AuthController();
 
   public routes(app: Application): void {
 
     app.route("/").get(this.DefaultController.index);
+    app.route("/login").get(this.AuthController.login);
 
     app.route("/user").post(this.UserController.createUser);
     app.route("/user").get(this.UserController.getAllUser);
