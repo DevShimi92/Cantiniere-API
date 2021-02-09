@@ -24,7 +24,7 @@ export class Routes {
   public routes(app: Application): void {
 
     app.route("/").get(this.DefaultController.index);
-    app.route("/login").get(this.AuthController.login);
+    app.route("/login").post(this.AuthController.login);
 
     app.route("/user").post(this.UserController.createUser);
     app.route("/user").get(this.UserController.getAllUser);

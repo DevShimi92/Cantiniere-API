@@ -9,7 +9,7 @@ export class AuthController {
     if (req.body.email == null ||req.body.password == null)
       {
             res.status(400).json({ error : 'Missing Fields' }).end();
-            log.error("Connection to api : Fail - Missing Fields");      
+            log.error("Connection to api : Fail - Missing Fields");
       }
     else
       {
