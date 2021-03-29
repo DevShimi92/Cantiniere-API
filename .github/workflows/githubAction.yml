@@ -51,6 +51,7 @@ jobs:
       run: npm run coverage
       env:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
     - name: Send to SonarCloud 
       uses: sonarsource/sonarcloud-github-action@master
