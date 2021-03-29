@@ -6,7 +6,7 @@ export default function moduleTestToken(): void {
   let token : string ;
 
   it("Login method - Missing Fields", function (done) {
-    this.timeout(15000);
+    this.timeout(60000);
     const data = {
       "email":  'emailE@POemail.com',
      }
@@ -22,7 +22,7 @@ export default function moduleTestToken(): void {
   });
 
   it("Login method - Account not found", function (done) {
-    this.timeout(15000);
+    this.timeout(60000);
     const data = {
       "email":  'emailE@POemaiaal.com',
       "password": ''
@@ -39,7 +39,7 @@ export default function moduleTestToken(): void {
   });
 
   it("Login method - Bad Password", function (done) {
-    this.timeout(15000);
+    this.timeout(60000);
     const data = {
       "email":  'emailE@POemail.com',
       "password": ''
@@ -56,7 +56,7 @@ export default function moduleTestToken(): void {
   });
 
   it("Login method - Get token", function (done) {
-    this.timeout(15000);
+    this.timeout(60000);
     const data = {
       "email":  'emailE@POemail.com',
       "password": '12345',
@@ -75,7 +75,7 @@ export default function moduleTestToken(): void {
   });
 
   it("Login method - Try without the token", function (done) {
-    this.timeout(15000);
+    this.timeout(60000);
     request(app)
         .post('/login_test')
         .set('Accept', 'application/json')
@@ -88,7 +88,7 @@ export default function moduleTestToken(): void {
   });
 
   it("Login method - Try with the bad token", function (done) {
-    this.timeout(15000);
+    this.timeout(60000);
     request(app)
         .post('/login_test')
         .set('Accept', 'application/json')
@@ -102,7 +102,7 @@ export default function moduleTestToken(): void {
   });
 
   it("Login method - Try with the good token", function (done) {
-    this.timeout(15000);
+    this.timeout(60000);
     request(app)
         .post('/login_test')
         .set('Accept', 'application/json')
