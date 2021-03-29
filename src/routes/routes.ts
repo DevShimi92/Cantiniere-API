@@ -9,6 +9,8 @@ import { OrderInfoController } from "../controllers/order_info_controller";
 import { OrderContentController } from "../controllers/order_content_controller";
 import { AuthController } from "../controllers/auth_controller";
 
+import   {AuthMiddleware}  from "../middlewares/auth"
+
 export class Routes {
   
   private DefaultController: DefaultController = new DefaultController();
@@ -21,10 +23,15 @@ export class Routes {
   private OrderContentController: OrderContentController = new OrderContentController();
   private AuthController: AuthController = new AuthController();
 
+  private AuthMiddleware: AuthMiddleware = new AuthMiddleware();
+
   public routes(app: Application): void {
 
     app.route("/").get(this.DefaultController.index);
     app.route("/login").post(this.AuthController.login);
+    
+    app.use("/login_test",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, next));
+    app.route("/login_test").post(this.AuthController.loginTest);
 
     app.route("/user").post(this.UserController.createUser);
     app.route("/user").get(this.UserController.getAllUser);

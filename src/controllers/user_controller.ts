@@ -7,7 +7,7 @@ export class UserController {
   public async createUser(req: Request, res: Response) : Promise<void> {
     log.info("Create User");
 
-    if (req.body.last_name == null || req.body.first_name == null || req.body.password == null || req.body.email == null )
+    if (req.body.last_name == null || req.body.first_name == null || req.body.email == null || req.body.password == null )
       {
             res.status(400).json({ error : 'Missing Fields' });
             res.end();
