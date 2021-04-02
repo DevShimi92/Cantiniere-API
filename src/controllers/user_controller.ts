@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
+import jwt from "jsonwebtoken";
+
 import { log } from "../config/log_config";
 import { User } from "../models/user";
+
 
 export class UserController {
 
@@ -33,19 +36,39 @@ export class UserController {
             }
         else
             {
-              await User.create<User>({ 
+              let newdata = await User.create<User>({ 
                   last_name: req.body.last_name,
                   first_name: req.body.first_name,
                   password: req.body.password,
                   email: req.body.email, })
-                .then(() => {
-                  res.status(201).end();
-                  log.info("Create User : OK");
+                .then((result) => {
+                
+                    return result.get({ plain: true });
+                
                 }).catch((err: Error) => {
+                
                   res.status(500).end();
                   log.error("Create User : Fail - ERROR");
                   log.error(err);
+                
                 });
+              
+              let dataSendInToken = {
+                    id: newdata.id,
+                    last_name: newdata.last_name,
+                    first_name: newdata.first_name,
+                    email: newdata.email,
+                    money: newdata.money,
+                    cooker: newdata.cooker,
+              }
+
+              let token = jwt.sign(dataSendInToken,process.env.SECRET_KEY);
+
+                res.status(201).json({
+                  token: token
+                }).end();
+              
+              log.info("Create User : OK");
 
             }
 

@@ -1,5 +1,8 @@
 import request from "supertest";
+import chai from "chai";
 import app from "../../app";
+
+chai.should();
 
 export function moduleUser(): void {
     
@@ -28,8 +31,9 @@ export function moduleUser(): void {
             .send(data)
             .set('Accept', 'application/json')
             .expect(201)
-            .end((err) => {
+            .end((err,res) => {
                 if (err) return done(err);
+                res.body.should.have.property("token");
                 done();
             });
         });
