@@ -62,7 +62,7 @@ export class UserController {
                     cooker: newdata.cooker,
               }
 
-              let token = jwt.sign(dataSendInToken,process.env.SECRET_KEY);
+              let token = jwt.sign(dataSendInToken,process.env.SECRET_KEY,{expiresIn: 60 * 15});
 
                 res.status(201).json({
                   token: token
