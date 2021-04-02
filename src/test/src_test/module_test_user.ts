@@ -18,6 +18,25 @@ export function moduleUser(): void {
             });
         }); 
 
+    it("Create User - Value too loong", function (done) {
+            this.timeout(60000);
+            const data = {
+                "last_name": 'Name',
+                "first_name": 'FirstNameOfTheHellYALAWHATTHEFUCKMANTHISISTOOLOONG',
+                "email":  'email@email.com',
+                "password": '1234',
+            }
+            request(app)
+                .post('/user')
+                .send(data)
+                .set('Accept', 'application/json')
+                .expect(500)
+                .end((err) => {
+                    if (err) return done(err);
+                    done();
+                });
+        });
+
     it("Create User - OK", function (done) {
         this.timeout(60000);
         const data = {
@@ -141,6 +160,81 @@ export function moduleUser(): void {
                 if (err) return done(err);
                 done();
             });
+        });
+    
+    it("Update User - First name too lonng", function (done) {
+            this.timeout(60000);
+            const data = {
+                "id": 1,
+                "last_name": 'avvv',
+                "first_name": 'FirsrNameOfTheHellYALAWHATTHEFUCKMANTHISISTOOLOONG',
+            }
+            request(app)
+                .put('/user')
+                .send(data)
+                .set('Accept', 'application/json')
+                .expect(409)
+                .end((err) => {
+                    if (err) return done(err);
+                    done();
+                });
+        });
+
+    it("Update User - Last name too lonng", function (done) {
+            this.timeout(60000);
+            const data = {
+                "id": 1,
+                "last_name": 'lastNameOfTheHellYALAWHATTHEFUCKMANTHISISTOOLOONG',
+                "first_name": 'zz',
+            }
+            request(app)
+                .put('/user')
+                .send(data)
+                .set('Accept', 'application/json')
+                .expect(409)
+                .end((err) => {
+                    if (err) return done(err);
+                    done();
+                });
+        });
+    
+    it("Update User - EMail too lonng", function (done) {
+            this.timeout(60000);
+            const data = {
+                "id": 1,
+                "last_name": 'avvv',
+                "first_name": 'zz',
+                "email":  'EMAILOfTheHellYALAWHATTHEFUCKMANTHISISTOOLOONGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
+            }
+            request(app)
+                .put('/user')
+                .send(data)
+                .set('Accept', 'application/json')
+                .expect(409)
+                .end((err) => {
+                    if (err) return done(err);
+                    done();
+                });
+        });
+    
+    it("Update User - Password too lonng", function (done) {
+            this.timeout(60000);
+            const data = {
+                "id": 1,
+                "last_name": 'avvv',
+                "first_name": 'zz',
+                "email":  'emailE@POemail.com',
+                "password": 'SMELLOFTHEDEADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD',
+            }
+            request(app)
+                .put('/user')
+                .send(data)
+                .set('Accept', 'application/json')
+                .expect(409)
+                .end((err) => {
+                    if (err) return done(err);
+                    done();
+                });
         });
 
     it("Update User - OK", function (done) {
