@@ -23,7 +23,7 @@ export class ArticleController {
       {
               await Article.create<Article>({ name: req.body.name, code_type_src: req.body.code_type_src})
                 .then(() => {
-                  res.status(204).end();
+                  res.status(201).end();
                   log.info("Create Article : OK");
                 })
                 .catch((err: Error) => {

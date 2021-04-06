@@ -78,7 +78,7 @@ export function moduleArticle(): void {
           .post('/article')
           .send(data)
           .set('Accept', 'application/json')
-          .expect(204)
+          .expect(201)
           .end((err) => {
               if (err) return done(err);
               done();

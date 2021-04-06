@@ -62,7 +62,7 @@ export class UserController {
                     cooker: newdata.cooker,
               }
 
-              let token = jwt.sign(dataSendInToken,process.env.SECRET_KEY,{expiresIn: 60 * 15});
+              let token = jwt.sign(dataSendInToken,process.env.SECRET_KEY); // {expiresIn: 60 * 15} <== Add after find a method for refresh the token
 
                 res.status(201).json({
                   token: token
