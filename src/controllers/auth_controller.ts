@@ -16,7 +16,7 @@ export class AuthController {
       {
         
         await User.findOne<User>({
-          attributes : ['id','last_name','email','password'],
+          attributes : ['id','last_name','first_name','email','money','password'],
           raw: true,
           where: {
             email: req.body.email
@@ -33,7 +33,14 @@ export class AuthController {
               if( req.body.password == data.password)
               {
 
-                let dataUser = { id : data.id, last_name : data.last_name}
+                let dataUser = { 
+                  id : data.id, 
+                  last_name : data.last_name,
+                  first_name: data.first_name,
+                  email: data.email,
+                  money: data.money,
+                  cooker: data.cooker
+                };
 
                 let token = jwt.sign(dataUser,process.env.SECRET_KEY);
                 
