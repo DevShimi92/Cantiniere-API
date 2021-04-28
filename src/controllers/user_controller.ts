@@ -59,7 +59,7 @@ export class UserController {
                     first_name: newdata.first_name,
                     email: newdata.email,
                     money: newdata.money,
-                    cooker: newdata.cooker,
+                    cooker: false,
               }
 
               let token = jwt.sign(dataSendInToken,process.env.SECRET_KEY); // {expiresIn: 60 * 15} <== Add after find a method for refresh the token
@@ -78,24 +78,38 @@ export class UserController {
   
   public async getAllUser(req: Request,res: Response) : Promise<void> {
     log.info("Get all User");
-
-    await User.findAll<User>({
-      attributes : ['id','first_name','last_name','money'],
-      raw: true,
-    }).then(function(data) { 
-
-      if(data.length == 0)
-        {
-          res.status(204).end();
-        }
-      else
-        {
-          res.status(200).json(data).end();
-        }
-
-      log.info("Get all User : OK");
+    if(res.locals.cooker == true)
+      {
+          await User.findAll<User>({
+            attributes : ['id','first_name','last_name','money'],
+            where: {
+              cooker: false
+            },
+            order:  [
+              ['money', 'DESC']
+            ],
+            raw: true,
+          }).then(function(data) { 
+      
+            if(data.length == 0)
+              {
+                res.status(204).end();
+              }
+            else
+              {
+                res.status(200).json(data).end();
+              }
+      
+            log.info("Get all User : OK");
+          
+          });
+      }
+    else
+      {
+        log.warn("Get all User : ERROR - User not admin");
+        res.status(403).end();
+      }
     
-    });
 
   }
 
@@ -176,6 +190,19 @@ export class UserController {
                 });
           }
 
+          if((req.body.money != null) && (!isNaN(req.body.money)) && (res.locals.cooker == true))
+          {
+            await User.update({ money: req.body.money }, {
+              where: {
+                id: req.body.id
+              }
+            }).then(() => OK++)
+            .catch((err: Error,) => {
+              Error++;
+              log.error('Error with field money of user : ' + err);
+                });
+          }
+
           if(req.body.password != null)
           {
             await User.update({ password: req.body.password }, {
@@ -221,7 +248,7 @@ export class UserController {
             res.end();
             log.error("Delete User : Fail - The value is not number"); 
       }
-    else
+    else if(res.locals.cooker == true)
       {
         await User.destroy<User>({
           where: {
@@ -244,6 +271,11 @@ export class UserController {
           log.error("Delete User : Fail - ERROR");
           log.error(err);
         });
+      }
+    else
+      {
+        res.status(403).end();
+        log.error("Delete User : Fail - User is not Admin");
       }
   }
 

@@ -13,22 +13,38 @@ export class AuthMiddleware {
         if (!!token && token.startsWith('Bearer ')) {
             token = token.slice(7, token.length);
         }
+
         if (token)
         {
-            jwt.verify(token, process.env.SECRET_KEY, (err) => {
+            jwt.verify(token, process.env.SECRET_KEY, (err, decoded:any) => {
                 if (err) {
                     log.info("Token not valid");
                     res.status(401).end();
                 } else {
-                    log.info("Token OK");
+                    if(typeof decoded !== 'undefined') {
+                        
+                        if(decoded.cooker)
+                            {
+                                res.locals.cooker = decoded.cooker; 
+                            }
+
+                        log.info("Token of "+decoded.last_name+" : OK ");
+                       
+                        }
+                    else
+                        {
+                            log.warn("Token OK but data not found");
+                            log.warn(decoded);
+                        }
+                    
                     next();
                 }
             });
         }
         else 
-        {
-            log.warn("Token not found");
-            res.status(401).end();
-        }
+            {
+                log.warn("Token not found");
+                res.status(401).end();
+            }
     }
 }

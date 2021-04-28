@@ -1,5 +1,6 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../config/database";
+import { log } from "../config/log_config";
 
 export interface UserInterface {
     id: number;
@@ -64,5 +65,24 @@ export interface UserInterface {
       sequelize: sequelize , 
     }
   );
+
+  User.findAll<User>({
+    attributes : ['cooker'],
+    raw: true,
+    where: {
+      cooker: true
+    }
+  }).then(function(data) {
+    if(data.length == 0)
+        {
+          log.warn('Compte admin non trouvé, création du compte....');
+          User.create({ first_name: 'Cantiniere', last_name: 'Responsable', email: process.env.COOKER_DEFAUT_EMAIL, password: process.env.COOKER_DEFAUT_PASSWORD, cooker: true });
+          log.warn('Compte admin crée');
+        }
+  });
+  
+  
+
+
 
 
