@@ -14,7 +14,7 @@ export function moduleUser(): void {
         const data = {
           "email":  process.env.COOKER_DEFAUT_EMAIL,
           "password": process.env.COOKER_DEFAUT_PASSWORD,
-          }
+          };
         request(app)
             .post('/login')
             .set('Accept', 'application/json')

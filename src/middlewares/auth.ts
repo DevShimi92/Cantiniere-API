@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 export class AuthMiddleware {
     
-    public async checkJWT (req:Request, res:Response, next:Function):Promise<void> {
+    public async checkJWT (req:Request, res:Response, adminRight:boolean, next:Function):Promise<void> {
 
         log.info("Check token...");
 
@@ -36,8 +36,22 @@ export class AuthMiddleware {
                             log.warn("Token OK but data not found");
                             log.warn(decoded);
                         }
+
+                    if(adminRight == false)
+                        {
+                            next();
+                        }
+                    else if( decoded.cooker == true)
+                        {
+                            next();
+                        }
+                    else
+                        {
+                            log.warn("Access forbidden");
+                            res.status(403).end(); 
+                        }
+                        
                     
-                    next();
                 }
             });
         }

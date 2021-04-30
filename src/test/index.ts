@@ -38,8 +38,6 @@ describe('Test of API', function() {
 
         describe('Checking delete method of Order Info model', moduleDeleteOrderInfo.bind(this));
 
-        describe('Checking delete method of User model', moduleDeleteUser.bind(this));
-
         describe('Checking delete method of Menu Content model', moduleDeleteMenuContent.bind(this));
 
         describe('Checking delete method of Menu Info model', moduleDeleteMenuInfo.bind(this));
@@ -47,6 +45,8 @@ describe('Test of API', function() {
         describe('Checking delete method of Article model', moduleDeleteArticle.bind(this));
   
         describe('Checking delete method of Type of Article model', moduleDeleteTypeArticle.bind(this));
+
+        describe('Checking delete method of User model', moduleDeleteUser.bind(this));
 
     });
 

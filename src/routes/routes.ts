@@ -30,17 +30,18 @@ export class Routes {
     app.route("/").get(this.DefaultController.index);
     app.route("/login").post(this.AuthController.login);
     
-    app.use("/login_test",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, next));
+    app.use("/login_test",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, false, next));
     app.route("/login_test").post(this.AuthController.loginTest);
 
     app.route("/user").post(this.UserController.createUser);
-    app.use("/user",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, next));
+    app.use("/user",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, false, next));
     app.route("/user").get(this.UserController.getAllUser);
     app.route("/user").put(this.UserController.updateUser);
     app.route("/user").delete(this.UserController.deleteUser);
 
-    app.route("/type_article").post(this.TypeArticleController.createTypeArticle);
     app.route("/type_article").get(this.TypeArticleController.getAllTypeArticle);
+    app.use("/type_article",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, true, next));
+    app.route("/type_article").post(this.TypeArticleController.createTypeArticle);
     app.route("/type_article").put(this.TypeArticleController.updateTypeArticle);
     app.route("/type_article").delete(this.TypeArticleController.deleteTypeArticle);
 
