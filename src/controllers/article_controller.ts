@@ -7,13 +7,13 @@ export class ArticleController {
   public async createArticle(req: Request, res: Response) : Promise<void> {
     log.info("Create Article");
 
-    if (req.body.name == null ||req.body.code_type_src == null)
+    if (req.body.name == null || req.body.price == null || req.body.code_type_src == null)
       {
             res.status(400).json({ error : 'Missing Fields' });
             res.end();
             log.error("Create Type of Article : Fail - Missing Fields");      
       }
-    else if (isNaN(req.body.code_type_src))
+    else if (isNaN(req.body.code_type_src) || isNaN(req.body.price))
       {
             res.status(400).json({ error : "Number only" });
             res.end();
@@ -21,7 +21,7 @@ export class ArticleController {
       }
     else
       {
-              await Article.create<Article>({ name: req.body.name, code_type_src: req.body.code_type_src})
+              await Article.create<Article>({ name: req.body.name, price : req.body.price, code_type_src: req.body.code_type_src})
                 .then(() => {
                   res.status(201).end();
                   log.info("Create Article : OK");
@@ -41,7 +41,7 @@ export class ArticleController {
     log.info("Get all article");
 
     await Article.findAll<Article>({
-      attributes : ['name','code_type_src','price','picture','description'],
+      attributes : ['id','name','code_type_src','price','picture','description'],
       raw: true,
     }).then(function(data) { 
 

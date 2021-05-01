@@ -45,8 +45,9 @@ export class Routes {
     app.route("/type_article").put(this.TypeArticleController.updateTypeArticle);
     app.route("/type_article").delete(this.TypeArticleController.deleteTypeArticle);
 
-    app.route("/article").post(this.ArticleController.createArticle);
     app.route("/article").get(this.ArticleController.getAllArticle);
+    app.use("/article",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, true, next));
+    app.route("/article").post(this.ArticleController.createArticle);
     app.route("/article").put(this.ArticleController.updateArticle);
     app.route("/article").delete(this.ArticleController.deleteArticle);
 
