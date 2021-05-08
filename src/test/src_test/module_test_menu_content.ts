@@ -1,9 +1,47 @@
 import request from "supertest";
 import app from "../../app";
 
+let tokenAdmin : string ;
+let token : string ;
+
 export function moduleMenuContent(): void {
+
+    before(function(done)  {
+        this.timeout(60000);
+        const loginAdmin = {
+            "email":  process.env.COOKER_DEFAUT_EMAIL,
+            "password": process.env.COOKER_DEFAUT_PASSWORD,
+            };
+        
+        const login = {
+            "email": 'emailE@POemail.com',
+            "password": '12345',
+            };
+
+        request(app)
+          .post('/login')
+          .set('Accept', 'application/json')
+          .send(loginAdmin)
+          .expect(200)
+          .end((err, res) => {
+            if (err) return done(err);
+            tokenAdmin = res.body.token;
+          });
+
+        request(app)
+            .post('/login')
+            .set('Accept', 'application/json')
+            .send(login)
+            .expect(200)
+            .end((err, res) => {
+              if (err) return done(err);
+              token = res.body.token;
+              done();
+            });
+    
+    });
   
-  it("Get One menu full - Not found", function (done) {
+    it("Get One menu full - Not found", function (done) {
       this.timeout(60000);
       const data = {
         "id_menu": 1,
@@ -18,39 +56,39 @@ export function moduleMenuContent(): void {
               done();
           });
           
-  });
+    });
 
-  it("Get One menu full - Missing Fields", function (done) {
-    this.timeout(60000);
-    request(app)
-        .get('/menu/content')
-        .set('Accept', 'application/json')
-        .expect(400)
-        .end((err) => {
-            if (err) return done(err);
-            done();
-        });
-        
-  });
+    it("Get One menu full - Missing Fields", function (done) {
+        this.timeout(60000);
+        request(app)
+            .get('/menu/content')
+            .set('Accept', 'application/json')
+            .expect(400)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
 
-  it("Get One menu full - ID MENU IS NOT A NUMBER", function (done) {
-    this.timeout(60000);
-    const data = {
-      "id_menu": 'NO',
-      }
-    request(app)
-        .get('/menu/content')
-        .set('Accept', 'application/json')
-        .send(data)
-        .expect(400)
-        .end((err) => {
-            if (err) return done(err);
-            done();
-        });
-        
-  });
+    it("Get One menu full - ID MENU IS NOT A NUMBER", function (done) {
+        this.timeout(60000);
+        const data = {
+        "id_menu": 'NO',
+        }
+        request(app)
+            .get('/menu/content')
+            .set('Accept', 'application/json')
+            .send(data)
+            .expect(400)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
 
-  it("Add Article to Menu - Missing Fields", function (done) {
+    it("Add Article to Menu - Missing Fields", function (done) {
       this.timeout(60000);
       const data = {
           "id_article": 1,
@@ -59,33 +97,69 @@ export function moduleMenuContent(): void {
           .post('/menu/content')
           .send(data)
           .set('Accept', 'application/json')
+          .set('Authorization', 'Bearer ' + tokenAdmin)
           .expect(400)
           .end((err) => {
               if (err) return done(err);
               done();
           });
           
-  });
+    });
 
-  it("Add Article to Menu - OK", function (done) {
-    this.timeout(60000);
-    const data = {
-        "id_article": 2,
-        "id_menu": 1
-    }
-    request(app)
-        .post('/menu/content')
-        .send(data)
-        .set('Accept', 'application/json')
-        .expect(204)
-        .end((err) => {
-            if (err) return done(err);
-            done();
-        });
-        
-});
+    it("Add Article to Menu - Unauthorized", function (done) {
+        this.timeout(60000);
+        const data = {
+            "id_article": 2,
+            "id_menu": 1
+        }
+        request(app)
+            .post('/menu/content')
+            .send(data)
+            .set('Accept', 'application/json')
+            .expect(401)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
 
-  it("Add Article to Menu - ID MENU AND ARTICLE IS NOT A NUMBER", function (done) {
+    it("Add Article to Menu - Forbidden", function (done) {
+        this.timeout(60000);
+        const data = {
+            "id_article": 2,
+            "id_menu": 1
+        }
+        request(app)
+            .post('/menu/content')
+            .send(data)
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + token)
+            .expect(403)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Add Article to Menu - OK", function (done) {
+        this.timeout(60000);
+        const data = {
+            "id_article": 2,
+            "id_menu": 1
+        }
+        request(app)
+            .post('/menu/content')
+            .send(data)
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + tokenAdmin)
+            .expect(204)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Add Article to Menu - ID MENU AND ARTICLE IS NOT A NUMBER", function (done) {
       this.timeout(60000);
       const data = {
           "id_article": 'NO',
@@ -95,15 +169,16 @@ export function moduleMenuContent(): void {
           .post('/menu/content')
           .send(data)
           .set('Accept', 'application/json')
+          .set('Authorization', 'Bearer ' + tokenAdmin)
           .expect(400,{ error : "Number only" })
           .end((err) => {
               if (err) return done(err);
               done();
           });
           
-  });
+    });
 
-  it("Get One menu full - OK", function (done) {
+    it("Get One menu full - OK", function (done) {
       this.timeout(60000);
       const data = {
         "id_menu": 1,
@@ -127,7 +202,7 @@ export function moduleMenuContent(): void {
               done();
           });
           
-  });
+    });
 
 }
 
@@ -142,6 +217,7 @@ export function moduleDeleteMenuContent(): void {
             .delete('/menu/content')
             .send(data)
             .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + tokenAdmin)
             .expect(400)
             .end((err) => {
                 if (err) return done(err);
@@ -160,6 +236,7 @@ export function moduleDeleteMenuContent(): void {
             .delete('/menu/content')
             .send(data)
             .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + tokenAdmin)
             .expect(400)
             .end((err) => {
                 if (err) return done(err);
@@ -177,6 +254,7 @@ export function moduleDeleteMenuContent(): void {
             .delete('/menu/content')
             .send(data)
             .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + tokenAdmin)
             .expect(404)
             .end((err) => {
                 if (err) return done(err);
@@ -184,6 +262,41 @@ export function moduleDeleteMenuContent(): void {
             });
     });
 
+    it("Delete Article to Menu - Unauthorized", function (done) {
+        this.timeout(60000);
+        const data = {
+            "id_article": 2,
+            "id_menu": 1
+        }
+        request(app)
+            .delete('/menu/content')
+            .send(data)
+            .set('Accept', 'application/json')
+            .expect(401)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Delete Article to Menu - Forbidden", function (done) {
+        this.timeout(60000);
+        const data = {
+            "id_article": 2,
+            "id_menu": 1
+        }
+        request(app)
+            .delete('/menu/content')
+            .send(data)
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + token)
+            .expect(403)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+    
     it("Delete Article to Menu - OK", function (done) {
         this.timeout(60000);
         const data = {
@@ -194,6 +307,7 @@ export function moduleDeleteMenuContent(): void {
             .delete('/menu/content')
             .send(data)
             .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + tokenAdmin)
             .expect(204)
             .end((err) => {
                 if (err) return done(err);

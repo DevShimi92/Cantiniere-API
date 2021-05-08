@@ -51,12 +51,12 @@ export class Routes {
     app.route("/article").put(this.ArticleController.updateArticle);
     app.route("/article").delete(this.ArticleController.deleteArticle);
 
-    app.route("/menu").post(this.MenuInfoController.createMenu);
     app.route("/menu").get(this.MenuInfoController.getAllMenu);
+    app.route("/menu/content").get(this.MenuContentController.getMenu);
+    app.use("/menu",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, true, next));
+    app.route("/menu").post(this.MenuInfoController.createMenu);
     app.route("/menu").put(this.MenuInfoController.updateMenu);
     app.route("/menu").delete(this.MenuInfoController.deleteMenu);
-
-    app.route("/menu/content").get(this.MenuContentController.getMenu);
     app.route("/menu/content").post(this.MenuContentController.addToMenu);
     app.route("/menu/content").delete(this.MenuContentController.deleteToMenu);
 

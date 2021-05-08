@@ -16,8 +16,8 @@ export class MenuInfoController {
     else
       {
           await MenuInfo.create<MenuInfo>({ name: req.body.name})
-                .then(() => {
-                  res.status(204).end();
+                .then((data) => {
+                  res.status(200).json({ id : data.get('id')}).end();
                   log.info("Create Menu : OK");
                 })
                 .catch((err: Error) => {
