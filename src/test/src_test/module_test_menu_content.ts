@@ -43,13 +43,10 @@ export function moduleMenuContent(): void {
   
     it("Get One menu full - Not found", function (done) {
       this.timeout(60000);
-      const data = {
-        "id_menu": 1,
-        }
       request(app)
-          .get('/menu/content')
+          .get('/menu/content/1')
           .set('Accept', 'application/json')
-          .send(data)
+          .set('Authorization', 'Bearer ' + tokenAdmin)
           .expect(204)
           .end((err) => {
               if (err) return done(err);
@@ -58,12 +55,13 @@ export function moduleMenuContent(): void {
           
     });
 
-    it("Get One menu full - Missing Fields", function (done) {
+    it("Get One menu full - 404 Not found", function (done) {
         this.timeout(60000);
         request(app)
-            .get('/menu/content')
+            .get('/menu/content/')
             .set('Accept', 'application/json')
-            .expect(400)
+            .set('Authorization', 'Bearer ' + tokenAdmin)
+            .expect(404)
             .end((err) => {
                 if (err) return done(err);
                 done();
@@ -73,13 +71,10 @@ export function moduleMenuContent(): void {
 
     it("Get One menu full - ID MENU IS NOT A NUMBER", function (done) {
         this.timeout(60000);
-        const data = {
-        "id_menu": 'NO',
-        }
         request(app)
-            .get('/menu/content')
+            .get('/menu/content/NO')
             .set('Accept', 'application/json')
-            .send(data)
+            .set('Authorization', 'Bearer ' + tokenAdmin)
             .expect(400)
             .end((err) => {
                 if (err) return done(err);
@@ -180,13 +175,10 @@ export function moduleMenuContent(): void {
 
     it("Get One menu full - OK", function (done) {
       this.timeout(60000);
-      const data = {
-        "id_menu": 1,
-        }
       request(app)
-          .get('/menu/content')
+          .get('/menu/content/1')
           .set('Accept', 'application/json')
-          .send(data)
+          .set('Authorization', 'Bearer ' + tokenAdmin)
           .expect(200,[{
               "id_menu": 1,
               "id_article": 2,

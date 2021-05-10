@@ -8,48 +8,45 @@ export class MenuContentController {
 
   public async getMenu(req: Request,res: Response) : Promise<void> {
     log.info("Get Menu")
-
-    if ( req.body.id_menu == null ) 
-      {
-            res.status(400).json({ error : "Missing Fields" });
-            res.end();
-            log.error("Get Menu : Fail - Missing Fields");      
-      }
-    else if ( isNaN(req.body.id_menu))
+    
+    if (!Number(req.params.id_menu))
       {
             res.status(400).json({ error : "Number only" });
             res.end();
             log.error("Get Menu : Fail - The value is not number"); 
       }
+    else
+      {
 
-    await MenuContent.findAll<MenuContent>({
-      attributes : ['id_menu','id_article'],
-      raw: true,
-     include: [
-      {model: MenuInfo, attributes: ['name','description','price_final']}, 
-      {model: Article, attributes: ['name','code_type_src','price']} 
-    ],
-     where: {
-      id_menu: req.body.id_menu
-    },
-    }).then(function(data) { 
-
-      if(data.length == 0)
-        {
-          res.status(204).end();
-        }
-      else
-        {
-          res.status(200).json(data).end();
-        }
-
-      log.info("Get Menu : OK");
+        await MenuContent.findAll<MenuContent>({
+          attributes : ['id_menu','id_article'],
+          raw: true,
+        include: [
+          {model: MenuInfo, attributes: ['name','description','price_final']}, 
+          {model: Article, attributes: ['name','code_type_src','price']} 
+        ],
+        where: {
+          id_menu: req.params.id_menu
+        },
+        }).then(function(data) { 
     
-    }).catch((err: Error) => {
-              res.status(500).end();
-              log.error("Get Menu : Fail - ERROR");
-              log.error(err);
-            });
+          if(data.length == 0)
+            {
+              res.status(204).end();
+            }
+          else
+            {
+              res.status(200).json(data).end();
+            }
+    
+          log.info("Get Menu : OK");
+        
+        }).catch((err: Error) => {
+                  res.status(500).end();
+                  log.error("Get Menu : Fail - ERROR");
+                  log.error(err);
+                });
+      }
 
   }
 

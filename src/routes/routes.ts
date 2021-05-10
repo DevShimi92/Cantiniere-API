@@ -9,7 +9,7 @@ import { OrderInfoController } from "../controllers/order_info_controller";
 import { OrderContentController } from "../controllers/order_content_controller";
 import { AuthController } from "../controllers/auth_controller";
 
-import   {AuthMiddleware}  from "../middlewares/auth"
+import { AuthMiddleware } from "../middlewares/auth"
 
 export class Routes {
   
@@ -52,7 +52,8 @@ export class Routes {
     app.route("/article").delete(this.ArticleController.deleteArticle);
 
     app.route("/menu").get(this.MenuInfoController.getAllMenu);
-    app.route("/menu/content").get(this.MenuContentController.getMenu);
+    app.route("/menu/content/:id_menu").get(this.MenuContentController.getMenu);
+    
     app.use("/menu",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, true, next));
     app.route("/menu").post(this.MenuInfoController.createMenu);
     app.route("/menu").put(this.MenuInfoController.updateMenu);

@@ -21,7 +21,7 @@ export function moduleOrderContent(): void {
       "id_order": 'NO',
       }
     request(app)
-        .get('/menu/content')
+        .get('/order/content')
         .set('Accept', 'application/json')
         .send(data)
         .expect(400)
