@@ -1,132 +1,174 @@
 import request from "supertest";
 import app from "../../app";
 
+let tokenAdmin : string ;
+let token : string ;
+
 export function moduleOrderInfo(): void {
 
-  it("Get One Order - Not found", function (done) {
-    this.timeout(60000);
-    const data = {
-      "id": 1
-  }
-    request(app)
-        .get('/order')
-        .set('Accept', 'application/json')
-        .send(data)
-        .expect(204)
-        .end((err) => {
-            if (err) return done(err);
-            done();
-        });
+    before(function(done)  {
+        this.timeout(60000);
+        const loginAdmin = {
+            "email":  process.env.COOKER_DEFAUT_EMAIL,
+            "password": process.env.COOKER_DEFAUT_PASSWORD,
+            };
         
-});
+        const login = {
+            "email": 'emailE@POemail.com',
+            "password": '12345',
+            };
 
-  it("Create Order - Missing Fields", function (done) {
-      this.timeout(60000);
-      const data = {
-          "id_client": 1,
-          "sold_before_order": 10,
-      }
-      request(app)
-          .post('/order')
-          .send(data)
+        request(app)
+          .post('/login')
           .set('Accept', 'application/json')
-          .expect(400)
-          .end((err) => {
-              if (err) return done(err);
-              done();
-          });
-          
-  });
-
-  it("Create Order - ONLY NUMBER", function (done) {
-    this.timeout(60000);
-    const data = {
-        "id_client": 'NO',
-        "sold_before_order": 'AND',
-        "total": 'NOO'
-    }
-    request(app)
-        .post('/order')
-        .send(data)
-        .set('Accept', 'application/json')
-        .expect(400)
-        .end((err) => {
+          .send(loginAdmin)
+          .expect(200)
+          .end((err, res) => {
             if (err) return done(err);
-            done();
-        });
-        
-});
-
-  it("Create Order - OK", function (done) {
-      this.timeout(60000);
-      const data = {
-          "id_client": 1,
-          "sold_before_order": 10,
-          "total":10
-      }
-      request(app)
-          .post('/order')
-          .send(data)
-          .set('Accept', 'application/json')
-          .expect(204)
-          .end((err) => {
-              if (err) return done(err);
-              done();
+            tokenAdmin = res.body.token;
           });
-          
-  });
 
-  it("Get One Order - Check Create Order", function (done) {
-      this.timeout(60000);
-      const data = {
+        request(app)
+            .post('/login')
+            .set('Accept', 'application/json')
+            .send(login)
+            .expect(200)
+            .end((err, res) => {
+              if (err) return done(err);
+              token = res.body.token;
+              done();
+            });
+    
+    });
+
+    it("Get One Order - Not found", function (done) {
+        this.timeout(60000);
+        const data = {
         "id": 1
-    }
-      request(app)
-          .get('/order')
-          .set('Accept', 'application/json')
-          .send(data)
-          .expect(200,[{
-              "id": 1,
-              "id_client": 1,
-              "sold_before_order": 10,
-              "total": 10
-          }])
-          .end((err) => {
-              if (err) return done(err);
-              done();
-          });
-          
-  });
-
-  it("Get One Order - Missing Fields", function (done) {
-    this.timeout(60000);
-    request(app)
-        .get('/order')
-        .set('Accept', 'application/json')
-        .expect(400,{ error : "Missing Fields" })
-        .end((err) => {
-            if (err) return done(err);
-            done();
-        });
-        
-});
-
-  it("Get One Order - NUMBER ONLY", function (done) {
-      this.timeout(60000);
-      const data = {
-        "id": 'NO'
         }
-      request(app)
-          .get('/order')
-          .set('Accept', 'application/json')
-          .send(data)
-          .expect(400,{ error : "Number only" })
-          .end((err) => {
-              if (err) return done(err);
-              done();
-          });
-          
-  });
+        request(app)
+            .get('/order')
+            .set('Accept', 'application/json')
+            .send(data)
+            .expect(204)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
+
+    it("Create Order - Missing Fields", function (done) {
+        this.timeout(60000);
+        const data = {
+            "id_client": 1,
+            "sold_before_order": 10,
+        }
+        request(app)
+            .post('/order')
+            .send(data)
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + token)
+            .expect(400)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
+
+    it("Create Order - ONLY NUMBER", function (done) {
+        this.timeout(60000);
+        const data = {
+            "id_client": 'NO',
+            "sold_before_order": 'AND',
+            "total": 'NOO'
+        }
+        request(app)
+            .post('/order')
+            .send(data)
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + token)
+            .expect(400)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
+
+    it("Create Order - OK", function (done) {
+        this.timeout(60000);
+        const data = {
+            "id_client": 2,
+            "sold_before_order": 999,
+            "total":10
+        }
+        request(app)
+            .post('/order')
+            .send(data)
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + token)
+            .expect(200)
+            .end((err,res) => {
+                if (err) return done(err);
+                res.body.should.have.property("id");
+                done();
+            });
+            
+    });
+
+    it("Get One Order - Check Create Order", function (done) {
+        this.timeout(60000);
+        const data = {
+            "id": 2
+        }
+        request(app)
+            .get('/order')
+            .set('Accept', 'application/json')
+            .send(data)
+            .expect(200,[{
+                "id": 1,
+                "id_client": 2,
+                "sold_before_order": 999,
+                "total": 10
+            }])
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
+
+    it("Get One Order - Missing Fields", function (done) {
+        this.timeout(60000);
+        request(app)
+            .get('/order')
+            .set('Accept', 'application/json')
+            .expect(400,{ error : "Missing Fields" })
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
+
+    it("Get One Order - NUMBER ONLY", function (done) {
+        this.timeout(60000);
+        const data = {
+            "id": 'NO'
+            }
+        request(app)
+            .get('/order')
+            .set('Accept', 'application/json')
+            .send(data)
+            .expect(400,{ error : "Number only" })
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
 
 }
 
@@ -140,6 +182,7 @@ export function moduleDeleteOrderInfo(): void {
         request(app)
             .delete('/order')
             .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + tokenAdmin)
             .send(data)
             .expect(404)
             .end((err) => {
@@ -156,6 +199,7 @@ export function moduleDeleteOrderInfo(): void {
         request(app)
             .delete('/order/1')
             .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + tokenAdmin)
             .send(data)
             .expect(404)
             .end((err) => {
@@ -173,6 +217,7 @@ export function moduleDeleteOrderInfo(): void {
         request(app)
             .delete('/order')
             .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + tokenAdmin)
             .send(data)
             .expect(204)
             .end((err) => {

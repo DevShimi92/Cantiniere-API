@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { log } from "../config/log_config";
 import { OrderInfo } from "../models/order_info";
+import { User } from "../models/user";
 
 export class OrderInfoController {
 
@@ -21,16 +22,48 @@ export class OrderInfoController {
       }
     else
     {
-        await OrderInfo.create<OrderInfo>({  id_client: req.body.id_client, sold_before_order: req.body.sold_before_order, total: req.body.total})
-            .then(() => {
-              res.status(204).end();
-              log.info("Create Order : OK");
-            })
-            .catch((err: Error) => {
-              res.status(500).end();
-              log.error("Create Order : Fail - ERROR");
-              log.error(err);
-            });
+        const moneyInAccount = await User.findOne({ attributes : ['money'], where: { id: req.body.id_client } });
+
+        if (moneyInAccount != null) {
+          console.log(moneyInAccount.money);
+          console.log(req.body.total);
+          if((moneyInAccount.money >= req.body.total) && ( moneyInAccount.money == req.body.sold_before_order))
+            {
+
+              await User.update({ money: moneyInAccount.money-req.body.total }, {
+                where: {
+                  id: req.body.id_client
+                }
+              }).then(async () => {
+                log.info("Create Order : User debit - succes");
+
+                await OrderInfo.create<OrderInfo>({  id_client: req.body.id_client, sold_before_order: req.body.sold_before_order, total: req.body.total})
+                .then((data) => {
+                  res.status(200).json({ id : data.get('id')}).end();
+                  log.info("Create Order : OK");
+                })
+                .catch((err: Error) => {
+                  res.status(500).end();
+                  log.error("Create Order : Fail - ERROR");
+                  log.error(err);
+                });
+
+              })
+              .catch((err: Error) => {
+                res.status(500).end();
+                log.error("Create Order : ERROR - Can't update solde of user");
+                log.error(err);
+              });
+
+            }
+          else
+            {
+              res.status(403).end();
+              log.error("Create Order : Fail - Insufficient balance or balance incorrect");
+            }
+         
+        }
+
     }
   }
 
