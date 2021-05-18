@@ -15,6 +15,8 @@ export class AuthController {
       }
     else
       {
+        console.log(req.body.email);
+        console.log(req.body.password);
         
         await User.findOne<User>({
           attributes : ['id','last_name','first_name','email','money','password','cooker'],
@@ -26,8 +28,6 @@ export class AuthController {
 
           if(data == null)
             {
-              console.log(req.body.email);
-              console.log(req.body.password);
               log.error("Connection to api : Fail - Account not found");
               res.status(401).end();
             }
