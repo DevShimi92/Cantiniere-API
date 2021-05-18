@@ -23,7 +23,7 @@ export class AuthController {
             email: req.body.email
           }
         }).then(function(data) { 
-          console.log('ETAPE 1');
+          log.debug('ETAPE 1');
           if(data == null)
             {
               log.error("Connection to api : Fail - Account not found");
@@ -33,7 +33,7 @@ export class AuthController {
             {
               if( req.body.password == data.password)
               {
-                console.log('ETAPE 2');
+                log.debug('ETAPE 2');
                 let dataUser = { 
                   id : data.id, 
                   last_name : data.last_name,
@@ -42,13 +42,13 @@ export class AuthController {
                   money: data.money,
                   cooker: data.cooker
                 };
-                console.log('ETAPE 3');
-                let token = jwt.sign(dataUser,process.env.SECRET_KEY);
-
+                log.debug('ETAPE 3');
+                let token = jwt.sign(dataUser,process.env.SECRET_KEY,{ expiresIn: 60 * 15 });
+                log.debug('ETAPE 3.1');
                 let refresh_token = jwt.sign('temporary_string',process.env.SECRET_KEY_REFRESH);
-                console.log('ETAPE 4');
+                log.debug('ETAPE 4');
                 RefreshToken.findOne({ where: { id_client: data.id } }).then((data) => {
-                  console.log('ETAPE 4.1');
+                  log.debug('ETAPE 4.1');
                   if(data != null)
                   {
                     RefreshToken.destroy({
@@ -60,9 +60,9 @@ export class AuthController {
                   }
 
                 });
-                console.log('ETAPE 5');
+                log.debug('ETAPE 5');
                 RefreshToken.create<RefreshToken>({id_client: data.id,tokenRefresh: refresh_token}).then(() => {
-                  console.log('ETAPE 6');
+                  log.debug('ETAPE 6');
                  // res.setHeader('Set-Cookie', cookie.serialize('refresh_token', refresh_token, { httpOnly: true }))
                   res.status(200).json({
                     token: token,

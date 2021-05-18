@@ -10,7 +10,7 @@ chai.should();
 export function moduleUser(): void {
 
     before(function(done)  {
-        this.timeout(90000);
+        this.timeout(120000);
         const data = {
           "email":  process.env.COOKER_DEFAUT_EMAIL,
           "password": process.env.COOKER_DEFAUT_PASSWORD,

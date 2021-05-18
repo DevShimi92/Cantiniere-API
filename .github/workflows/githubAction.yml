@@ -52,6 +52,7 @@ jobs:
       env:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        SECRET_KEY_REFRESH: ${{ secrets.SECRET_KEY_REFRESH }}
         COOKER_DEFAUT_EMAIL: ${{ secrets.COOKER_DEFAUT_EMAIL }}
         COOKER_DEFAUT_PASSWORD: ${{ secrets.COOKER_DEFAUT_PASSWORD }}
 
