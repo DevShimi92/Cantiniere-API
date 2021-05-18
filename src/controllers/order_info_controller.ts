@@ -25,8 +25,7 @@ export class OrderInfoController {
         const moneyInAccount = await User.findOne({ attributes : ['money'], where: { id: req.body.id_client } });
 
         if (moneyInAccount != null) {
-          console.log(moneyInAccount.money);
-          console.log(req.body.total);
+          
           if((moneyInAccount.money >= req.body.total) && ( moneyInAccount.money == req.body.sold_before_order))
             {
 

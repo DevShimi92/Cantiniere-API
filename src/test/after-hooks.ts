@@ -1,8 +1,8 @@
 import { sequelize } from "../config/database";
 import { log } from "../config/log_config";
 
-after(function(done) {
-
+after(function() {
+/*
   this.timeout(60000);    
   log.info('Cleaning the test base');
 
@@ -14,5 +14,5 @@ after(function(done) {
     log.error(err);
     done();
   });
-
+*/
 });

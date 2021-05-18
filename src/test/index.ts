@@ -15,7 +15,7 @@ describe('Test of API', function() {
     describe('Checking all method of models without delete data', function() {
 
         describe('Checking method of User model', moduleUser.bind(this));
-  
+/*  
         describe('Checking method of Type of Article model', moduleTypeArticle.bind(this));
 
         describe('Checking method of Article model', moduleArticle.bind(this));
@@ -26,15 +26,15 @@ describe('Test of API', function() {
 
         describe('Checking method of Order Info model', moduleOrderInfo.bind(this));
 
-        describe('Checking method of Order Content model', moduleOrderContent.bind(this));
+        describe('Checking method of Order Content model', moduleOrderContent.bind(this));*/
 
     });
 
-    describe('Check login method', moduleTestToken.bind(this));
+//    describe('Check login method', moduleTestToken.bind(this));
 
     describe('Checking all delete method of models', function() { 
 
-        describe('Checking delete method of Order Content model', moduleDeleteOrderContent.bind(this));
+    /*    describe('Checking delete method of Order Content model', moduleDeleteOrderContent.bind(this));
 
         describe('Checking delete method of Order Info model', moduleDeleteOrderInfo.bind(this));
 
@@ -46,7 +46,7 @@ describe('Test of API', function() {
   
         describe('Checking delete method of Type of Article model', moduleDeleteTypeArticle.bind(this));
 
-        describe('Checking delete method of User model', moduleDeleteUser.bind(this));
+        describe('Checking delete method of User model', moduleDeleteUser.bind(this));*/
 
     });
 
