@@ -43,7 +43,7 @@ export class AuthController {
                   cooker: data.cooker
                 };
                 console.log('ETAPE 3');
-                let token = jwt.sign(dataUser,process.env.SECRET_KEY, { expiresIn: 60 * 15 });
+                let token = jwt.sign(dataUser,process.env.SECRET_KEY);
 
                 let refresh_token = jwt.sign('temporary_string',process.env.SECRET_KEY_REFRESH);
                 console.log('ETAPE 4');
