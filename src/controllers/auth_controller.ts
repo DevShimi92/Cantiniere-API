@@ -15,9 +15,7 @@ export class AuthController {
       }
     else
       {
-        console.log(req.body.email);
-        console.log(req.body.password);
-        
+
         await User.findOne<User>({
           attributes : ['id','last_name','first_name','email','money','password','cooker'],
           raw: true,
@@ -69,7 +67,7 @@ export class AuthController {
                   res.status(200).json({
                     token: token,
                     refresh_token: refresh_token
-                    },).end();
+                    }).end();
 
                   log.info("API connection successful for : " + data.last_name);
 

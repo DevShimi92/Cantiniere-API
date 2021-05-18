@@ -4,7 +4,7 @@ import app from "../../app";
 
 let tokenAdmin : string ;
 let token : string ;
-
+let refreshToken : string ;
 chai.should();
 
 export function moduleUser(): void {
@@ -23,6 +23,7 @@ export function moduleUser(): void {
             .end((err, res) => {
               if (err) return done(err);
               tokenAdmin = res.body.token;
+              refreshToken = res.body.refreshToken;
               done();
             });
     
