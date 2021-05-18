@@ -27,6 +27,8 @@ export class Routes {
 
   public routes(app: Application): void {
 
+    app.route("/refresh_token").post(this.AuthController.refreshToken);
+
     app.route("/").get(this.DefaultController.index);
     app.route("/login").post(this.AuthController.login);
     
