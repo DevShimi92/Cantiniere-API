@@ -53,7 +53,7 @@ export class AuthController {
                   cooker: data.cooker
                 };
                
-                let token = jwt.sign(dataUser,process.env.SECRET_KEY,{ expiresIn: 15 });
+                let token = jwt.sign(dataUser,process.env.SECRET_KEY,{ expiresIn: 60 * 15 });
          
                 let refresh_token = jwt.sign({key_random : randomValueHex(40)},process.env.SECRET_KEY_REFRESH);
                 
@@ -160,7 +160,7 @@ export class AuthController {
                             cooker: data.cooker
                           };
 
-                          let token = jwt.sign(dataUser,process.env.SECRET_KEY, { expiresIn: 15  });
+                          let token = jwt.sign(dataUser,process.env.SECRET_KEY, { expiresIn: 60 *15  });
 
                           // res.setHeader('Set-Cookie', cookie.serialize('refresh_token', refresh_token, { httpOnly: true }))
                             res.status(200).json({

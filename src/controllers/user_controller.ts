@@ -1,8 +1,16 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import crypto  from "crypto";
 
 import { log } from "../config/log_config";
 import { User } from "../models/user";
+import { RefreshToken } from "../models/refresh_token";
+
+function randomValueHex (length:number) {
+  return crypto.randomBytes(Math.ceil(length/2))
+      .toString('hex') // convert to hexadecimal format
+      .slice(0,length).toUpperCase();   // return required number of characters
+}
 
 
 export class UserController {
@@ -62,13 +70,25 @@ export class UserController {
                     cooker: false,
               }
 
-              let token = jwt.sign(dataSendInToken,process.env.SECRET_KEY); // {expiresIn: 60 * 15} <== Add after find a method for refresh the token
+              let token = jwt.sign(dataSendInToken,process.env.SECRET_KEY,{ expiresIn: 60 * 15 });
 
-                res.status(201).json({
-                  token: token
-                }).end();
-              
-              log.info("Create User : OK");
+              let refresh_token = jwt.sign({key_random : randomValueHex(40)},process.env.SECRET_KEY_REFRESH);
+
+              await RefreshToken.create<RefreshToken>({id_client: newdata.id, tokenRefresh: refresh_token }).then(() => {
+               
+                // res.setHeader('Set-Cookie', cookie.serialize('refresh_token', refresh_token, { httpOnly: true }))
+                 res.status(201).json({
+                   token: token,
+                   refresh_token: refresh_token
+                   }).end();
+
+                   log.info("Create User : OK");
+
+                 }).catch((err: Error) => {
+                   res.status(500).end();
+                   log.error("Create User : Fail - ERROR");
+                   log.error(err);
+                 });
 
             }
 
