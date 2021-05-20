@@ -1,14 +1,17 @@
 import { Request, Response } from "express";
+import crypto  from "crypto";
 import { log } from "../config/log_config";
 import { User } from "../models/user";
 import { RefreshToken } from "../models/refresh_token";
 import jwt from "jsonwebtoken";
 
-function randomString(length:number, chars:string) {
-  var result = '';
-  for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
-  return result;
+
+function randomValueHex (length:number) {
+  return crypto.randomBytes(Math.ceil(length/2))
+      .toString('hex') // convert to hexadecimal format
+      .slice(0,length).toUpperCase();   // return required number of characters
 }
+
 
 export class AuthController {
   
@@ -52,7 +55,7 @@ export class AuthController {
                
                 let token = jwt.sign(dataUser,process.env.SECRET_KEY,{ expiresIn: 15 });
          
-                let refresh_token = jwt.sign({key_random : randomString(40, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')},process.env.SECRET_KEY_REFRESH);
+                let refresh_token = jwt.sign({key_random : randomValueHex(40)},process.env.SECRET_KEY_REFRESH);
                 
                 await RefreshToken.findOne({ where: { id_client: dataUser.id } }).then(async (data) => {
                  
@@ -132,7 +135,7 @@ export class AuthController {
             }
           else
             {
-              let refresh_token = jwt.sign({key_random : randomString(40, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')},process.env.SECRET_KEY_REFRESH);
+              let refresh_token = jwt.sign({key_random : randomValueHex(40)},process.env.SECRET_KEY_REFRESH);
 
               await RefreshToken.update<RefreshToken>({tokenRefresh: refresh_token}, {
                   where: {
