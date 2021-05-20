@@ -4,7 +4,14 @@ import { User } from "../models/user";
 import { RefreshToken } from "../models/refresh_token";
 import jwt from "jsonwebtoken";
 
+function randomString(length:number, chars:string) {
+  var result = '';
+  for (var i = length; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
+  return result;
+}
+
 export class AuthController {
+  
   public async login(req: Request, res: Response) : Promise<void> {
     log.info("Connection attempt to api");
 
@@ -22,7 +29,7 @@ export class AuthController {
           where: {
             email: req.body.email
           }
-        }).then(function(data) { 
+        }).then(async function(data) { 
       
           if(data == null)
             {
@@ -33,7 +40,7 @@ export class AuthController {
             {
               if( req.body.password == data.password)
               {
-             
+
                 let dataUser = { 
                   id : data.id, 
                   last_name : data.last_name,
@@ -43,38 +50,39 @@ export class AuthController {
                   cooker: data.cooker
                 };
                
-                let token = jwt.sign(dataUser,process.env.SECRET_KEY,{ expiresIn: 60 * 15 });
+                let token = jwt.sign(dataUser,process.env.SECRET_KEY,{ expiresIn: 15 });
          
-                let refresh_token = jwt.sign('temporary_string',process.env.SECRET_KEY_REFRESH);
+                let refresh_token = jwt.sign({key_random : randomString(40, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')},process.env.SECRET_KEY_REFRESH);
                 
-                RefreshToken.findOne({ where: { id_client: data.id } }).then((data) => {
+                await RefreshToken.findOne({ where: { id_client: dataUser.id } }).then(async (data) => {
                  
                   if(data != null)
                   {
-                    RefreshToken.destroy({
+                    await RefreshToken.destroy({
                       where: {
-                        id_client: req.body.id,
-                        tokenRefresh: req.body.refreshToken
+                        id_client: dataUser.id,
+                        tokenRefresh: data.tokenRefresh
                         }
                     });
                   }
-
-                });
-             
-                RefreshToken.create<RefreshToken>({id_client: data.id,tokenRefresh: refresh_token}).then(() => {
+                  
+                  await RefreshToken.create<RefreshToken>({id_client: dataUser.id, tokenRefresh: refresh_token }).then(() => {
                
-                 // res.setHeader('Set-Cookie', cookie.serialize('refresh_token', refresh_token, { httpOnly: true }))
-                  res.status(200).json({
-                    token: token,
-                    refresh_token: refresh_token
-                    }).end();
+                    // res.setHeader('Set-Cookie', cookie.serialize('refresh_token', refresh_token, { httpOnly: true }))
+                     res.status(200).json({
+                       token: token,
+                       refresh_token: refresh_token
+                       }).end();
+   
+                     log.info("API connection successful for : " + dataUser.last_name);
+   
+                     }).catch((err: Error) => {
+                       res.status(500).end();
+                       log.error("Connection to api : Fail - ERROR");
+                       log.error(err);
+                     });
 
-                  log.info("API connection successful for : " + data.last_name);
 
-                }).catch((err: Error) => {
-                  res.status(500).end();
-                  log.error("Connection to api : Fail - ERROR");
-                  log.error(err);
                 });
                 
               }
@@ -124,7 +132,7 @@ export class AuthController {
             }
           else
             {
-              let refresh_token = jwt.sign('temporary_string',process.env.SECRET_KEY_REFRESH);
+              let refresh_token = jwt.sign({key_random : randomString(40, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')},process.env.SECRET_KEY_REFRESH);
 
               await RefreshToken.update<RefreshToken>({tokenRefresh: refresh_token}, {
                   where: {
@@ -149,7 +157,7 @@ export class AuthController {
                             cooker: data.cooker
                           };
 
-                          let token = jwt.sign(dataUser,process.env.SECRET_KEY, { expiresIn: 60 * 15 });
+                          let token = jwt.sign(dataUser,process.env.SECRET_KEY, { expiresIn: 15  });
 
                           // res.setHeader('Set-Cookie', cookie.serialize('refresh_token', refresh_token, { httpOnly: true }))
                             res.status(200).json({
