@@ -8,6 +8,8 @@ import { MenuContentController } from "../controllers/menu_content_controller";
 import { OrderInfoController } from "../controllers/order_info_controller";
 import { OrderContentController } from "../controllers/order_content_controller";
 import { AuthController } from "../controllers/auth_controller";
+import { MailController } from "../controllers/mail_controller";
+
 
 import { AuthMiddleware } from "../middlewares/auth"
 
@@ -22,15 +24,17 @@ export class Routes {
   private OrderInfoController: OrderInfoController = new OrderInfoController();
   private OrderContentController: OrderContentController = new OrderContentController();
   private AuthController: AuthController = new AuthController();
+  private MailController: MailController = new MailController();
 
   private AuthMiddleware: AuthMiddleware = new AuthMiddleware();
 
   public routes(app: Application): void {
 
-    app.route("/refresh_token").post(this.AuthController.refreshToken);
+    app.route("/mail").post(this.MailController.report);
 
     app.route("/").get(this.DefaultController.index);
     app.route("/login").post(this.AuthController.login);
+    app.route("/refresh_token").post(this.AuthController.refreshToken);
     
     app.use("/login_test",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, false, next));
     app.route("/login_test").post(this.AuthController.loginTest);
