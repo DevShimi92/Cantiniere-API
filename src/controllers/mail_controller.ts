@@ -116,7 +116,7 @@ export class MailController {
 
               var mailOptions = {
                 from: process.env.EMAIL_SUPPORT,
-                to: process.env.EMAIL_SUPPORT,
+                to: req.body.email,
                 subject: 'Lien de réinitialisation de mot de passe',
                 text: 'Voici un lien pour réinitialiser votre mot de passe :\n\n'+process.env.CLIENT_URL+"rest_password/"+rest_token + "\n\n Ce lien n'est valide que pendant 15 minute."
               };
