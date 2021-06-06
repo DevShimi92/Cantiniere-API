@@ -30,7 +30,7 @@ describe('Test of API', function() {
 
     });
 
-       describe('Check login method', moduleTestToken.bind(this));
+       describe('Check token method', moduleTestToken.bind(this));
 
     describe('Checking all delete method of models', function() { 
 

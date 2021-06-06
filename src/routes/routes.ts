@@ -30,11 +30,12 @@ export class Routes {
 
   public routes(app: Application): void {
 
-    app.route("/mail").post(this.MailController.report);
-
     app.route("/").get(this.DefaultController.index);
     app.route("/login").post(this.AuthController.login);
     app.route("/refresh_token").post(this.AuthController.refreshToken);
+    app.route("/rest_password").post(this.UserController.restPassword);
+    app.route("/mail").post(this.MailController.report);
+    app.route("/forgot_password").post(this.MailController.forgotPasswordMail);
     
     app.use("/login_test",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, false, next));
     app.route("/login_test").post(this.AuthController.loginTest);

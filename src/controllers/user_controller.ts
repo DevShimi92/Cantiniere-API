@@ -5,6 +5,7 @@ import crypto  from "crypto";
 import { log } from "../config/log_config";
 import { User } from "../models/user";
 import { RefreshToken } from "../models/refresh_token";
+import { RestToken } from "../models/rest_token";
 
 function randomValueHex (length:number) {
   return crypto.randomBytes(Math.ceil(length/2))
@@ -297,6 +298,86 @@ export class UserController {
         res.status(403).end();
         log.error("Delete User : Fail - User is not Admin");
       }
+  }
+
+  public async restPassword(req: Request,res: Response) : Promise<void> {
+    log.info("Rest Password");
+
+    if (req.body.password == null )
+    {
+          res.status(400).json({ error : 'Missing Fields' });
+          res.end();
+          log.error(" Missing Password");      
+    }
+    else
+    {
+      
+      let tokenRestPassword = req.headers.authorization;
+
+      if (!!tokenRestPassword && tokenRestPassword.startsWith('Bearer ')) {
+          tokenRestPassword = tokenRestPassword.slice(7, tokenRestPassword.length);
+        }
+      
+      if(tokenRestPassword)
+        {
+          jwt.verify(tokenRestPassword, process.env.SECRET_KEY_REST, async (err) => {
+            if (err) {
+              log.warn("Token not valid or expired");
+              res.status(401).end();
+              } 
+            else 
+              {
+
+                await RestToken.findOne<RestToken>({
+                  attributes : ['id_client','token_Rest'],
+                  raw: true,
+                  where: {
+                    token_Rest: tokenRestPassword
+                  }}).then(async function(data) { 
+                  if(data != null)
+                    {
+                      
+                      await User.update({ password: req.body.password }, {
+                        where: {
+                          id: data.id_client
+                        }
+                      }).then(async () => {
+
+                        res.status(200).end();
+                        log.info('Rest Password success for account n° '+data.id_client);
+                        await RestToken.destroy({
+                          where: {
+                            token_Rest: tokenRestPassword
+                            }
+                        }).then(() => {
+                          log.info('Rest Token delete');
+                        });
+
+                      })
+                      .catch((err: Error,) => {
+                        res.status(401).end();
+                        log.error('Error with field password  : ' + err);
+                          });
+                    }
+                  else
+                    {
+                      log.warn("Token not found in BDD");
+                      res.status(401).end();
+                    }
+
+                });
+
+              }
+            });
+        }
+      else
+        {
+          log.warn("Token not found");
+          res.status(401).end();
+        }
+
+    }
+
   }
 
 }

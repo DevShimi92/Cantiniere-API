@@ -140,6 +140,26 @@ export function moduleOrderInfo(): void {
             
     });
 
+    it("Create Order - Balance incorrect", function (done) {
+        this.timeout(60000);
+        const data = {
+            "id_client": 2,
+            "sold_before_order": 999,
+            "total":10
+        }
+        request(app)
+            .post('/order')
+            .send(data)
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + token)
+            .expect(403)
+            .end((err,res) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
+
     it("Get One Order - Missing Fields", function (done) {
         this.timeout(60000);
         request(app)
@@ -174,6 +194,19 @@ export function moduleOrderInfo(): void {
 
 export function moduleDeleteOrderInfo(): void {
 
+    it("Delete Order - Missing Fields", function (done) {
+        this.timeout(60000);
+        request(app)
+            .delete('/order')
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + tokenAdmin)
+            .expect(400)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
     it("Delete Order - Not Found", function (done) {
         this.timeout(60000);
         const data = {
@@ -194,14 +227,14 @@ export function moduleDeleteOrderInfo(): void {
     it("Delete Order - ID IS NOT NUMBER", function (done) {
         this.timeout(60000);
         const data = {
-            "id": 'NO'
+            "id": "AHABFAIHUEFB"
         }
         request(app)
-            .delete('/order/1')
+            .delete('/order')
             .set('Accept', 'application/json')
             .set('Authorization', 'Bearer ' + tokenAdmin)
             .send(data)
-            .expect(404)
+            .expect(400)
             .end((err) => {
                 if (err) return done(err);
                 done();

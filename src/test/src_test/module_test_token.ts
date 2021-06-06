@@ -4,6 +4,7 @@ import app from "../../app";
 export default function moduleTestToken(): void {
 
   let token : string ;
+  let refresh_token : string ;
 
   it("Login method - Missing Fields", function (done) {
     this.timeout(60000);
@@ -69,6 +70,7 @@ export default function moduleTestToken(): void {
         .end((err, res) => {
           if (err) return done(err);
           token = res.body.token;
+          refresh_token = res.body.refresh_token;
           done();
         });
 
@@ -115,5 +117,55 @@ export default function moduleTestToken(): void {
 
   });
 
+  it("Refresh token method -  Missing Fields", function (done) {
+    this.timeout(60000);
+    request(app)
+        .post('/refresh_token')
+        .set('Accept', 'application/json')
+        .expect(400,{ error : 'Missing Fields' })
+        .end((err) => {
+          if (err) return done(err);
+          done();
+        });
+
+  });
+
+  it("Refresh token method -  NOT FOUND", function (done) {
+    this.timeout(60000);
+    const data = {
+      "id": '3',
+      "refreshToken": 'BAD TOKEN',
+      }
+    request(app)
+        .post('/refresh_token')
+        .set('Accept', 'application/json')
+        .send(data)
+        .expect(403)
+        .end((err) => {
+          if (err) return done(err);
+          done();
+        });
+
+  });
+
+  it("Refresh token method -  OK", function (done) {
+    this.timeout(60000);
+    const data = {
+      "id": '2',
+      "refreshToken": refresh_token,
+      }
+    request(app)
+        .post('/refresh_token')
+        .set('Accept', 'application/json')
+        .send(data)
+        .expect(200)
+        .end((err,res) => {
+          if (err) return done(err);
+          res.body.should.have.property("token");
+          res.body.should.have.property("refresh_token");
+          done();
+        });
+
+  });
 
 }
