@@ -9,13 +9,7 @@ export class OrderContentController {
   public async getOrderContent(req: Request,res: Response) : Promise<void> {
     log.info("Get Order Content")
 
-    if ( req.body.id_order == null ) 
-      {
-            res.status(400).json({ error : "Missing Fields" });
-            res.end();
-            log.error("Get Order Content : Fail - Missing Fields");      
-      }
-    else if ( isNaN(req.body.id_order))
+    if (!Number(req.params.id_order))
       {
             res.status(400).json({ error : "Number only" });
             res.end();
@@ -30,7 +24,7 @@ export class OrderContentController {
           {model: Article, attributes: ['name','code_type_src','price']}
         ],
         where: {
-          id_order: req.body.id_order
+          id_order: req.params.id_order
         },
       }).then(function(dataOrderContent) { 
 

@@ -46,6 +46,7 @@ export function moduleOrderContent(): void {
             request(app)
                 .get('/order/content')
                 .set('Accept', 'application/json')
+                .set('Authorization', 'Bearer ' + token)
                 .expect(400)
                 .end((err) => {
                     if (err) return done(err);
@@ -55,13 +56,10 @@ export function moduleOrderContent(): void {
 
     it("Get One Order full - ID ORDER IS NOT A NUMBER", function (done) {
         this.timeout(60000);
-        const data = {
-        "id_order": 'NO',
-        }
         request(app)
-            .get('/order/content')
+            .get('/order/content/NO')
             .set('Accept', 'application/json')
-            .send(data)
+            .set('Authorization', 'Bearer ' + token)
             .expect(400)
             .end((err) => {
                 if (err) return done(err);
@@ -72,13 +70,10 @@ export function moduleOrderContent(): void {
 
     it("Get One Order full - Not found", function (done) {
             this.timeout(60000);
-            const data = {
-            "id_order": 1,
-            }
             request(app)
-                .get('/order/content')
+                .get('/order/content/1')
                 .set('Accept', 'application/json')
-                .send(data)
+                .set('Authorization', 'Bearer ' + token)
                 .expect(204)
                 .end((err) => {
                     if (err) return done(err);
@@ -144,13 +139,10 @@ export function moduleOrderContent(): void {
 
     it("Get One order full - OK", function (done) {
         this.timeout(60000);
-        const data = {
-        "id_order": 1,
-        }
         request(app)
-            .get('/order/content')
+            .get('/order/content/1')
             .set('Accept', 'application/json')
-            .send(data)
+            .set('Authorization', 'Bearer ' + token)
             .expect(200,[
                 {
                     "price": null,

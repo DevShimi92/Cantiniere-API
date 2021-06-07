@@ -69,13 +69,7 @@ export class OrderInfoController {
   public async getOrder(req: Request,res: Response) : Promise<void> {
     log.info("Get Order")
 
-    if ( req.body.id == null ) 
-      {
-            res.status(400).json({ error : "Missing Fields" });
-            res.end();
-            log.error("Get Order : Fail - Missing Fields");      
-      }
-    else if ( isNaN(req.body.id))
+     if (!Number(req.params.id_client))
       {
             res.status(400).json({ error : "Number only" });
             res.end();
@@ -84,10 +78,10 @@ export class OrderInfoController {
     else
       {
             await OrderInfo.findAll<OrderInfo>({
-              attributes : ['id','id_client','sold_before_order','total'],
+              attributes : ['id','createdAt','total'],
               raw: true,
               where: {
-                id_client: req.body.id
+                id_client: req.params.id_client
               },
             }).then(function(dataOrder) { 
         

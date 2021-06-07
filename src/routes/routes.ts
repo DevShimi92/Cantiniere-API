@@ -68,12 +68,12 @@ export class Routes {
     app.route("/menu/content").post(this.MenuContentController.addToMenu);
     app.route("/menu/content").delete(this.MenuContentController.deleteToMenu);
 
-    app.route("/order").get(this.OrderInfoController.getOrder);
-    app.route("/order/content").get(this.OrderContentController.getOrderContent);
 
     app.use("/order",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, false, next));
     app.route("/order").post(this.OrderInfoController.createOrder);
+    app.route("/order/:id_client").get(this.OrderInfoController.getOrder);
     app.route("/order/content").post(this.OrderContentController.addToOrder);
+    app.route("/order/content/:id_order").get(this.OrderContentController.getOrderContent);
     
     app.use("/order",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, true, next));
     

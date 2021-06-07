@@ -43,13 +43,10 @@ export function moduleOrderInfo(): void {
 
     it("Get One Order - Not found", function (done) {
         this.timeout(60000);
-        const data = {
-        "id": 1
-        }
         request(app)
-            .get('/order')
+            .get('/order/1')
             .set('Accept', 'application/json')
-            .send(data)
+            .set('Authorization', 'Bearer ' + token)
             .expect(204)
             .end((err) => {
                 if (err) return done(err);
@@ -120,21 +117,16 @@ export function moduleOrderInfo(): void {
 
     it("Get One Order - Check Create Order", function (done) {
         this.timeout(60000);
-        const data = {
-            "id": 2
-        }
         request(app)
-            .get('/order')
+            .get('/order/2')
             .set('Accept', 'application/json')
-            .send(data)
-            .expect(200,[{
-                "id": 1,
-                "id_client": 2,
-                "sold_before_order": 999,
-                "total": 10
-            }])
-            .end((err) => {
+            .set('Authorization', 'Bearer ' + token)
+            .expect(200)
+            .end((err,res) => {
                 if (err) return done(err);
+                res.body[0].should.have.property("id");
+                res.body[0].should.have.property("createdAt");
+                res.body[0].should.have.property("total");
                 done();
             });
             
@@ -160,12 +152,13 @@ export function moduleOrderInfo(): void {
             
     });
 
-    it("Get One Order - Missing Fields", function (done) {
+    it("Get One Order - Missing Fields ( Forbidden )", function (done) {
         this.timeout(60000);
         request(app)
             .get('/order')
             .set('Accept', 'application/json')
-            .expect(400,{ error : "Missing Fields" })
+            .set('Authorization', 'Bearer ' + token)
+            .expect(403)
             .end((err) => {
                 if (err) return done(err);
                 done();
@@ -175,13 +168,10 @@ export function moduleOrderInfo(): void {
 
     it("Get One Order - NUMBER ONLY", function (done) {
         this.timeout(60000);
-        const data = {
-            "id": 'NO'
-            }
         request(app)
-            .get('/order')
+            .get('/order/N')
             .set('Accept', 'application/json')
-            .send(data)
+            .set('Authorization', 'Bearer ' + token)
             .expect(400,{ error : "Number only" })
             .end((err) => {
                 if (err) return done(err);
