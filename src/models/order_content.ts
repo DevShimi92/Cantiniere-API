@@ -4,6 +4,7 @@ import { sequelize } from "../config/database";
 export interface OrderContentInterface {
     id_order: number;
     id_article: number;
+    id_menu: number;
     price: number;
     origin_price: number;
     discout: number;
@@ -13,6 +14,7 @@ export interface OrderContentInterface {
 export class OrderContent extends Model {
     public id_order!: number;
     public id_article!: number;
+    public id_menu!: number;
     public price!: number;
     public origin_price!: number;
     public discout!: number;
@@ -26,7 +28,11 @@ export class OrderContent extends Model {
       },
       id_article: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
+      },
+      id_menu: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
       },
       price: {
         type: DataTypes.FLOAT,

@@ -153,7 +153,10 @@ export function moduleOrderContent(): void {
                     "OrderInfo.total": 10,
                     "Article.name": "teteandcocori",
                     "Article.code_type_src": 1,
-                    "Article.price": 10
+                    "Article.price": 10,
+                    "MenuInfo.id": null,
+                    "MenuInfo.name": null,
+                    "MenuInfo.price_final": null
                 }
             ])
             .end((err) => {
