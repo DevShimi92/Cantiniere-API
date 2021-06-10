@@ -13,9 +13,18 @@ export class MenuInfoController {
             res.end();
             log.error("Create Menu : Fail - Missing Fields");      
       }
+    else if( req.body.price_final != null && isNaN(req.body.price_final))
+      {
+            res.status(400).json({ error : "Number only" });
+            res.end();
+            log.error("Create Menu : Fail - The value of price_final is not number"); 
+      }
     else
       {
-          await MenuInfo.create<MenuInfo>({ name: req.body.name})
+        if(req.body.price_final == null)
+            req.body.price_final=0;
+
+          await MenuInfo.create<MenuInfo>({ name: req.body.name, description: req.body.description , price_final: req.body.price_final})
                 .then((data) => {
                   res.status(200).json({ id : data.get('id')}).end();
                   log.info("Create Menu : OK");
@@ -58,7 +67,7 @@ export class MenuInfoController {
 
   public async updateMenu(req: Request, res: Response) : Promise<void> {
     log.info("Update Menu");
-
+    
     if ( req.body.id == null )
       {
             res.status(400).json({ error : "Missing Fields" });
@@ -109,7 +118,7 @@ export class MenuInfoController {
 
         if(req.body.price_final != null)
         {
-          await MenuInfo.update({ price: req.body.price_final }, {
+          await MenuInfo.update({ price_final : req.body.price_final }, {
             where: {
               id: req.body.id
             }
@@ -137,13 +146,13 @@ export class MenuInfoController {
           {
             res.status(204);
             res.end();
-            log.info("Update Article : OK");
+            log.info("Update Menu : OK");
           }
         else
           {
             res.status(409);
             res.end();
-            log.warn("Update Article : OK with error - "+OK+' update done only');
+            log.warn("Update Menu : OK with error - "+OK+' update done only');
           }
 
       }

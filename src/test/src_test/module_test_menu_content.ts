@@ -184,7 +184,7 @@ export function moduleMenuContent(): void {
               "id_article": 2,
               "MenuInfo.name": "menu_the_1",
               "MenuInfo.description": "idk",
-              "MenuInfo.price_final": 0,
+              "MenuInfo.price_final": 10,
               "Article.name": "teteandcocori",
               "Article.code_type_src": 1,
               "Article.price": 10

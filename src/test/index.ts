@@ -7,6 +7,7 @@ import {moduleMenuContent, moduleDeleteMenuContent} from './src_test/module_test
 import {moduleOrderInfo, moduleDeleteOrderInfo}  from './src_test/module_test_order_info';
 import {moduleOrderContent, moduleDeleteOrderContent} from './src_test/module_test_order_content';
 import moduleTestToken from './src_test/module_test_token';
+import moduleTestMail from './src_test/module_test_mail';
 
 describe('Test of API', function() {
 
@@ -31,6 +32,8 @@ describe('Test of API', function() {
     });
 
        describe('Check token method', moduleTestToken.bind(this));
+
+       describe('Check mail method', moduleTestMail.bind(this));
 
     describe('Checking all delete method of models', function() { 
 
