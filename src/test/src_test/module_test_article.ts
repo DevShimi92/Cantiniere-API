@@ -174,7 +174,7 @@ export function moduleArticle(): void {
       const data = {
           "name": 'tete',
           "code_type_src" : 1,
-          "price" : 10
+          "price" : 10.5
       }
       request(app)
           .post('/article')
@@ -194,7 +194,7 @@ export function moduleArticle(): void {
       request(app)
           .get('/article')
           .set('Accept', 'application/json')
-          .expect(200,[{ "id" : 2 ,"name": 'tete', "code_type_src" : 1, "price": 10, "picture" : null , "description": null}])
+          .expect(200,[{ "id" : 2 ,"name": 'tete', "code_type_src" : 1, "price": 10.5, "picture" : null , "description": null}])
           .end((err) => {
               if (err) return done(err);
               done();

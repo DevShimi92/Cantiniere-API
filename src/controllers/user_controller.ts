@@ -6,6 +6,7 @@ import { log } from "../config/log_config";
 import { User } from "../models/user";
 import { RefreshToken } from "../models/refresh_token";
 import { RestToken } from "../models/rest_token";
+import { MailController } from './mail_controller';
 
 function randomValueHex (length:number) {
   return crypto.randomBytes(Math.ceil(length/2))
@@ -17,6 +18,7 @@ function randomValueHex (length:number) {
 export class UserController {
 
   public async createUser(req: Request, res: Response) : Promise<void> {
+
     log.info("Create User");
 
     if (req.body.last_name == null || req.body.first_name == null || req.body.email == null || req.body.password == null )
@@ -75,8 +77,9 @@ export class UserController {
 
               let refresh_token = jwt.sign({key_random : randomValueHex(40)},process.env.SECRET_KEY_REFRESH);
 
-              await RefreshToken.create<RefreshToken>({id_client: newdata.id, tokenRefresh: refresh_token }).then(() => {
+              await RefreshToken.create<RefreshToken>({id_client: newdata.id, tokenRefresh: refresh_token }).then(async () => {
                
+                await MailController.mailNewAccount(req.body.email);
                 // res.setHeader('Set-Cookie', cookie.serialize('refresh_token', refresh_token, { httpOnly: true }))
                  res.status(201).json({
                    token: token,
@@ -84,6 +87,8 @@ export class UserController {
                    }).end();
 
                    log.info("Create User : OK");
+
+                   
 
                  }).catch((err: Error) => {
                    res.status(500).end();
@@ -320,7 +325,14 @@ export class UserController {
       
       if(tokenRestPassword)
         {
-          jwt.verify(tokenRestPassword, process.env.SECRET_KEY_REST, async (err) => {
+          let SECRET_KEY : string;
+
+          if(process.env.NODE_MAIL_TEST_MODE)
+                SECRET_KEY=process.env.SECRET_KEY_REST_TEST;
+              else
+                SECRET_KEY=process.env.SECRET_KEY_REST;
+                
+          jwt.verify(tokenRestPassword, SECRET_KEY, async (err) => {
             if (err) {
               log.warn("Token not valid or expired");
               res.status(401).end();

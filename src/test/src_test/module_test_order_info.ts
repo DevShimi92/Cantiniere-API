@@ -124,13 +124,102 @@ export function moduleOrderInfo(): void {
             .expect(200)
             .end((err,res) => {
                 if (err) return done(err);
-                res.body[0].should.have.property("id");
+                res.body[0].should.have.property("id",1);
                 res.body[0].should.have.property("createdAt");
-                res.body[0].should.have.property("total");
+                res.body[0].should.have.property("total",10);
+                res.body[0].should.have.property("done",false);
                 done();
             });
             
     });
+
+    it("Valid Order - Missing Fields", function (done) {
+        this.timeout(60000);
+        request(app)
+            .put('/order/valid')
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + tokenAdmin)
+            .expect(400)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
+
+    it("Valid Order - ONLY NUMBER", function (done) {
+        this.timeout(60000);
+        const data = {
+            "id_order": 'NO',
+        }
+        request(app)
+            .put('/order/valid')
+            .send(data)
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + tokenAdmin)
+            .expect(400)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
+
+    it("Valid Order -NOT FOUND", function (done) {
+        this.timeout(60000);
+        const data = {
+            "id_order": '2',
+        }
+        request(app)
+            .put('/order/valid')
+            .send(data)
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + tokenAdmin)
+            .expect(404)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
+
+    it("Valid Order -DONE", function (done) {
+        this.timeout(60000);
+        const data = {
+            "id_order": '1',
+        }
+        request(app)
+            .put('/order/valid')
+            .send(data)
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + tokenAdmin)
+            .expect(204)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
+
+    it("Valid Order - Check Create Order", function (done) {
+        this.timeout(60000);
+        request(app)
+            .get('/order/2')
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + token)
+            .expect(200)
+            .end((err,res) => {
+                if (err) return done(err);
+                res.body[0].should.have.property("id",1);
+                res.body[0].should.have.property("createdAt");
+                res.body[0].should.have.property("total",10);
+                res.body[0].should.have.property("done",true);
+                done();
+            });
+            
+    });
+
+
 
     it("Create Order - Balance incorrect", function (done) {
         this.timeout(60000);
@@ -200,7 +289,7 @@ export function moduleDeleteOrderInfo(): void {
     it("Delete Order - Not Found", function (done) {
         this.timeout(60000);
         const data = {
-            "id": 2
+            "id_order": 2
         }
         request(app)
             .delete('/order')
@@ -217,7 +306,7 @@ export function moduleDeleteOrderInfo(): void {
     it("Delete Order - ID IS NOT NUMBER", function (done) {
         this.timeout(60000);
         const data = {
-            "id": "AHABFAIHUEFB"
+            "id_order": "AHABFAIHUEFB"
         }
         request(app)
             .delete('/order')
@@ -231,11 +320,10 @@ export function moduleDeleteOrderInfo(): void {
             });
     });
 
-
     it("Delete Order - OK", function (done) {
         this.timeout(60000);
         const data = {
-            "id": 1
+            "id_order": 1
         }
         request(app)
             .delete('/order')
@@ -243,6 +331,28 @@ export function moduleDeleteOrderInfo(): void {
             .set('Authorization', 'Bearer ' + tokenAdmin)
             .send(data)
             .expect(204)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    });
+
+    it("Delete Order - Check sold update", function (done) {
+        this.timeout(60000);
+        const data = {
+            "id_order": 1
+        }
+        request(app)
+            .get('/user')
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + tokenAdmin)
+            .send(data)
+            .expect(200,[{
+                "id" : 2,
+                "last_name": 'avvv',
+                "first_name": 'zz',
+                "money": 999,
+             }])
             .end((err) => {
                 if (err) return done(err);
                 done();

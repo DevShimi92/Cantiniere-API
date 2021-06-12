@@ -38,7 +38,7 @@ export class Article extends Model {
         allowNull: false,
       },
       price: {
-        type: new DataTypes.INTEGER,
+        type: new DataTypes.FLOAT,
         defaultValue: 0,
       },
       picture: {

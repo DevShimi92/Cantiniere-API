@@ -356,7 +356,7 @@ export function moduleUser(): void {
             });
         });
 
-    it("Read All User - Check Update User ( money at 0)", function (done) {
+    it("Read All User - Check Update User ( money at 999)", function (done) {
         this.timeout(60000);
         request(app)
             .get('/user')

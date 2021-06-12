@@ -7,6 +7,7 @@ export interface OrderInfoInterface {
     id_client: number;
     sold_before_order: number;
     total: number;
+    done: boolean;
   }
   
   
@@ -15,6 +16,7 @@ export class OrderInfo extends Model {
     public id_client!: number;
     public sold_before_order!: number;
     public total!: number;
+    public done!: boolean;
 
     // timestamps
     public readonly createdAt!: Date;
@@ -39,6 +41,10 @@ export class OrderInfo extends Model {
       total: {
         type: new DataTypes.INTEGER,
         allowNull: false,
+      },
+      done: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
     },
     {

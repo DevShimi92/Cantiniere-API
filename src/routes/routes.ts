@@ -74,10 +74,12 @@ export class Routes {
     app.route("/order/:id_client").get(this.OrderInfoController.getOrder);
     app.route("/order/content").post(this.OrderContentController.addToOrder);
     app.route("/order/content/:id_order").get(this.OrderContentController.getOrderContent);
-    
+   
+
     app.use("/order",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, true, next));
     
     app.route("/order").delete(this.OrderInfoController.deleteOrder);
     app.route("/order/content").delete(this.OrderContentController.deleteToOrder);
+    app.route("/order/valid").put(this.OrderInfoController.validOrder);
   }
 }
