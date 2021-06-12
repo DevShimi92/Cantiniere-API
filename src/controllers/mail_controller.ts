@@ -40,6 +40,20 @@ else
 
 const transporter = nodemailer.createTransport(mailConfig);
 
+function sendMail ( mailOptions : object ) : void {
+
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      log.error(error);
+      log.error(mailOptions);
+    } else {
+      log.info('Email sent : ')
+      log.info(info);
+    }
+  });
+
+}
+
 export class MailController {
 
   public report(req: Request, res: Response) : void {
@@ -161,25 +175,9 @@ export class MailController {
                 text: 'Voici un lien pour réinitialiser votre mot de passe :\n\n'+process.env.CLIENT_URL+"rest_password/"+rest_token + "\n\n Ce lien n'est valide que pendant 15 minute."
               };
 
-                const promise = new Promise<boolean>((resolve, reject) => {  
-
-                    transporter.sendMail(mailOptions, function(error, info){
-                      if (error) {
-                        log.error(error);
-                        log.error(mailOptions);
-                        return reject(false);
-                      } else {
-                        log.info(" Email for rest password send to "+req.body.email);
-                        log.info(info);
-                        return resolve(true);
-                      }
-                    });
-
-                });
-      
-                promise.then(() => {
-                  res.status(200).end();
-                });
+              sendMail(mailOptions);
+              res.status(200).end();
+              
 
             });
 
@@ -200,25 +198,9 @@ export class MailController {
       text: "Bienevenue sur le site Cantiniere 2021 !\n\n"+'Nous espérons que vous passez un bon repas dans nos locaux!'
     };
   
-    const promise = new Promise<boolean>((resolve, reject) => {  
-      
-      transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-          log.error(error);
-          log.error(mailOptions);
-          return reject(false);
-        } else {
-          log.info('Email sent : ')
-          log.info(info);
-          return resolve(true);
-        }
-      });
-  
-    });
-  
-    promise.then(() => {
-      log.info("mailNewAccount end");
-    });
+    sendMail(mailOptions);
+    log.info("mailNewAccount end");
+    
                   
   }
   
@@ -231,25 +213,9 @@ export class MailController {
       text: "Votre commande a bien été prise en compte !\n\n"+'Vous recevez un email losrsque votre commande sera prete !'
     };
   
-    const promise = new Promise<boolean>((resolve, reject) => {  
-      
-      transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-          log.error(error);
-          log.error(mailOptions);
-          return reject(false);
-        } else {
-          log.info('Email sent : ')
-          log.info(info);
-          return resolve(true);
-        }
-      });
+    sendMail(mailOptions);
+    log.info("mailConfirmedOrder end");
   
-    });
-  
-    promise.then(() => {
-      log.info("mailConfirmedOrder end");
-    });
 
   }
 
@@ -262,26 +228,9 @@ export class MailController {
       text: "Bonjour votre commande est prete a etre retirer !\n\n"+'Nous espérons que vous passez un bon repas dans nos locaux!'
     };
   
-    const promise = new Promise<boolean>((resolve, reject) => {  
-      
-      transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-          log.error(error);
-          log.error(mailOptions);
-          return reject(false);
-        } else {
-          log.info('Email sent : ')
-          log.info(info);
-          return resolve(true);
-        }
-      });
-  
-    });
-  
-    promise.then(() => {
-      log.info("mailOrderReady end");
-    });
-
+    sendMail(mailOptions);
+    log.info("mailOrderReady end");
+   
   }
 
   static async mailCancelOrder(emailUser:string): Promise<void>{
@@ -293,25 +242,9 @@ export class MailController {
       text: "Votre commande a été annulé!\n\n"+'Nous espérons que vous passez un bon repas dans nos locaux!'
     };
   
-    const promise = new Promise<boolean>((resolve, reject) => {  
-      
-      transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-          log.error(error);
-          log.error(mailOptions);
-          return reject(false);
-        } else {
-          log.info('Email sent : ')
-          log.info(info);
-          return resolve(true);
-        }
-      });
-  
-    });
-  
-    promise.then(() => {
-      log.info("mailCancelOrder end");
-    });
+    sendMail(mailOptions);
+    log.info("mailCancelOrder end");
+
 
   }
 }
