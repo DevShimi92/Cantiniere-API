@@ -18,6 +18,8 @@ if (process.env.NODE_MAIL_TEST_MODE){
     mailConfig = {
       host: process.env.HOST_SMTP_URL_TEST,
       port: process.env.SMTP_PORT_TEST,
+      secure: false,
+      requireTLS: true,
       auth: {
           user: process.env.EMAIL_SUPPORT_TEST,
           pass: process.env.PASSWORD_SUPPORT_TEST
@@ -25,10 +27,11 @@ if (process.env.NODE_MAIL_TEST_MODE){
   }
 else
   {
-    log.error('PROD');
     mailConfig = {
       host: process.env.HOST_SMTP_URL,
       port: process.env.SMTP_PORT,
+      secure: true,
+      requireTLS: true,
       auth: {
           user: process.env.EMAIL_SUPPORT,
           pass: process.env.PASSWORD_SUPPORT
