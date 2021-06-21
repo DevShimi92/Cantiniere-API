@@ -37,11 +37,11 @@ export class AuthMiddleware {
                             log.warn(decoded);
                         }
 
-                    if(adminRight == false)
+                    if(!adminRight)
                         {
                             next();
                         }
-                    else if( decoded.cooker == true)
+                    else if(decoded.cooker)
                         {
                             next();
                         }

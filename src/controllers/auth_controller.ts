@@ -57,14 +57,14 @@ export class AuthController {
          
                 let refresh_token = jwt.sign({key_random : randomValueHex(40)},process.env.SECRET_KEY_REFRESH);
                 
-                await RefreshToken.findOne({ where: { id_client: dataUser.id } }).then(async (data) => {
+                await RefreshToken.findOne({ where: { id_client: dataUser.id } }).then(async (dataRefreshToken) => {
                  
-                  if(data != null)
+                  if(dataRefreshToken != null)
                   {
                     await RefreshToken.destroy({
                       where: {
                         id_client: dataUser.id,
-                        tokenRefresh: data.tokenRefresh
+                        tokenRefresh: dataRefreshToken.tokenRefresh
                         }
                     });
                   }
@@ -148,16 +148,16 @@ export class AuthController {
                       where: {
                         id: req.body.id
                       }
-                    }).then(function(data) { 
-                      if(data != null)
+                    }).then(function(dataClient) { 
+                      if(dataClient != null)
                         {
                           let dataUser = { 
-                            id : data.id, 
-                            last_name : data.last_name,
-                            first_name: data.first_name,
-                            email: data.email,
-                            money: data.money,
-                            cooker: data.cooker
+                            id : dataClient.id, 
+                            last_name : dataClient.last_name,
+                            first_name: dataClient.first_name,
+                            email: dataClient.email,
+                            money: dataClient.money,
+                            cooker: dataClient.cooker
                           };
 
                           let token = jwt.sign(dataUser,process.env.SECRET_KEY, { expiresIn: 60 *15  });
@@ -168,7 +168,7 @@ export class AuthController {
                               refresh_token: refresh_token
                               }).end();
                               log.info("Refresh token successful for user n° " + req.body.id);
-                        };
+                        }
 
                     }).catch((err: Error) => {
                       res.status(500).end();

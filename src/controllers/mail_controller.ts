@@ -154,12 +154,12 @@ export class MailController {
               raw: true,
               where: {
                 id_client: data.id
-            }}).then(async function(data) { 
-              if(data != null)
+            }}).then(async function(dataClient) { 
+              if(dataClient != null)
                 {
                   await RestToken.destroy({
                     where: {
-                      id_client: data.id_client
+                      id_client: dataClient.id_client
                       }
                   });
                 }

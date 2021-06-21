@@ -104,7 +104,7 @@ export class UserController {
   
   public async getAllUser(req: Request,res: Response) : Promise<void> {
     log.info("Get all User");
-    if(res.locals.cooker == true)
+    if(res.locals.cooker)
       {
           await User.findAll<User>({
             attributes : ['id','first_name','last_name','money'],
@@ -216,7 +216,7 @@ export class UserController {
                 });
           }
 
-          if((req.body.money != null) && (!isNaN(req.body.money)) && (res.locals.cooker == true))
+          if((req.body.money != null) && (!isNaN(req.body.money)) && (res.locals.cooker))
           {
             await User.update({ money: req.body.money }, {
               where: {
@@ -274,7 +274,7 @@ export class UserController {
             res.end();
             log.error("Delete User : Fail - The value is not number"); 
       }
-    else if(res.locals.cooker == true)
+    else if(res.locals.cooker)
       {
         await User.destroy<User>({
           where: {
@@ -366,9 +366,9 @@ export class UserController {
                         });
 
                       })
-                      .catch((err: Error,) => {
+                      .catch((errUpdate: Error) => {
                         res.status(401).end();
-                        log.error('Error with field password  : ' + err);
+                        log.error('Error with field password  : ' + errUpdate);
                           });
                     }
                   else

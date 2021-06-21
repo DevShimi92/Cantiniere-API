@@ -22,7 +22,10 @@ export class MenuInfoController {
     else
       {
         if(req.body.price_final == null)
+          {
             req.body.price_final=0;
+          }
+            
 
           await MenuInfo.create<MenuInfo>({ name: req.body.name, description: req.body.description , price_final: req.body.price_final})
                 .then((data) => {
