@@ -9,7 +9,7 @@ import { OrderInfoController } from "../controllers/order_info_controller";
 import { OrderContentController } from "../controllers/order_content_controller";
 import { AuthController } from "../controllers/auth_controller";
 import { MailController } from "../controllers/mail_controller";
-
+import { SettingController } from "../controllers/setting_controller";
 
 import { AuthMiddleware } from "../middlewares/auth"
 
@@ -25,6 +25,7 @@ export class Routes {
   private OrderContentController: OrderContentController = new OrderContentController();
   private AuthController: AuthController = new AuthController();
   private MailController: MailController = new MailController();
+  private SettingController: SettingController = new SettingController();
 
   private AuthMiddleware: AuthMiddleware = new AuthMiddleware();
 
@@ -81,5 +82,8 @@ export class Routes {
     app.route("/order").delete(this.OrderInfoController.deleteOrder);
     app.route("/order/content").delete(this.OrderContentController.deleteToOrder);
     app.route("/order/valid").put(this.OrderInfoController.validOrder);
+
+    app.use("/setting",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, true, next));
+    app.route("/setting/hourlimit").put(this.SettingController.updateHourLimit);
   }
 }

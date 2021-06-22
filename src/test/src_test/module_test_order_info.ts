@@ -94,6 +94,52 @@ export function moduleOrderInfo(): void {
             
     });
 
+    it("Create Order - Order time exceeded ", function (done) {
+        this.timeout(60000);
+        const data = {
+            "id_client": 2,
+            "sold_before_order": 999,
+            "total":10
+        }
+        request(app)
+            .post('/order')
+            .send(data)
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + token)
+            .expect(403)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
+
+    it("Create Order - Update time limit order ", function (done) {
+        this.timeout(60000);
+
+        let hourNow = new Date;
+
+        hourNow.setHours(hourNow.getHours() + 6);
+        console.log(hourNow.toUTCString());
+
+        const hourFormated :string = hourNow.toUTCString().slice(17, 25)
+        console.log(hourFormated);
+        const data = {
+            "hour_limit": hourFormated,
+        }
+        request(app)
+            .put('/setting/hourlimit')
+            .send(data)
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + tokenAdmin)
+            .expect(200)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
+
     it("Create Order - OK", function (done) {
         this.timeout(60000);
         const data = {

@@ -3,6 +3,7 @@ import { log } from "../config/log_config";
 import { OrderInfo } from "../models/order_info";
 import { User } from "../models/user";
 import { MailController } from './mail_controller';
+import { SettingController } from './setting_controller';
 
 export class OrderInfoController {
 
@@ -25,9 +26,11 @@ export class OrderInfoController {
     {
         const dataclient = await User.findOne({ attributes : ['money','email'], where: { id: req.body.id_client } });
 
-        if (dataclient != null) {
+        const canOrder = await SettingController.checkHourLimit();
+
+        if (dataclient != null ) {
           
-          if((dataclient.money >= req.body.total) && ( dataclient.money == req.body.sold_before_order))
+          if((dataclient.money >= req.body.total) && ( dataclient.money == req.body.sold_before_order) && canOrder == true )
             {
 
               await User.update({ money: dataclient.money-req.body.total }, {
@@ -63,7 +66,15 @@ export class OrderInfoController {
           else
             {
               res.status(403).end();
-              log.error("Create Order : Fail - Insufficient balance or balance incorrect");
+              if(canOrder)
+                {
+                  log.error("Create Order : Fail - Insufficient balance or balance incorrect");
+                }
+              else
+                {
+                  log.error("Create Order : Fail - Order time exceeded");
+                }
+              
             }
          
         }
