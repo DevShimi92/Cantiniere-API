@@ -119,7 +119,8 @@ export function moduleOrderInfo(): void {
 
         let hourNow = new Date;
 
-        hourNow.setHours(hourNow.getHours() + 6);
+        hourNow.setHours(hourNow.getHours() + 2);
+        hourNow.setMinutes(hourNow.getMinutes() + 15);
         console.log(hourNow.toUTCString());
 
         const hourFormated :string = hourNow.toUTCString().slice(17, 25)

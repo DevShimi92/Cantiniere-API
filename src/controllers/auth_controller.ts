@@ -172,13 +172,13 @@ export class AuthController {
 
                     }).catch((err: Error) => {
                       res.status(500).end();
-                      log.error("Refresh token : Fail - ERROR");
+                      log.error("Refresh token : Fail - ERROR Cant found user ");
                       log.error(err);
                     });
 
                }).catch((err: Error) => {
                  res.status(500).end();
-                 log.error("Refresh token : Fail - ERROR");
+                 log.error("Refresh token : Fail - ERROR Cant found tokenRefresh ");
                  log.error(err);
                });
 

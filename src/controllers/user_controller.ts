@@ -59,7 +59,7 @@ export class UserController {
                 }).catch((err: Error) => {
                 
                   res.status(500).end();
-                  log.error("Create User : Fail - ERROR");
+                  log.error("Create User : Fail - ERROR Can't create User");
                   log.error(err);
                 
                 });
