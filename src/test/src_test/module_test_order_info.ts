@@ -94,6 +94,31 @@ export function moduleOrderInfo(): void {
             
     });
 
+    it("Create Order - Update time limit order for ' Order time exceeded ' ", function (done) {
+        this.timeout(60000);
+
+        let hourNow = new Date;
+
+        hourNow.setHours(hourNow.getHours() + 1);
+        hourNow.setMinutes(hourNow.getMinutes() + 15);
+
+        const hourFormated :string = hourNow.toUTCString().slice(17, 25)
+        const data = {
+            "hour_limit": hourFormated,
+        }
+        request(app)
+            .put('/setting/hourlimit')
+            .send(data)
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + tokenAdmin)
+            .expect(200)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
+
     it("Create Order - Order time exceeded ", function (done) {
         this.timeout(60000);
         const data = {
@@ -121,10 +146,9 @@ export function moduleOrderInfo(): void {
 
         hourNow.setHours(hourNow.getHours() + 2);
         hourNow.setMinutes(hourNow.getMinutes() + 15);
-        console.log(hourNow.toUTCString());
 
         const hourFormated :string = hourNow.toUTCString().slice(17, 25)
-        console.log(hourFormated);
+        
         const data = {
             "hour_limit": hourFormated,
         }

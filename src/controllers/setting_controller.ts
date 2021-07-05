@@ -45,6 +45,27 @@ export class SettingController {
 
   }
 
+  static async getHourLimit(): Promise<string> {
+    log.info("Get hour Limit");
+
+    return Setting.findOne<Setting>({
+      attributes : ['hour_limit'],
+      raw: true,
+    }).then(function(data) {
+      
+      if(data != null)
+      {
+        return data.hour_limit.toString();
+      }
+      else
+      {
+        log.error("Paramètre non trouvé");
+        return 'ERROR';
+      }
+
+    });
+  }
+  
   public async updateHourLimit(req: Request,res: Response) : Promise<void> {
 
     log.info("Update hour Limit");

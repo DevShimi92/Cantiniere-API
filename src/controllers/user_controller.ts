@@ -7,6 +7,7 @@ import { User } from "../models/user";
 import { RefreshToken } from "../models/refresh_token";
 import { RestToken } from "../models/rest_token";
 import { MailController } from './mail_controller';
+import { SettingController } from './setting_controller';
 
 function randomValueHex (length:number) {
   return crypto.randomBytes(Math.ceil(length/2))
@@ -63,6 +64,8 @@ export class UserController {
                   log.error(err);
                 
                 });
+               
+              let hour_limit = await SettingController.getHourLimit();
               
               let dataSendInToken = {
                     id: newdata.id,
@@ -71,6 +74,7 @@ export class UserController {
                     email: newdata.email,
                     money: newdata.money,
                     cooker: false,
+                    hour_limit: hour_limit
               }
 
               let token = jwt.sign(dataSendInToken,process.env.SECRET_KEY,{ expiresIn: 60 * 15 });
