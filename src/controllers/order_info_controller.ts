@@ -30,7 +30,7 @@ export class OrderInfoController {
 
         if (dataclient != null ) {
           
-          if((dataclient.money >= req.body.total) && ( dataclient.money == req.body.sold_before_order) && canOrder == true )
+          if((dataclient.money >= req.body.total) && ( dataclient.money == req.body.sold_before_order) && canOrder )
             {
 
               await User.update({ money: dataclient.money-req.body.total }, {
@@ -170,16 +170,16 @@ export class OrderInfoController {
                       log.info("Delete Order : OK");
                       await MailController.mailCancelOrder(dataclient.email);
 
-                    }).catch((err: Error) => {
+                    }).catch((errDestroy: Error) => {
                       res.status(500).end();
                       log.error("Delete Order : Fail - ERROR");
-                      log.error(err);
+                      log.error(errDestroy);
                   });
                     
-                  }).catch((err: Error) => {
+                  }).catch((errUpdate: Error) => {
                     res.status(500).end();
                     log.error("Delete Order : Fail - ERROR");
-                    log.error(err);
+                    log.error(errUpdate);
                 });
 
               }
@@ -244,10 +244,10 @@ export class OrderInfoController {
                     res.status(204).end();
                     log.info("Valid Order : OK");
           
-                  }).catch((err: Error) => {
+                  }).catch((errUpdate: Error) => {
                     res.status(500).end();
                     log.error("Valid Order : Fail - ERROR");
-                    log.error(err);
+                    log.error(errUpdate);
                 });
 
             }
