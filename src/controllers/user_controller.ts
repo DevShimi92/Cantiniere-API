@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import crypto  from "crypto";
+import bcrypt from "bcrypt";
 
 import { log } from "../config/log_config";
 import { User } from "../models/user";
@@ -14,7 +15,6 @@ function randomValueHex (length:number) {
       .toString('hex') // convert to hexadecimal format
       .slice(0,length).toUpperCase();   // return required number of characters
 }
-
 
 export class UserController {
 
@@ -48,10 +48,18 @@ export class UserController {
             }
         else
             {
+
+              let saltRounds = 10 ;
+
+              let salt =  await bcrypt.genSalt(saltRounds);
+
+              let hash =  await bcrypt.hash(req.body.password, salt);
+
               let newdata = await User.create<User>({ 
                   last_name: req.body.last_name,
                   first_name: req.body.first_name,
-                  password: req.body.password,
+                  password: hash,
+                  salt : salt,
                   email: req.body.email, })
                 .then((result) => {
                 
@@ -64,41 +72,46 @@ export class UserController {
                   log.error(err);
                 
                 });
-               
-              let hour_limit = await SettingController.getHourLimit();
-              
-              let dataSendInToken = {
-                    id: newdata.id,
-                    last_name: newdata.last_name,
-                    first_name: newdata.first_name,
-                    email: newdata.email,
-                    money: newdata.money,
-                    cooker: false,
-                    hour_limit: hour_limit
+              log.error(newdata);
+              if(newdata)
+              { 
+
+                  let hour_limit = await SettingController.getHourLimit();
+                  
+                  let dataSendInToken = {
+                        id: newdata.id,
+                        last_name: newdata.last_name,
+                        first_name: newdata.first_name,
+                        email: newdata.email,
+                        money: newdata.money,
+                        cooker: false,
+                        hour_limit: hour_limit
+                  }
+
+                  let token = jwt.sign(dataSendInToken,process.env.SECRET_KEY,{ expiresIn: 60 * 15 });
+
+                  let refresh_token = jwt.sign({key_random : randomValueHex(40)},process.env.SECRET_KEY_REFRESH);
+
+                  await RefreshToken.create<RefreshToken>({id_client: newdata.id, tokenRefresh: refresh_token }).then(async () => {
+                  
+                    await MailController.mailNewAccount(req.body.email);
+                    // res.setHeader('Set-Cookie', cookie.serialize('refresh_token', refresh_token, { httpOnly: true }))
+                    res.status(201).json({
+                      token: token,
+                      refresh_token: refresh_token
+                      }).end();
+
+                      log.info("Create User : OK");
+
+                      
+
+                    }).catch((err: Error) => {
+                      res.status(500).end();
+                      log.error("Create User : Fail - ERROR");
+                      log.error(err);
+                    });
+
               }
-
-              let token = jwt.sign(dataSendInToken,process.env.SECRET_KEY,{ expiresIn: 60 * 15 });
-
-              let refresh_token = jwt.sign({key_random : randomValueHex(40)},process.env.SECRET_KEY_REFRESH);
-
-              await RefreshToken.create<RefreshToken>({id_client: newdata.id, tokenRefresh: refresh_token }).then(async () => {
-               
-                await MailController.mailNewAccount(req.body.email);
-                // res.setHeader('Set-Cookie', cookie.serialize('refresh_token', refresh_token, { httpOnly: true }))
-                 res.status(201).json({
-                   token: token,
-                   refresh_token: refresh_token
-                   }).end();
-
-                   log.info("Create User : OK");
-
-                   
-
-                 }).catch((err: Error) => {
-                   res.status(500).end();
-                   log.error("Create User : Fail - ERROR");
-                   log.error(err);
-                 });
 
             }
 
@@ -235,7 +248,28 @@ export class UserController {
 
           if(req.body.password != null)
           {
-            await User.update({ password: req.body.password }, {
+
+            let salt =  await User.findOne<User>({
+              attributes : ['salt'],
+              raw: true,
+              where: {
+                id: req.body.id
+              }
+            }).then(function(data) {
+              if(data != null)
+                {
+                  return data.salt.toString();
+                }
+                else
+                {
+                  log.error("SALT non trouvé");
+                  return 'ERROR';
+                }
+            });
+
+            let hash =  await bcrypt.hash(req.body.password, salt);
+
+            await User.update({ password: hash }, {
               where: {
                 id: req.body.id
               }
@@ -353,7 +387,27 @@ export class UserController {
                   if(data != null)
                     {
                       
-                      await User.update({ password: req.body.password }, {
+                      let salt =  await User.findOne<User>({
+                        attributes : ['salt'],
+                        raw: true,
+                        where: {
+                          id: data.id_client
+                        }
+                      }).then(function(data) {
+                        if(data != null)
+                          {
+                            return data.salt.toString();
+                          }
+                          else
+                          {
+                            log.error("SALT non trouvé");
+                            return 'ERROR';
+                          }
+                      });
+          
+                      let hash =  await bcrypt.hash(req.body.password, salt);
+
+                      await User.update({ password: hash }, {
                         where: {
                           id: data.id_client
                         }

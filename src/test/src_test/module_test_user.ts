@@ -259,27 +259,6 @@ export function moduleUser(): void {
                     done();
                 });
         });
-    
-    it("Update User - Password too lonng", function (done) {
-            this.timeout(60000);
-            const data = {
-                "id": 2,
-                "last_name": 'avvv',
-                "first_name": 'zz',
-                "email":  'emailE@POemail.com',
-                "password": 'SMELLOFTHEDEADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD',
-            }
-            request(app)
-                .put('/user')
-                .send(data)
-                .set('Accept', 'application/json')
-                .set('Authorization', 'Bearer ' + token)
-                .expect(409)
-                .end((err) => {
-                    if (err) return done(err);
-                    done();
-                });
-        });
 
     it("Update User - OK", function (done) {
         this.timeout(60000);
@@ -318,7 +297,7 @@ export function moduleUser(): void {
                     if (err) return done(err);
                     done();
                 });
-            });
+        });
 
     it("Read All User - Check Update User ( money at 0)", function (done) {
         this.timeout(60000);

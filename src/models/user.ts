@@ -1,6 +1,7 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../config/database";
 import { log } from "../config/log_config";
+import bcrypt from "bcrypt";
 
 export interface UserInterface {
     id: number;
@@ -8,6 +9,7 @@ export interface UserInterface {
     last_name: string;
     email: string;
     password: string;
+    salt:string;
     money: number;
     cooker: boolean;
   }
@@ -19,6 +21,7 @@ export interface UserInterface {
     public last_name!: string;
     public email!: string;
     public password!: string;
+    public salt!: string;
     public money!: number;
     public cooker!: boolean;
   
@@ -51,6 +54,10 @@ export interface UserInterface {
         type: new DataTypes.STRING,
         allowNull: false,
       },
+      salt: {
+        type: new DataTypes.STRING,
+        allowNull: true,
+      },
       money: {
         type: new DataTypes.FLOAT,
         defaultValue: 0,
@@ -72,11 +79,15 @@ export interface UserInterface {
     where: {
       cooker: true
     }
-  }).then(function(data) {
-    if(data.length == 0)
+  }).then(async function(data) {
+    if(data.length == 0 && !process.env.API_TEST)
         {
           log.warn('Compte admin non trouvé, création du compte....');
-          User.create({ first_name: 'Cantiniere', last_name: 'Responsable', email: process.env.COOKER_DEFAUT_EMAIL, password: process.env.COOKER_DEFAUT_PASSWORD, cooker: true });
+          let saltRounds = 10 ;
+          let salt =  await bcrypt.genSalt(saltRounds);
+          let password = process.env.COOKER_DEFAUT_PASSWORD!;
+          let hash =  await bcrypt.hash(password,  salt);
+          User.create({ first_name: 'Cantiniere', last_name: 'Responsable', email: process.env.COOKER_DEFAUT_EMAIL, password: hash, salt: salt, cooker: true });
           log.warn('Compte admin crée');
         }
   });

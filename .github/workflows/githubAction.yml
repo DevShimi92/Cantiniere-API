@@ -50,6 +50,7 @@ jobs:
     - name: Running test with coverage...
       run: npm run coverage
       env:
+        API_TEST: ${{ secrets.API_TEST }}
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
         SECRET_KEY_REFRESH: ${{ secrets.SECRET_KEY_REFRESH }}
