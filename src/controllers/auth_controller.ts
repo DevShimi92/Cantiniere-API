@@ -46,7 +46,7 @@ export class AuthController {
 
               bcrypt.compare(req.body.password, data.password, async function(err, result) {
 
-                if (err || result == false) { 
+                if (err || !result ) { 
                   log.error("Connection to api : Fail - Failed identification");
                   if(err)
                      { log.error(err); }
@@ -93,10 +93,10 @@ export class AuthController {
     
                       log.info("API connection successful for : " + dataUser.last_name);
     
-                      }).catch((err: Error) => {
+                      }).catch((errRefreshToken: Error) => {
                         res.status(500).end();
                         log.error("Connection to api : Fail - ERROR");
-                        log.error(err);
+                        log.error(errRefreshToken);
                       });
 
 

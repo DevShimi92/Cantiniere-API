@@ -37,11 +37,7 @@ export class AuthMiddleware {
                             log.warn(decoded);
                         }
 
-                    if(!adminRight)
-                        {
-                            next();
-                        }
-                    else if(decoded.cooker)
+                    if(!adminRight || decoded.cooker)
                         {
                             next();
                         }

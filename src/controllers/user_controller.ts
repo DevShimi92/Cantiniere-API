@@ -393,10 +393,10 @@ export class UserController {
                         where: {
                           id: data.id_client
                         }
-                      }).then(function(data) {
-                        if(data != null)
+                      }).then(function(dataUser) {
+                        if(dataUser != null)
                           {
-                            return data.salt.toString();
+                            return dataUser.salt.toString();
                           }
                           else
                           {
