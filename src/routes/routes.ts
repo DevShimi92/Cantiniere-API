@@ -84,6 +84,9 @@ export class Routes {
     app.route("/order/valid").put(this.OrderInfoController.validOrder);
 
     app.use("/setting",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, true, next));
-    app.route("/setting/hourlimit").put(this.SettingController.updateHourLimit);
+    app.route("/setting/hour_limit").put(this.SettingController.updateHourLimit);
+    app.route("/setting/order_total_limit").put(this.SettingController.updateTotalOrderLimitDay);
+    app.route("/setting/order_total_limit_account").put(this.SettingController.updateTotalOrderLimitAccountDay);
+    app.route("/setting/pre_order").put(this.SettingController.updatePreOrder);
   }
 }

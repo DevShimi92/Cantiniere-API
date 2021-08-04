@@ -1,7 +1,7 @@
 import request from "supertest";
 import app from "../../app";
 
-export default function moduleTestToken(): void {
+export default function moduleToken(): void {
 
   let token : string ;
   let refresh_token : string ;

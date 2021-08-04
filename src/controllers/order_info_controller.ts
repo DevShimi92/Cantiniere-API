@@ -28,9 +28,15 @@ export class OrderInfoController {
 
         const canOrder = await SettingController.checkHourLimit();
 
-        if (dataclient != null ) {
+        const NBOrderLimit = await SettingController.checkTotalOrderLimitDay();
+
+        const thisAccountCanOrder = await SettingController.checkTotalOrderLimitAccountDay(req.body.id_client);
+
+        const canPreOrderIfOn = await SettingController.checkPreOrder(req.body.date_order);
+
+        if (dataclient != null && canPreOrderIfOn) {
           
-          if((dataclient.money >= req.body.total) && ( dataclient.money == req.body.sold_before_order) && canOrder )
+          if((dataclient.money >= req.body.total) && ( dataclient.money == req.body.sold_before_order) && canOrder && NBOrderLimit && thisAccountCanOrder)
             {
 
               await User.update({ money: dataclient.money-req.body.total }, {
@@ -40,7 +46,7 @@ export class OrderInfoController {
               }).then(async () => {
                 log.info("Create Order : User debit - succes");
 
-                await OrderInfo.create<OrderInfo>({  id_client: req.body.id_client, sold_before_order: req.body.sold_before_order, total: req.body.total})
+                await OrderInfo.create<OrderInfo>({  id_client: req.body.id_client, date_order: req.body.date_order,sold_before_order: req.body.sold_before_order, total: req.body.total})
                 .then(async (data) => {
                   res.status(200).json({ id : data.get('id')}).end();
 
@@ -66,17 +72,38 @@ export class OrderInfoController {
           else
             {
               res.status(403).end();
-              if(canOrder)
+              
+              if(!canOrder)
                 {
-                  log.error("Create Order : Fail - Insufficient balance or balance incorrect");
+                  log.error("Create Order : Fail - Order time exceeded");
+                }
+              else if(!NBOrderLimit)
+                {
+                  log.error("Create Order : Fail - Limit Order exceeded ");
+                }
+              else if(!thisAccountCanOrder)
+                {
+                  log.error("Create Order : Fail - Limit Order for this account exceeded ");
                 }
               else
                 {
-                  log.error("Create Order : Fail - Order time exceeded");
+                  log.error("Create Order : Fail - Insufficient balance or balance incorrect");
                 }
               
             }
          
+        }
+        else
+        {
+          res.status(403).end();
+          if(!canPreOrderIfOn)
+            {
+              log.error("Create Order : Fail - Unauthorized order date ");
+            }
+          else
+            {
+              log.error("Create Order : Fail - Data user not found");
+            }
         }
 
     }

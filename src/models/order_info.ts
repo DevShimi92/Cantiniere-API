@@ -1,10 +1,11 @@
-import { Model, DataTypes } from "sequelize";
+import { Model, DataTypes,Sequelize } from "sequelize";
 import { sequelize } from "../config/database";
 import { OrderContent } from "./order_content";
 
 export interface OrderInfoInterface {
     id: number;
     id_client: number;
+    date_order : Date;
     sold_before_order: number;
     total: number;
     done: boolean;
@@ -14,6 +15,7 @@ export interface OrderInfoInterface {
 export class OrderInfo extends Model {
     public id!: number;
     public id_client!: number;
+    public date_order!: Date;
     public sold_before_order!: number;
     public total!: number;
     public done!: boolean;
@@ -33,6 +35,10 @@ export class OrderInfo extends Model {
       id_client: {
         type: new DataTypes.INTEGER,
         allowNull: false,
+      },
+      date_order: {
+        type: new DataTypes.DATEONLY,
+        defaultValue: Sequelize.fn('now'),
       },
       sold_before_order: {
         type: new DataTypes.INTEGER,

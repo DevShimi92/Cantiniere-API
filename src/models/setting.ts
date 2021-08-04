@@ -39,7 +39,7 @@ export class Setting extends Model {
         defaultValue: 1,
       },
       order_in_advance: {
-        type: new DataTypes.STRING,
+        type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
     },

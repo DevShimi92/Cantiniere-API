@@ -2,7 +2,7 @@ import request from "supertest";
 import jwt from "jsonwebtoken";
 import app from "../../app";
 
-export default function moduleTestMail(): void {
+export default function moduleMail(): void {
 
   let rest_token : string;
 
