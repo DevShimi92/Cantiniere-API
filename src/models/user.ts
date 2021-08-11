@@ -80,20 +80,22 @@ export interface UserInterface {
       cooker: true
     }
   }).then(async function(data) {
-    if(data.length == 0 && !process.env.API_TEST)
-        {
-          log.warn('Compte admin non trouvé, création du compte....');
-          let saltRounds = 10 ;
-          let salt =  await bcrypt.genSalt(saltRounds);
-          let password = process.env.COOKER_DEFAUT_PASSWORD!;
-          let hash =  await bcrypt.hash(password,  salt);
-          User.create({ first_name: 'Cantiniere', last_name: 'Responsable', email: process.env.COOKER_DEFAUT_EMAIL, password: hash, salt: salt, cooker: true });
-          log.warn('Compte admin crée');
-        }
-  });
-  
-  
 
+      if( ( data.length == 0 ) && (process.env.API_TEST == 'false'))
+      {
+        log.warn('Compte admin non trouvé, création du compte....');
+        let saltRounds = 10 ;
+        let salt =  await bcrypt.genSalt(saltRounds);
+        let password = process.env.COOKER_DEFAUT_PASSWORD!;
+        let hash =  await bcrypt.hash(password,  salt);
+        User.create({ first_name: 'Cantiniere', last_name: 'Responsable', email: process.env.COOKER_DEFAUT_EMAIL, password: hash, salt: salt, cooker: true });
+        log.warn('Compte admin crée');
+      }
+    
+
+
+      
+  });
 
 
 
