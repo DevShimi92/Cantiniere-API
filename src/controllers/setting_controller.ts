@@ -72,7 +72,7 @@ export class SettingController {
 
     log.info("Update hour Limit");
 
-    var regexp = RegExp("^([0-1]?[0-9]:[0-9][0-9]:[0-9][0-9])|(2[0-3]:[0-9][0-9]:[0-9][0-9])");
+    var regexp = RegExp("^([0-1]?[0-9]:[0-9][0-9]:[0-9][0-9])|(2[0-3]:[0-9][0-9]:[0-9][0-9])$");
 
     if ( req.body.hour_limit == null ) 
       {
