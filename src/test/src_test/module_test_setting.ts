@@ -3,6 +3,8 @@ import app from "../../app";
 
 let tokenAdmin : string ;
 
+let hourFormated :string ;
+
 export default function moduleSetting(): void {
 
   before(function(done)  {
@@ -67,7 +69,7 @@ export default function moduleSetting(): void {
     hourNow.setHours(hourNow.getHours() + 2);
     hourNow.setMinutes(hourNow.getMinutes() + 15);
 
-    const hourFormated :string = hourNow.toUTCString().slice(17, 25)
+    hourFormated = hourNow.toUTCString().slice(17, 25)
 
     const data = {
         "hour_limit": hourFormated,
@@ -243,4 +245,24 @@ export default function moduleSetting(): void {
         });
 
   });
+
+  it("Get All Setting", function (done) {
+    this.timeout(60000);
+    
+    request(app)
+        .get('/setting/')
+        .set('Accept', 'application/json')
+        .set('Authorization', 'Bearer ' + tokenAdmin)
+        .expect(200,{ 
+            hourlimit : hourFormated,
+            totalOrderLimitDay :"15",
+            totalOrderLimitAccountDay:"2",
+            canPreOrder:"true"
+    })
+        .end((err) => {
+            if (err) return done(err);
+            done();
+        });
+  });
+
 }

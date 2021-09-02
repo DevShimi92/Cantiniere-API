@@ -72,7 +72,7 @@ export class SettingController {
 
     log.info("Update hour Limit");
 
-    var regexp = RegExp("^([0-1]?[0-9]:[0-9][0-9]:[0-9][0-9])|(2[0-3]:[0-9][0-9]:[0-9][0-9])$");
+    var regexp = RegExp("^([0-1]?[0-9]:[0-9][0-9]:[0-9][0-9])$|^(2[0-3]:[0-9][0-9]:[0-9][0-9])$");
 
     if ( req.body.hour_limit == null ) 
       {
@@ -272,7 +272,7 @@ export class SettingController {
 
   }
 
-  public async updateTotalOrderLimitAccountDay (req: Request,res: Response) : Promise<void> {
+  public async updateTotalOrderLimitAccountPerDay (req: Request,res: Response) : Promise<void> {
     log.info("Update Total order limit per account");
 
     if ( req.body.nb_limit_per_account == null ) 
@@ -396,4 +396,25 @@ export class SettingController {
 
   }
 
+  public async getAllSetting (req: Request,res: Response) : Promise<void> {
+    log.info("Get all setting ");
+
+    let hourlimit = await SettingController.getHourLimit();
+
+    let totalOrderLimitDay = await SettingController.getTotalOrderLimitDay();
+
+    let totalOrderLimitAccountDay = await SettingController.getTotalOrderLimitAccountDay();
+
+    let canPreOrder = await SettingController.getPreOrder();
+
+    let data = {
+      hourlimit : hourlimit,
+      totalOrderLimitDay : totalOrderLimitDay,
+      totalOrderLimitAccountDay : totalOrderLimitAccountDay,
+      canPreOrder : canPreOrder,
+    }
+
+    res.status(200).json(data).end();
+
+  }
 }
