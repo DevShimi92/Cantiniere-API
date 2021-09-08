@@ -69,7 +69,6 @@ export class Routes {
     app.route("/menu/content").post(this.MenuContentController.addToMenu);
     app.route("/menu/content").delete(this.MenuContentController.deleteToMenu);
 
-
     app.use("/order",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, false, next));
     app.route("/order").post(this.OrderInfoController.createOrder);
     app.route("/order/:id_client").get(this.OrderInfoController.getOrder);
@@ -82,6 +81,8 @@ export class Routes {
     app.route("/order").delete(this.OrderInfoController.deleteOrder);
     app.route("/order/content").delete(this.OrderContentController.deleteToOrder);
     app.route("/order/valid").put(this.OrderInfoController.validOrder);
+    app.route("/order/recap").get(this.OrderContentController.recapOrder);
+    app.route("/order/recapAll").get(this.OrderInfoController.getAllOrderForToday);
 
     app.use("/setting",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, true, next));
     app.route("/setting/").get(this.SettingController.getAllSetting);

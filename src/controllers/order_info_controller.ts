@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { log } from "../config/log_config";
 import { OrderInfo } from "../models/order_info";
+import { OrderContent } from "../models/order_content";
 import { User } from "../models/user";
 import { MailController } from './mail_controller';
 import { SettingController } from './setting_controller';
@@ -231,6 +232,8 @@ export class OrderInfoController {
 
     log.info("Valid Order");
 
+    console.info(req.body.id_order );
+
     if ( req.body.id_order == null )
       {
             res.status(400).json({ error : "Missing Fields" });
@@ -293,6 +296,40 @@ export class OrderInfoController {
 
       }
 
+  }
+
+  public async getAllOrderForToday (req: Request,res: Response) : Promise<void> {
+    log.info("Get All Order for today");
+
+    let today = new Date;
+    let DateToday = today.toISOString().slice(0, 10);
+
+    await OrderInfo.findAll<OrderInfo>({
+      attributes : ['id','id_client','done'],
+      raw: true,
+      include: [
+        {model: User, attributes: ['first_name','last_name']}
+      ],
+      where: {
+        date_order : DateToday
+      }
+    }).then((dataAllOrder)=>{
+        if(dataAllOrder.length == 0)
+          {
+            res.status(204).end();
+          }
+      else
+        {
+          res.status(200).json(dataAllOrder).end();
+        }
+
+    }).catch((error: Error)=>{
+        res.status(500).end();
+        log.error("Get All Order for today : Fail - ERROR");
+        log.error(error);
+    });
+
+    res.status(204).end();
   }
 
 }

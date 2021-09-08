@@ -4,6 +4,7 @@ import { Article } from "../models/article";
 import { OrderInfo } from "../models/order_info";
 import { OrderContent } from "../models/order_content";
 import { MenuInfo } from "../models/menu_info";
+import { Sequelize } from "sequelize";
 
 export class OrderContentController {
 
@@ -124,6 +125,44 @@ export class OrderContentController {
           log.error(err);
         });
       }
+  }
+
+  public async recapOrder(req: Request,res: Response) : Promise<void> {
+    log.info("Get Recap Order for today");
+    let today = new Date;
+    let DateToday = today.toISOString().slice(0, 10);
+
+    await OrderContent.findAll<OrderContent>({
+      attributes : ['id_article', [Sequelize.fn('COUNT', Sequelize.col('OrderContent.id_article')), 'nombre']],
+      raw: true,
+      group: ['id_article','name','OrderInfo.date_order'],
+      include: [
+        {model: Article, attributes: ['name']},
+        {model: OrderInfo, attributes: ['date_order'],
+          where: {
+            date_order : DateToday
+          }
+        }
+      ],
+    }).then((dataRecapOrder) => {
+
+      if(dataRecapOrder.length == 0) 
+          {
+            res.status(204).end();
+          }
+        else
+          {
+            res.status(200).json(dataRecapOrder).end();
+          }
+
+        log.info("Recap Order for today : OK");
+
+      }).catch((err: Error) => {
+        res.status(500).end();
+        log.error("Recap Order for today : Fail - ERROR");
+        log.error(err);
+      });
+
   }
 
 }

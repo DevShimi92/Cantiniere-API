@@ -1,6 +1,7 @@
 import { Model, DataTypes,Sequelize } from "sequelize";
 import { sequelize } from "../config/database";
 import { OrderContent } from "./order_content";
+import { User } from "./user";
 
 export interface OrderInfoInterface {
     id: number;
@@ -70,4 +71,12 @@ export class OrderInfo extends Model {
     foreignKey: {
       name: 'id_order'
     }
+  });
+
+  OrderInfo.belongsTo(User, {
+    foreignKey: {
+      name: 'id_client'
+    },
+    targetKey:'id',
+    constraints:false
   });
