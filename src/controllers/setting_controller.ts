@@ -106,7 +106,7 @@ export class SettingController {
   }
 
   static async checkTotalOrderLimitDay () : Promise<boolean>{
-    log.info("Check Total order limit of day ");
+    log.info("Check Total order limit of day");
 
     let DateNow = new Date;
     let DateSting ;
@@ -232,15 +232,21 @@ export class SettingController {
         }
       });
 
-    return OrderInfo.findOne<OrderInfo>({
-      raw: true,
+    return OrderInfo.count({
       where: {
         id_client: id_client
       }
     }).then(function(data){
       if(data != null)
       {
-        return false;
+        if(data>OrderAccountLimit)
+          {
+            return false;
+          }
+        else
+          {
+            return true;
+          }
       }
       else
       {

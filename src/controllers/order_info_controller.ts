@@ -72,23 +72,26 @@ export class OrderInfoController {
             }
           else
             {
-              res.status(403).end();
               
               if(!canOrder)
                 {
                   log.error("Create Order : Fail - Order time exceeded");
+                  res.status(403).json({ error : "Order time exceeded" });
                 }
               else if(!NBOrderLimit)
                 {
                   log.error("Create Order : Fail - Limit Order exceeded ");
+                  res.status(403).json({ error : "Limit Order exceeded" });
                 }
               else if(!thisAccountCanOrder)
                 {
                   log.error("Create Order : Fail - Limit Order for this account exceeded ");
+                  res.status(403).json({ error : "Limit Order for this account exceeded" });
                 }
               else
                 {
                   log.error("Create Order : Fail - Insufficient balance or balance incorrect");
+                  res.status(403).json({ error : "Insufficient balance or balance incorrect" });
                 }
               
             }

@@ -38,8 +38,10 @@ export class Routes {
     app.route("/mail").post(this.MailController.report);
     app.route("/forgot_password").post(this.MailController.forgotPasswordMail);
     
+
     app.use("/login_test",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, false, next));
     app.route("/login_test").post(this.AuthController.loginTest);
+
 
     app.route("/user").post(this.UserController.createUser);
     app.use("/user",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, false, next));
@@ -47,11 +49,13 @@ export class Routes {
     app.route("/user").put(this.UserController.updateUser);
     app.route("/user").delete(this.UserController.deleteUser);
 
+
     app.route("/type_article").get(this.TypeArticleController.getAllTypeArticle);
     app.use("/type_article",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, true, next));
     app.route("/type_article").post(this.TypeArticleController.createTypeArticle);
     app.route("/type_article").put(this.TypeArticleController.updateTypeArticle);
     app.route("/type_article").delete(this.TypeArticleController.deleteTypeArticle);
+
 
     app.route("/article").get(this.ArticleController.getAllArticle);
     app.use("/article",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, true, next));
@@ -59,9 +63,10 @@ export class Routes {
     app.route("/article").put(this.ArticleController.updateArticle);
     app.route("/article").delete(this.ArticleController.deleteArticle);
 
+
     app.route("/menu").get(this.MenuInfoController.getAllMenu);
     app.route("/menu/content/:id_menu").get(this.MenuContentController.getMenu);
-    
+   
     app.use("/menu",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, true, next));
     app.route("/menu").post(this.MenuInfoController.createMenu);
     app.route("/menu").put(this.MenuInfoController.updateMenu);
@@ -69,20 +74,22 @@ export class Routes {
     app.route("/menu/content").post(this.MenuContentController.addToMenu);
     app.route("/menu/content").delete(this.MenuContentController.deleteToMenu);
 
+
     app.use("/order",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, false, next));
     app.route("/order").post(this.OrderInfoController.createOrder);
-    app.route("/order/:id_client").get(this.OrderInfoController.getOrder);
     app.route("/order/content").post(this.OrderContentController.addToOrder);
     app.route("/order/content/:id_order").get(this.OrderContentController.getOrderContent);
+    app.route("/order/:id_client").get(this.OrderInfoController.getOrder);
    
-
     app.use("/order",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, true, next));
-    
     app.route("/order").delete(this.OrderInfoController.deleteOrder);
     app.route("/order/content").delete(this.OrderContentController.deleteToOrder);
     app.route("/order/valid").put(this.OrderInfoController.validOrder);
-    app.route("/order/recap").get(this.OrderContentController.recapOrder);
-    app.route("/order/recapAll").get(this.OrderInfoController.getAllOrderForToday);
+
+    app.use("/orderRecap",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, true, next));
+    app.route("/orderRecap/").get(this.OrderContentController.recapOrder);
+    app.route("/orderRecap/all").get(this.OrderInfoController.getAllOrderForToday);
+
 
     app.use("/setting",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, true, next));
     app.route("/setting/").get(this.SettingController.getAllSetting);
