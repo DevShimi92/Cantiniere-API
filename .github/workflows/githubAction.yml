@@ -63,6 +63,8 @@ jobs:
         SMTP_PORT_TEST: ${{ secrets.SMTP_PORT_TEST }}
         EMAIL_SUPPORT_TEST: ${{ secrets.EMAIL_SUPPORT_TEST }}
         PASSWORD_SUPPORT_TEST: ${{ secrets.PASSWORD_SUPPORT_TEST }}
+        FOLDER_IMAGE_PATH: ${{ secrets.FOLDER_IMAGE_PATH }}
+        CLOUDINARY_URL: ${{ secrets.CLOUDINARY_URL }}
 
     - name: Send to SonarCloud 
       uses: sonarsource/sonarcloud-github-action@master

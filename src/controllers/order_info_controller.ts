@@ -235,8 +235,6 @@ export class OrderInfoController {
 
     log.info("Valid Order");
 
-    console.info(req.body.id_order );
-
     if ( req.body.id_order == null )
       {
             res.status(400).json({ error : "Missing Fields" });
@@ -302,7 +300,7 @@ export class OrderInfoController {
   }
 
   public async getAllOrderForToday (req: Request,res: Response) : Promise<void> {
-    log.info("Get All Order for today");
+    log.info("Get all Order for today");
 
     let today = new Date;
     let DateToday = today.toISOString().slice(0, 10);

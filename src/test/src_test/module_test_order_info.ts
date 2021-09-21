@@ -55,6 +55,47 @@ export function moduleOrderInfo(): void {
             
     });
 
+    it("Get all Order for today - Unauthorized", function (done) {
+        this.timeout(60000);
+        request(app)
+            .get('/orderRecap/all')
+            .set('Accept', 'application/json')
+            .expect(401)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
+
+    it("Get all Order for today - Forbidden", function (done) {
+        this.timeout(60000);
+        request(app)
+            .get('/orderRecap/all')
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + token)
+            .expect(403)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
+
+    it("Get all Order for today - Not found", function (done) {
+        this.timeout(60000);
+        request(app)
+            .get('/orderRecap/all')
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + tokenAdmin)
+            .expect(204)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
+
     it("Create Order - Missing Fields", function (done) {
         this.timeout(60000);
         const data = {
@@ -128,6 +169,25 @@ export function moduleOrderInfo(): void {
                 res.body[0].should.have.property("createdAt");
                 res.body[0].should.have.property("total",10);
                 res.body[0].should.have.property("done",false);
+                done();
+            });
+            
+    });
+
+    it("Get all Order for today - Found", function (done) {
+        this.timeout(60000);
+        request(app)
+            .get('/orderRecap/all')
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + tokenAdmin)
+            .expect(200)
+            .end((err,res) => {
+                if (err) return done(err);
+                    res.body[0].should.have.property("id",1);
+                    res.body[0].should.have.property("id_client",2);
+                    res.body[0].should.have.property("done",false);
+                    res.body[0].should.have.property("User.first_name",'zz');
+                    res.body[0].should.have.property("User.last_name",'avvv');
                 done();
             });
             

@@ -17,6 +17,8 @@ declare global {
         SMTP_PORT_TEST:number;
         EMAIL_SUPPORT_TEST: string;
         PASSWORD_SUPPORT_TEST: string;
+        FOLDER_IMAGE_PATH: string;
+        CLOUDINARY_URL: string;
       }
     }
   }

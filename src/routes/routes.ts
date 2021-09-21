@@ -1,4 +1,6 @@
 import { Application } from "express";
+import Multer from "multer";
+
 import { DefaultController } from "../controllers/default_controller";
 import { UserController } from "../controllers/user_controller";
 import { TypeArticleController } from "../controllers/type_article_controller";
@@ -10,8 +12,10 @@ import { OrderContentController } from "../controllers/order_content_controller"
 import { AuthController } from "../controllers/auth_controller";
 import { MailController } from "../controllers/mail_controller";
 import { SettingController } from "../controllers/setting_controller";
+import { ImageController } from "../controllers/image_controller";
 
-import { AuthMiddleware } from "../middlewares/auth"
+import { AuthMiddleware } from "../middlewares/auth";
+import { UploadImageMiddleware } from "../middlewares/upload_image"
 
 export class Routes {
   
@@ -26,8 +30,24 @@ export class Routes {
   private AuthController: AuthController = new AuthController();
   private MailController: MailController = new MailController();
   private SettingController: SettingController = new SettingController();
+  private ImageController: ImageController = new ImageController();
 
   private AuthMiddleware: AuthMiddleware = new AuthMiddleware();
+  private UploadImageMiddleware: UploadImageMiddleware = new UploadImageMiddleware();
+
+  private storage = Multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'src/resources/')
+    },
+    filename: function (req, file, cb) {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+      cb(null, file.fieldname + '-' + uniqueSuffix)
+    }
+  })
+
+  private upload = Multer({ storage: this.storage , preservePath : true});
+  private uploadSingle = this.upload.single('img'); 
+
 
   public routes(app: Application): void {
 
@@ -87,7 +107,7 @@ export class Routes {
     app.route("/order/valid").put(this.OrderInfoController.validOrder);
 
     app.use("/orderRecap",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, true, next));
-    app.route("/orderRecap/").get(this.OrderContentController.recapOrder);
+    app.route("/orderRecap").get(this.OrderContentController.recapOrder);
     app.route("/orderRecap/all").get(this.OrderInfoController.getAllOrderForToday);
 
 
@@ -97,5 +117,12 @@ export class Routes {
     app.route("/setting/order_total_limit").put(this.SettingController.updateTotalOrderLimitDay);
     app.route("/setting/order_total_limit_account").put(this.SettingController.updateTotalOrderLimitAccountPerDay);
     app.route("/setting/pre_order").put(this.SettingController.updatePreOrder);
+
+    app.route("/image").get(this.ImageController.getImage);
+    
+    app.use("/image",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, true, next));
+    app.use("/image",(req, res, next) => this.UploadImageMiddleware.uploadImage(req, res, next));
+    app.route("/image").post(this.ImageController.imageProcessing);
+
   }
 }

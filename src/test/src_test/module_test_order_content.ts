@@ -81,6 +81,48 @@ export function moduleOrderContent(): void {
                 });
     });  
 
+    it("Get Recap Order for today - Unauthorized", function (done) {
+        this.timeout(60000);
+        request(app)
+            .get('/orderRecap')
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + tokenAdmin)
+            .expect(204)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
+
+    it("Get Recap Order for today - Forbidden", function (done) {
+        this.timeout(60000);
+        request(app)
+            .get('/orderRecap')
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + tokenAdmin)
+            .expect(204)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
+
+    it("Get Recap Order for today - Not found", function (done) {
+        this.timeout(60000);
+        request(app)
+            .get('/orderRecap')
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + tokenAdmin)
+            .expect(204)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
+
     it("Add Article to Order - Missing Fields", function (done) {
         this.timeout(60000);
         const data = {
@@ -161,6 +203,26 @@ export function moduleOrderContent(): void {
             ])
             .end((err) => {
                 if (err) return done(err);
+                done();
+            });
+            
+    });
+
+    it("Get Recap Order for today - Found", function (done) {
+        this.timeout(60000);
+        const date = new Date();
+        const dateString = date.toISOString().slice(0, 10)
+        request(app)
+            .get('/orderRecap')
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + tokenAdmin)
+            .expect(200)
+            .end((err,res) => {
+                if (err) return done(err);
+                res.body[0].should.have.property("id_article",2);
+                res.body[0].should.have.property("nombre",'1');
+                res.body[0].should.have.property("Article.name",'teteandcocori');
+                res.body[0].should.have.property("OrderInfo.date_order",dateString);
                 done();
             });
             

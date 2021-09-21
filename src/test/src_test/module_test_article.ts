@@ -333,6 +333,30 @@ export function moduleArticle(): void {
           });
   });
 
+  it("Update Article - Remove Picture", function (done) {
+    this.timeout(60000);
+    const data = {
+        "id" : 2,
+        /*
+            I found a bug with the id. I check this later.            
+        */
+        "name": 'teteandcocori',
+        "price": 10,
+        "picture" : "",
+        "description" : 'idk'
+    }
+    request(app)
+        .put('/article')
+        .send(data)
+        .set('Accept', 'application/json')
+        .set('Authorization', 'Bearer ' + tokenAdmin)
+        .expect(204)
+        .end((err) => {
+            if (err) return done(err);
+            done();
+        });
+});
+
 }
 
 export function moduleDeleteArticle(): void {
