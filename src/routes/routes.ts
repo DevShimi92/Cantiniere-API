@@ -35,20 +35,6 @@ export class Routes {
   private AuthMiddleware: AuthMiddleware = new AuthMiddleware();
   private UploadImageMiddleware: UploadImageMiddleware = new UploadImageMiddleware();
 
-  private storage = Multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, 'src/resources/')
-    },
-    filename: function (req, file, cb) {
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-      cb(null, file.fieldname + '-' + uniqueSuffix)
-    }
-  })
-
-  private upload = Multer({ storage: this.storage , preservePath : true});
-  private uploadSingle = this.upload.single('img'); 
-
-
   public routes(app: Application): void {
 
     app.route("/").get(this.DefaultController.index);
