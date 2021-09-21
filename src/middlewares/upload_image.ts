@@ -44,6 +44,9 @@ export class UploadImageMiddleware {
                         return cb(new Error('Allowed only .png, .jpg and .jpeg'));
                     }
 
+                },limits: { 
+                    fileSize: 8000000,
+                    files: 1
                 },
                 preservePath : true
             });
