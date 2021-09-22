@@ -105,7 +105,7 @@ export class ImageController {
                   else
                     {
 
-                      Article.update({ picture: result?.url }, {
+                      Article.update({ picture: result?.secure_url }, {
                         where: {
                           id: req.body.id_article
                         }
