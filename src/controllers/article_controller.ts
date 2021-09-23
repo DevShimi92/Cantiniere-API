@@ -21,7 +21,7 @@ export class ArticleController {
       }
     else
       {
-              await Article.create<Article>({ name: req.body.name, price : req.body.price, code_type_src: req.body.code_type_src})
+              await Article.create<Article>({ name: req.body.name, price : req.body.price, code_type_src: req.body.code_type_src, description: req.body.description})
                 .then(() => {
                   res.status(201).end();
                   log.info("Create Article : OK");
