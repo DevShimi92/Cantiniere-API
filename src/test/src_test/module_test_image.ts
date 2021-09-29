@@ -86,10 +86,10 @@ export default function moduleTestImage(): void {
         });
   });
 
-  it("Post image - Unauthorized", function (done) {
+  it("Put image - Unauthorized", function (done) {
     this.timeout(60000);
     request(app)
-        .post('/image')
+        .put('/image')
         .set('Accept', 'application/json')
         .expect(401)
         .end((err) => {
@@ -98,10 +98,10 @@ export default function moduleTestImage(): void {
         });
   });
 
-  it("Post image - Forbidden", function (done) {
+  it("Put image - Forbidden", function (done) {
     this.timeout(60000);
     request(app)
-        .post('/image')
+        .put('/image')
         .set('Accept', 'application/json')
         .set('Authorization', 'Bearer ' + token)
         .expect(403)
@@ -111,10 +111,10 @@ export default function moduleTestImage(): void {
         });
   });
 
-  it("Post image - Missing Fields", function (done) {
+  it("Put image - Missing Fields", function (done) {
     this.timeout(60000);
     request(app)
-        .post('/image')
+        .put('/image')
         .set('content-type', 'multipart/form-data')
         .set('Authorization', 'Bearer ' + tokenAdmin)
         .expect(400)
@@ -124,13 +124,13 @@ export default function moduleTestImage(): void {
         });
   });
 
-  it("Post image - ID IS NOT A NUMBER", function (done) {
+  it("Put image - ID IS NOT A NUMBER", function (done) {
     this.timeout(60000);
     const data = {
       "id_article": '@'
     }
     request(app)
-        .post('/image')        
+        .put('/image')        
         .set('content-type', 'multipart/form-data')
         .set('Authorization', 'Bearer ' + tokenAdmin)
         .field('id_article', '@')
@@ -141,13 +141,13 @@ export default function moduleTestImage(): void {
         });
   });
 
-  it("Post image - Article not found", function (done) {
+  it("Put image - Article not found", function (done) {
     this.timeout(60000);
     const data = {
       "id_article": 1
     }
     request(app)
-        .post('/image')        
+        .put('/image')        
         .set('content-type', 'multipart/form-data')
         .set('Authorization', 'Bearer ' + tokenAdmin)
         .field('id_article', 1)
@@ -158,10 +158,10 @@ export default function moduleTestImage(): void {
         });
   });
 
-  it("Post image - Image not found", function (done) {
+  it("Put image - Image not found", function (done) {
     this.timeout(60000);
     request(app)
-        .post('/image')
+        .put('/image')
         .set('content-type', 'multipart/form-data')
         .set('Authorization', 'Bearer ' + tokenAdmin)
         .field('id_article', 2)
@@ -172,10 +172,10 @@ export default function moduleTestImage(): void {
         });
   });
 
-  it("Post image - OK", function (done) {
+  it("Put image - OK", function (done) {
     this.timeout(60000);
     request(app)
-        .post('/image')
+        .put('/image')
         .set('content-type', 'multipart/form-data')
         .set('Authorization', 'Bearer ' + tokenAdmin)
         .field('id_article', 2)

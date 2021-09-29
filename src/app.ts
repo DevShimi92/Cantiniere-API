@@ -1,5 +1,4 @@
 import express from "express";
-import * as bodyParser from "body-parser";
 import cors from "cors";
 import { Routes } from "./routes/routes";
 
@@ -9,7 +8,7 @@ class App {
   public options ='';
   private corsOptions = {
     origin: process.env.WHITE_LIST_CORS_ORIGIN,
-    optionsSuccessStatus: 200 
+    optionsSuccessStatus: 200
 }
 
   constructor() {
@@ -18,10 +17,11 @@ class App {
     this.routeApi.routes(this.app);
   }
 
- private config(): void {
-    this.app.use(bodyParser.json());
-    this.app.use(bodyParser.urlencoded({ extended: false }));
-    this.app.use(cors(this.corsOptions));
+ private config(): void { 
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: false }));  
+    this.app.use(cors(this.corsOptions)); 
+    
 
   } 
 }

@@ -1,5 +1,4 @@
 import { Application } from "express";
-import Multer from "multer";
 
 import { DefaultController } from "../controllers/default_controller";
 import { UserController } from "../controllers/user_controller";
@@ -108,7 +107,7 @@ export class Routes {
     
     app.use("/image",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, true, next));
     app.use("/image",(req, res, next) => this.UploadImageMiddleware.uploadImage(req, res, next));
-    app.route("/image").post(this.ImageController.imageProcessing);
+    app.route("/image").put(this.ImageController.imageProcessing);
 
   }
 }
