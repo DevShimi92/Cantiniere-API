@@ -61,12 +61,12 @@ export class Routes {
     app.route("/type_article").put(this.TypeArticleController.updateTypeArticle);
     app.route("/type_article").delete(this.TypeArticleController.deleteTypeArticle);
 
-
     app.route("/article").get(this.ArticleController.getAllArticle);
     app.use("/article",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, true, next));
-    app.route("/article").post(this.ArticleController.createArticle);
     app.route("/article").put(this.ArticleController.updateArticle);
     app.route("/article").delete(this.ArticleController.deleteArticle);
+    app.use("/article",(req, res, next) => this.UploadImageMiddleware.uploadImage(req, res, next));
+    app.route("/article").post(this.ArticleController.createArticle);
 
 
     app.route("/menu").get(this.MenuInfoController.getAllMenu);
@@ -107,7 +107,7 @@ export class Routes {
     
     app.use("/image",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, true, next));
     app.use("/image",(req, res, next) => this.UploadImageMiddleware.uploadImage(req, res, next));
-    app.route("/image").put(this.ImageController.imageProcessing);
+    app.route("/image").put(this.ImageController.beforeImageProcessing);
 
   }
 }

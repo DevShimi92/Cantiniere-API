@@ -58,7 +58,7 @@ export class ImageController {
 
   }
 
-  public async imageProcessing(req: Request, res: Response) : Promise<void> {
+  public async beforeImageProcessing(req: Request, res: Response) : Promise<void> {
     log.info("Image Processing ...");
 
     if(req.body.id_article  == null)
@@ -93,38 +93,14 @@ export class ImageController {
             }
           else
             {
-              cloudinary.v2.uploader.upload(res.locals.path,{ public_id: res.locals.fileName }, function(error, result) {
-                  log.debug(result);
 
-                  if(error)
-                    {
-                      log.error("Image Processing - Error during uploading : ");
-                      log.error(error);
-                      res.status(500).end();
-                    }
-                  else
-                    {
-
-                      Article.update({ picture: result?.secure_url }, {
-                        where: {
-                          id: req.body.id_article
-                        }
-                      }).then(() => {
-
-                          res.status(204).end();
-                          log.info("Image Processing : OK");
-
-                        })
-                      .catch((err: Error,) => {
-
-                          res.status(500).end();
-                          log.error('Image Processing - Error with field picture of Article : ' + err);
-                          ImageController.deleteImage(res);
-
-                        });
-
-                    }
-
+              ImageController.imageProcessing(req.body.id_article,res).then(()=>{
+                res.status(204).end();
+                
+              })
+              .catch((error)=>{
+                log.error(error);
+                res.status(500).end();
               });
 
             }
@@ -134,6 +110,49 @@ export class ImageController {
        
       }
   }
+
+  static async imageProcessing(id:number, res: Response): Promise<boolean> {
+    log.info("Image Processing ...");
+
+    return new Promise<boolean>((resolve, reject) => { 
+
+          cloudinary.v2.uploader.upload(res.locals.path,{ public_id: res.locals.fileName }, function(error, result) {
+            log.debug(result);
+
+            if(error)
+              {
+                log.error("Image Processing - Error during uploading : ");
+                log.error(error);
+                return reject(error);
+              }
+            else
+              {
+
+                return Article.update({ picture: result?.secure_url }, {
+                  where: {
+                    id: id
+                  }
+                }).then(() => {
+
+                    log.info("Image Processing : OK");
+                    return resolve(true);
+
+                  })
+                .catch((err: Error,) => {
+                    log.error('Image Processing - Error with field picture of Article : ' + err);
+                    ImageController.deleteImage(res);
+                    return reject(err);
+                  });
+
+              }
+
+        });
+
+    });
+
+
+  }
+
 
   static async deleteImage(res: Response): Promise<void> {
     fs.unlink(res.locals.path, function (err) {

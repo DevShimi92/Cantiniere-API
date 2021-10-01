@@ -1,36 +1,50 @@
 import { Request, Response } from "express";
 import { log } from "../config/log_config";
 import { Article } from "../models/article";
+import { ImageController } from "./image_controller";
 
 export class ArticleController {
 
   public async createArticle(req: Request, res: Response) : Promise<void> {
     log.info("Create Article");
-
+    log.debug(req.body);
     if (req.body.name == null || req.body.price == null || req.body.code_type_src == null)
       {
             res.status(400).json({ error : 'Missing Fields' });
             res.end();
-            log.error("Create Type of Article : Fail - Missing Fields");      
+            log.error("Create Article : Fail - Missing Fields");      
       }
     else if (isNaN(req.body.code_type_src) || isNaN(req.body.price))
       {
             res.status(400).json({ error : "Number only" });
             res.end();
-            log.error("Create Type of Article : Fail - The value is not number"); 
+            log.error("Create Article : Fail - The value is not number"); 
       }
     else
       {
-              await Article.create<Article>({ name: req.body.name, price : req.body.price, code_type_src: req.body.code_type_src, description: req.body.description})
-                .then(() => {
-                  res.status(201).end();
-                  log.info("Create Article : OK");
-                })
-                .catch((err: Error) => {
+          await Article.create<Article>({ name: req.body.name, price : req.body.price, code_type_src: req.body.code_type_src, description: req.body.description})
+              .then(async (data) => {
+
+                  if(req.files?.length == 0 || req.files?.length == undefined)
+                    {
+                      log.warn("Create Article : Image not found.");
+                      res.status(201).end();
+                      log.info("Create Article : OK");
+                    }
+                  else
+                    {
+                      log.info("Create Article : Image found. Upload image");
+                      await ImageController.imageProcessing(data.id,res);
+                      res.status(201).end();
+                      log.info("Create Article : OK");
+                    }
+
+              })
+              .catch((err: Error) => {
                   res.status(500).end();
                   log.error("Create Article : Fail - ERROR");
                   log.error(err);
-                });
+              });
 
                 
       }
