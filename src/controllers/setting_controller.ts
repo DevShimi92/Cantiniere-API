@@ -67,6 +67,14 @@ export class SettingController {
 
     });
   }
+
+  public async getHourLimit(req: Request,res: Response) : Promise<void> {
+
+    log.info("Get hour Limit route");
+    let hour_limit = await SettingController.getHourLimit();
+    res.status(200).json({ hour_limit : hour_limit }).end();
+
+  }
   
   public async updateHourLimit(req: Request,res: Response) : Promise<void> {
 
