@@ -42,6 +42,7 @@ export class Routes {
     app.route("/rest_password").post(this.UserController.restPassword);
     app.route("/mail").post(this.MailController.report);
     app.route("/forgot_password").post(this.MailController.forgotPasswordMail);
+    app.route("/setting/hour_limit").get(this.SettingController.getHourLimit);
     
 
     app.use("/login_test",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, false, next));
@@ -95,7 +96,6 @@ export class Routes {
     app.route("/orderRecap").get(this.OrderContentController.recapOrder);
     app.route("/orderRecap/all").get(this.OrderInfoController.getAllOrderForToday);
 
-    app.route("/setting/hour_limit").get(this.SettingController.getHourLimit);
     app.use("/setting",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, true, next));
     app.route("/setting/").get(this.SettingController.getAllSetting);
     app.route("/setting/hour_limit").put(this.SettingController.updateHourLimit);
