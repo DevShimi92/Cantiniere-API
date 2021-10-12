@@ -7,7 +7,6 @@ export class ArticleController {
 
   public async createArticle(req: Request, res: Response) : Promise<void> {
     log.info("Create Article");
-    log.debug(req.body);
     if (req.body.name == null || req.body.price == null || req.body.code_type_src == null)
       {
             res.status(400).json({ error : 'Missing Fields' });
@@ -34,7 +33,7 @@ export class ArticleController {
                   else
                     {
                       log.info("Create Article : Image found. Upload image");
-                      await ImageController.imageProcessing(data.id,res);
+                      await ImageController.imageProcessing(data.id,res,true);
                       res.status(201).end();
                       log.info("Create Article : OK");
                     }
@@ -217,7 +216,7 @@ export class ArticleController {
           where: {
             id: req.body.id
           }
-        }).then(function(dataArticle) { // dataArticle beacause sonarcloud logic
+        }).then(function(dataArticle) { 
           if(dataArticle == 0)
             {
               res.status(404).end();

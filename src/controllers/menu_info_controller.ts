@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { log } from "../config/log_config";
 import { MenuInfo } from "../models/menu_info";
+import { ImageController } from "./image_controller";
 
 export class MenuInfoController {
 
@@ -29,8 +30,20 @@ export class MenuInfoController {
 
           await MenuInfo.create<MenuInfo>({ name: req.body.name, description: req.body.description , price_final: req.body.price_final})
                 .then((data) => {
-                  res.status(200).json({ id : data.get('id')}).end();
-                  log.info("Create Menu : OK");
+                  
+                  if(req.files?.length == 0 || req.files?.length == undefined)
+                    {
+                      log.warn("Create Menu : Image not found.");
+                      res.status(201).json({ id : data.get('id')}).end();
+                      log.info("Create Menu : OK");
+                    }
+                  else
+                    {
+                      log.info("Create Menu : Image found. Upload image");
+                      ImageController.imageProcessing(data.id,res,false);
+                      res.status(200).json({ id : data.get('id')}).end();
+                      log.info("Create Menu : OK");
+                    }
                 })
                 .catch((err: Error) => {
                   res.status(500).end();
@@ -185,7 +198,7 @@ export class MenuInfoController {
           where: {
             id: req.body.id
           }
-        }).then(function(dataDeletMenu) { // dataDeletMenu beacause sonarcloud logic
+        }).then(function(dataDeletMenu) {
           if(dataDeletMenu == 0)
             {
               res.status(404).end();

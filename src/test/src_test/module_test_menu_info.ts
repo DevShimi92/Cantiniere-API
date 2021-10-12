@@ -112,7 +112,7 @@ export function moduleMenuInfo(): void {
           .send(data)
           .set('Accept', 'application/json')
           .set('Authorization', 'Bearer ' + tokenAdmin)
-          .expect(200,{ "id": 1})
+          .expect(201,{ "id": 1})
           .end((err) => {
               if (err) return done(err);
               done();

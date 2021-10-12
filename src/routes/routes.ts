@@ -74,12 +74,13 @@ export class Routes {
     app.route("/menu/content/:id_menu").get(this.MenuContentController.getMenu);
    
     app.use("/menu",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, true, next));
-    app.route("/menu").post(this.MenuInfoController.createMenu);
     app.route("/menu").put(this.MenuInfoController.updateMenu);
     app.route("/menu").delete(this.MenuInfoController.deleteMenu);
+    app.use("/menu",(req, res, next) => this.UploadImageMiddleware.uploadImage(req, res, next));
+    app.route("/menu").post(this.MenuInfoController.createMenu);
     app.route("/menu/content").post(this.MenuContentController.addToMenu);
     app.route("/menu/content").delete(this.MenuContentController.deleteToMenu);
-
+    
 
     app.use("/order",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, false, next));
     app.route("/order").post(this.OrderInfoController.createOrder);

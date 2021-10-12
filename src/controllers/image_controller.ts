@@ -4,6 +4,7 @@ import cloudinary  from "cloudinary" ;
 
 import { log } from "../config/log_config";
 import { Article } from "../models/article";
+import { MenuInfo } from "../models/menu_info";
 
 export class ImageController {
 
@@ -61,13 +62,13 @@ export class ImageController {
   public async beforeImageProcessing(req: Request, res: Response) : Promise<void> {
     log.info("Image Processing ...");
 
-    if(req.body.id_article  == null)
+    if(req.body.id_article  == null && req.body.id_menu  == null)
       {
           res.status(400).json({ error : "Missing Fields" }).end();
           log.error("Image Processing : Fail - Missing Fields"); 
           ImageController.deleteImage(res);
       }
-    else if( (isNaN(req.body.id_article) && req.body.id_article !=null) )
+    else if( (isNaN(req.body.id_article) && req.body.id_article !=null) || (isNaN(req.body.id_menu) && req.body.id_menu !=null))
       {
           res.status(400).json({ error : "Number only" }).end();
           log.error("Image Processing : Fail - The value is not number"); 
@@ -80,21 +81,59 @@ export class ImageController {
       }
     else
       {
+        if(req.body.id_article !=null)
+          {
+
+            await Article.findOne<Article>({
+              raw: true,
+              where: {
+                id : req.body.id_article
+              }
+            }).then(function(data) { 
         
-        await Article.findOne<Article>({
+              if(data == null)
+                {
+                  res.status(404).json({ error : "Article not found" }).end();
+                  log.error("Image Processing : Fail - Article not found"); 
+                  ImageController.deleteImage(res);
+                }
+              else
+                {
+    
+                  ImageController.imageProcessing(req.body.id_article,res,true).then(()=>{
+                    res.status(204).end();
+                    
+                  })
+                  .catch((error)=>{
+                    log.error(error);
+                    res.status(500).end();
+                  });
+    
+                }
+            
+            });
+
+          }
+        else
+        {
+
+          await MenuInfo.findOne<MenuInfo>({
           raw: true,
+          where: {
+            id : req.body.id_menu
+          }
         }).then(function(data) { 
     
           if(data == null)
             {
-              res.status(404).json({ error : "Article not found" }).end();
-              log.error("Image Processing : Fail - Article not found"); 
+              res.status(404).json({ error : "Menu not found" }).end();
+              log.error("Image Processing : Fail - Menu not found"); 
               ImageController.deleteImage(res);
             }
           else
             {
 
-              ImageController.imageProcessing(req.body.id_article,res).then(()=>{
+              ImageController.imageProcessing(req.body.id_menu,res,true).then(()=>{
                 res.status(204).end();
                 
               })
@@ -106,12 +145,13 @@ export class ImageController {
             }
         
         });
-        
+
+        }  
        
       }
   }
 
-  static async imageProcessing(id:number, res: Response): Promise<boolean> {
+  static async imageProcessing(id:number, res: Response, isArticle: boolean): Promise<boolean> {
     log.info("Image Processing ...");
 
     return new Promise<boolean>((resolve, reject) => { 
@@ -128,21 +168,46 @@ export class ImageController {
             else
               {
 
-                return Article.update({ picture: result?.secure_url }, {
-                  where: {
-                    id: id
+                if(isArticle)
+                  {
+
+                    return Article.update({ picture: result?.secure_url }, {
+                      where: {
+                        id: id
+                      }
+                    }).then(() => {
+
+                        log.info("Image Processing : OK");
+                        return resolve(true);
+
+                      })
+                    .catch((err: Error,) => {
+                        log.error('Image Processing - Error with field picture of Article : ' + err);
+                        ImageController.deleteImage(res);
+                        return reject(err);
+                      });
+
                   }
-                }).then(() => {
+                else
+                  {
 
-                    log.info("Image Processing : OK");
-                    return resolve(true);
+                    return MenuInfo.update({ picture: result?.secure_url }, {
+                      where: {
+                        id: id
+                      }
+                    }).then(() => {
 
-                  })
-                .catch((err: Error,) => {
-                    log.error('Image Processing - Error with field picture of Article : ' + err);
-                    ImageController.deleteImage(res);
-                    return reject(err);
-                  });
+                        log.info("Image Processing : OK");
+                        return resolve(true);
+
+                      })
+                    .catch((err: Error,) => {
+                        log.error('Image Processing - Error with field picture of Article : ' + err);
+                        ImageController.deleteImage(res);
+                        return reject(err);
+                      });
+
+                  }
 
               }
 

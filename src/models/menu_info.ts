@@ -7,6 +7,7 @@ export interface MenuInfoInterface {
     id: number;
     name: string;
     description: string;
+    picture: string;
     price_final: number;
   }
   
@@ -14,6 +15,7 @@ export class MenuInfo extends Model {
     public id!: number;
     public name!: string;
     public description!: string;
+    public picture!: string;
     public price_final!: number;
   }
 
@@ -30,6 +32,10 @@ export class MenuInfo extends Model {
         allowNull: false,
       },
       description: {
+        type: new DataTypes.STRING,
+        allowNull: true,
+      },
+      picture: {
         type: new DataTypes.STRING,
         allowNull: true,
       },
