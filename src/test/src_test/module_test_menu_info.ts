@@ -125,7 +125,7 @@ export function moduleMenuInfo(): void {
       request(app)
           .get('/menu')
           .set('Accept', 'application/json')
-          .expect(200,[{ "id": 1, "name": 'menu1', "price_final": 0, "description": null}])
+          .expect(200,[{ "id": 1, "name": 'menu1', "price_final": 0, "description": null, "picture": null}])
           .end((err) => {
               if (err) return done(err);
               done();

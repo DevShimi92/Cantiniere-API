@@ -58,7 +58,7 @@ export class MenuInfoController {
     log.info("Get all Menu");
 
     await MenuInfo.findAll<MenuInfo>({
-      attributes : ['id','name','description','price_final'],
+      attributes : ['id','name','description','price_final','picture'],
       raw: true,
     }).then(function(data) { 
 
