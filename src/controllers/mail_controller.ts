@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 import { User } from "../models/user";
 import { RestToken } from "../models/rest_token";
 
-let mailConfig;
+let mailConfig : any;
 
 function randomValueHex (length:number) {
   return crypto.randomBytes(Math.ceil(length/2))
@@ -90,6 +90,7 @@ export class MailController {
           if (error) {
             log.error(error);
             log.error(mailOptions);
+            log.error(mailConfig);
             return reject(false);
           } else {
             log.info('Email sent : ')
