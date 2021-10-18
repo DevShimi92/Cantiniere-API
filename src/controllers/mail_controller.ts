@@ -14,7 +14,7 @@ function randomValueHex (length:number) {
       .slice(0,length).toUpperCase();   // return required number of characters
 }
 
-if (process.env.NODE_MAIL_TEST_MODE){
+if (process.env.NODE_MAIL_TEST_MODE == 'true'){
     mailConfig = {
       host: process.env.HOST_SMTP_URL_TEST,
       port: process.env.SMTP_PORT_TEST,
@@ -137,7 +137,7 @@ export class MailController {
 
             let rest_token : string;
 
-            if (process.env.NODE_MAIL_TEST_MODE){
+            if (process.env.NODE_MAIL_TEST_MODE == 'true'){
 
               rest_token = jwt.sign("FAKETOKEN",process.env.SECRET_KEY_REST_TEST);
 
@@ -172,7 +172,7 @@ export class MailController {
                 from: process.env.EMAIL_SUPPORT,
                 to: req.body.email,
                 subject: 'Lien de réinitialisation de mot de passe',
-                text: 'Voici un lien pour réinitialiser votre mot de passe :\n\n'+process.env.CLIENT_URL+"rest_password/"+rest_token + "\n\n Ce lien n'est valide que pendant 15 minute."
+                text: 'Voici un lien pour réinitialiser votre mot de passe :\n\n'+process.env.SITE_URL+"rest_password/"+rest_token + "\n\n Ce lien n'est valide que pendant 15 minute."
               };
 
               sendMail(mailOptions);

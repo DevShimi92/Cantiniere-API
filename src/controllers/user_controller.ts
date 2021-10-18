@@ -365,7 +365,7 @@ export class UserController {
         {
           let SECRET_KEY : string;
 
-          if(process.env.NODE_MAIL_TEST_MODE)
+          if(process.env.NODE_MAIL_TEST_MODE == 'true')
                 SECRET_KEY=process.env.SECRET_KEY_REST_TEST;
               else
                 SECRET_KEY=process.env.SECRET_KEY_REST;

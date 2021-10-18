@@ -54,17 +54,13 @@ export class AuthController {
                  }
                 else
                   {
-
-                  let hour_limit = await SettingController.getHourLimit();
-
                   let dataUser = { 
                     id : data.id, 
                     last_name : data.last_name,
                     first_name: data.first_name,
                     email: data.email,
                     money: data.money,
-                    cooker: data.cooker,
-                    hour_limit: hour_limit
+                    cooker: data.cooker
                   };
                 
                   let token = jwt.sign(dataUser,process.env.SECRET_KEY,{ expiresIn: 60 * 15 });
@@ -160,17 +156,14 @@ export class AuthController {
                       }
                     }).then(async function(dataClient) { 
                       if(dataClient != null)
-                        {
-                          let hour_limit = await SettingController.getHourLimit();
-                          
+                        { 
                           let dataUser = { 
                             id : dataClient.id, 
                             last_name : dataClient.last_name,
                             first_name: dataClient.first_name,
                             email: dataClient.email,
                             money: dataClient.money,
-                            cooker: dataClient.cooker,
-                            hour_limit: hour_limit
+                            cooker: dataClient.cooker
                           };
 
                           let token = jwt.sign(dataUser,process.env.SECRET_KEY, { expiresIn: 60 *15  });

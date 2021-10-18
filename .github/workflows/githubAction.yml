@@ -50,22 +50,22 @@ jobs:
     - name: Running test with coverage...
       run: npm run coverage
       env:
-        API_TEST: ${{ secrets.API_TEST }}
+        COOKER_DEFAUT_EMAIL: ${{ secrets.COOKER_DEFAUT_EMAIL }}
+        COOKER_DEFAUT_PASSWORD: ${{ secrets.COOKER_DEFAUT_PASSWORD }}
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
         SECRET_KEY: ${{ secrets.SECRET_KEY }}
         SECRET_KEY_REFRESH: ${{ secrets.SECRET_KEY_REFRESH }}
-        COOKER_DEFAUT_EMAIL: ${{ secrets.COOKER_DEFAUT_EMAIL }}
-        COOKER_DEFAUT_PASSWORD: ${{ secrets.COOKER_DEFAUT_PASSWORD }}
+        FOLDER_IMAGE_PATH: ${{ secrets.FOLDER_IMAGE_PATH }}
+        CLOUDINARY_URL: ${{ secrets.CLOUDINARY_URL }}
+        API_TEST: ${{ secrets.API_TEST }}
         EMAIL_SUPPORT: ${{ secrets.EMAIL_SUPPORT }}
         NODE_MAIL_TEST_MODE: ${{ secrets.NODE_MAIL_TEST_MODE }}
         SECRET_KEY_REST_TEST: ${{ secrets.SECRET_KEY_REST_TEST }}
         HOST_SMTP_URL_TEST: ${{ secrets.HOST_SMTP_URL_TEST }}
         SMTP_PORT_TEST: ${{ secrets.SMTP_PORT_TEST }}
         EMAIL_SUPPORT_TEST: ${{ secrets.EMAIL_SUPPORT_TEST }}
-        PASSWORD_SUPPORT_TEST: ${{ secrets.PASSWORD_SUPPORT_TEST }}
-        FOLDER_IMAGE_PATH: ${{ secrets.FOLDER_IMAGE_PATH }}
-        CLOUDINARY_URL: ${{ secrets.CLOUDINARY_URL }}
-
+        PASSWORD_SUPPORT_TEST: ${{ secrets.PASSWORD_SUPPORT_TEST }}        
+        
     - name: Send to SonarCloud 
       uses: sonarsource/sonarcloud-github-action@master
       with:
