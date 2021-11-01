@@ -21,6 +21,11 @@ export class ArticleController {
       }
     else
       {
+        if(req.body.description === 'null')
+            {
+              req.body.description = null;
+            }
+            
           await Article.create<Article>({ name: req.body.name, price : req.body.price, code_type_src: req.body.code_type_src, description: req.body.description})
               .then(async (data) => {
 
