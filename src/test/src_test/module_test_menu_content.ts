@@ -187,7 +187,8 @@ export function moduleMenuContent(): void {
               "MenuInfo.price_final": 10,
               "Article.name": "teteandcocori",
               "Article.code_type_src": 1,
-              "Article.price": 10
+              "Article.price": 10,
+              "Article.picture": ""
           }])
           .end((err) => {
               if (err) return done(err);

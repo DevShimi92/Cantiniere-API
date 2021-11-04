@@ -23,7 +23,7 @@ export class MenuContentController {
           raw: true,
         include: [
           {model: MenuInfo, attributes: ['name','description','price_final']}, 
-          {model: Article, attributes: ['name','code_type_src','price']} 
+          {model: Article, attributes: ['name','code_type_src','price','picture']} 
         ],
         where: {
           id_menu: req.params.id_menu
