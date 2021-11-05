@@ -19,7 +19,7 @@ export class MenuContentController {
       {
 
         await MenuContent.findAll<MenuContent>({
-          attributes : ['id_menu','id_article'],
+          attributes : ['id','id_menu','id_article'],
           raw: true,
         include: [
           {model: MenuInfo, attributes: ['name','description','price_final']}, 
@@ -81,13 +81,13 @@ export class MenuContentController {
   public async deleteToMenu(req: Request,res: Response) : Promise<void> {
     log.info("Delete Article to Menu");
 
-    if ( req.body.id_article == null || req.body.id_menu == null) 
+    if ( req.body.id_article == null || req.body.id_menu == null || req.body.id == null) 
       {
             res.status(400).json({ error : "Missing Fields" });
             res.end();
             log.error("Delete Article to Menu : Fail - Missing Fields");      
       }
-    else if ( isNaN(req.body.id_article) || isNaN(req.body.id_menu) )
+    else if ( isNaN(req.body.id_article) || isNaN(req.body.id_menu) || isNaN(req.body.id) )
       {
             res.status(400).json({ error : "Number only" });
             res.end();
@@ -97,10 +97,11 @@ export class MenuContentController {
       {
         await MenuContent.destroy<MenuContent>({
           where: {
+            id: req.body.id,
             id_article: req.body.id_article,
             id_menu: req.body.id_menu,
           }
-        }).then(function(dataMenuContent) {  // dataMenuContent beacause sonarcloud logic
+        }).then(function(dataMenuContent) { 
           if(dataMenuContent == 0)
             {
               res.status(404).end();

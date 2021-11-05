@@ -180,6 +180,7 @@ export function moduleMenuContent(): void {
           .set('Accept', 'application/json')
           .set('Authorization', 'Bearer ' + tokenAdmin)
           .expect(200,[{
+              "id": 1,
               "id_menu": 1,
               "id_article": 2,
               "MenuInfo.name": "menu_the_1",
@@ -240,6 +241,7 @@ export function moduleDeleteMenuContent(): void {
     it("Delete Article to Menu - Not found", function (done) {
         this.timeout(60000);
         const data = {
+            "id": 1,
             "id_article": 1,
             "id_menu": 1
         }
@@ -258,6 +260,7 @@ export function moduleDeleteMenuContent(): void {
     it("Delete Article to Menu - Unauthorized", function (done) {
         this.timeout(60000);
         const data = {
+            "id": 1,
             "id_article": 2,
             "id_menu": 1
         }
@@ -275,6 +278,7 @@ export function moduleDeleteMenuContent(): void {
     it("Delete Article to Menu - Forbidden", function (done) {
         this.timeout(60000);
         const data = {
+            "id": 1,
             "id_article": 2,
             "id_menu": 1
         }
@@ -293,6 +297,7 @@ export function moduleDeleteMenuContent(): void {
     it("Delete Article to Menu - OK", function (done) {
         this.timeout(60000);
         const data = {
+            "id": 1,
             "id_article": 2,
             "id_menu": 1
         }
