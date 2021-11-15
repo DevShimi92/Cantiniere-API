@@ -128,41 +128,51 @@ export class OrderContentController {
   }
 
   public async recapOrder(req: Request,res: Response) : Promise<void> {
-    log.info("Get Recap Order for today");
-    let today = new Date;
-    let DateToday = today.toISOString().slice(0, 10);
+    log.info("Get Recap Order for one day");
 
-    await OrderContent.findAll<OrderContent>({
-      attributes : ['id_article', [Sequelize.fn('COUNT', Sequelize.col('OrderContent.id_article')), 'nombre']],
-      raw: true,
-      group: ['id_article','name','OrderInfo.date_order'],
-      include: [
-        {model: Article, attributes: ['name']},
-        {model: OrderInfo, attributes: ['date_order'],
-          where: {
-            date_order : DateToday
-          }
-        }
-      ],
-    }).then((dataRecapOrder) => {
+    var regexp = RegExp("^([0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9])$");
 
-      if(dataRecapOrder.length == 0) 
-          {
-            res.status(204).end();
-          }
-        else
-          {
-            res.status(200).json(dataRecapOrder).end();
-          }
+    if ( !regexp.test(req.params.date) || req.params.date.length != 10 ) 
+      {
+            res.status(400).json({ error : "Missing Fields or Bad format" });
+            res.end();
+            log.error("Get All Order for one day : Fail - Missing Fields or Bad format");      
+      }
+    else
+      {
 
-        log.info("Recap Order for today : OK");
+          await OrderContent.findAll<OrderContent>({
+            attributes : ['id_article', [Sequelize.fn('COUNT', Sequelize.col('OrderContent.id_article')), 'nombre']],
+            raw: true,
+            group: ['id_article','name','OrderInfo.date_order'],
+            include: [
+              {model: Article, attributes: ['name']},
+              {model: OrderInfo, attributes: ['date_order'],
+                where: {
+                  date_order : req.params.date
+                }
+              }
+            ],
+          }).then((dataRecapOrder) => {
 
-      }).catch((err: Error) => {
-        res.status(500).end();
-        log.error("Recap Order for today : Fail - ERROR");
-        log.error(err);
-      });
+            if(dataRecapOrder.length == 0) 
+                {
+                  res.status(204).end();
+                }
+              else
+                {
+                  res.status(200).json(dataRecapOrder).end();
+                }
 
+              log.info("Recap Order for today : OK");
+
+            }).catch((err: Error) => {
+              res.status(500).end();
+              log.error("Recap Order for today : Fail - ERROR");
+              log.error(err);
+            });
+
+      }
   }
 
 }

@@ -55,10 +55,10 @@ export function moduleOrderInfo(): void {
             
     });
 
-    it("Get all Order for today - Unauthorized", function (done) {
+    it("Get all Order for one day - Unauthorized", function (done) {
         this.timeout(60000);
         request(app)
-            .get('/orderRecap/all')
+            .get('/orderRecap/list/')
             .set('Accept', 'application/json')
             .expect(401)
             .end((err) => {
@@ -68,10 +68,10 @@ export function moduleOrderInfo(): void {
             
     });
 
-    it("Get all Order for today - Forbidden", function (done) {
+    it("Get all Order for one day - Forbidden", function (done) {
         this.timeout(60000);
         request(app)
-            .get('/orderRecap/all')
+            .get('/orderRecap/list/')
             .set('Accept', 'application/json')
             .set('Authorization', 'Bearer ' + token)
             .expect(403)
@@ -82,10 +82,38 @@ export function moduleOrderInfo(): void {
             
     });
 
-    it("Get all Order for today - Not found", function (done) {
+    it("Get all Order for one day - Missing Fields", function (done) {
         this.timeout(60000);
         request(app)
-            .get('/orderRecap/all')
+            .get('/orderRecap/list/')
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + tokenAdmin)
+            .expect(400)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
+
+    it("Get all Order for one day - Bad format", function (done) {
+        this.timeout(60000);
+        request(app)
+            .get('/orderRecap/list/')
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + tokenAdmin)
+            .expect(400)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
+
+    it("Get all Order for one day - Not found", function (done) {
+        this.timeout(60000);
+        request(app)
+            .get('/orderRecap/list/1990-01-01')
             .set('Accept', 'application/json')
             .set('Authorization', 'Bearer ' + tokenAdmin)
             .expect(204)
@@ -174,10 +202,13 @@ export function moduleOrderInfo(): void {
             
     });
 
-    it("Get all Order for today - Found", function (done) {
+    it("Get all Order for one day - Found", function (done) {
         this.timeout(60000);
+        let today = new Date;
+        let DateToday = today.toISOString().slice(0, 10);
+
         request(app)
-            .get('/orderRecap/all')
+            .get('/orderRecap/list/'+DateToday)
             .set('Accept', 'application/json')
             .set('Authorization', 'Bearer ' + tokenAdmin)
             .expect(200)

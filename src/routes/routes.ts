@@ -94,8 +94,9 @@ export class Routes {
     app.route("/order/valid").put(this.OrderInfoController.validOrder);
 
     app.use("/orderRecap",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, true, next));
-    app.route("/orderRecap").get(this.OrderContentController.recapOrder);
-    app.route("/orderRecap/all").get(this.OrderInfoController.getAllOrderForToday);
+    app.route("/orderRecap/list/:date").get(this.OrderInfoController.getAllOrderForOneDay);
+    app.route("/orderRecap/:date").get(this.OrderContentController.recapOrder);
+   
 
     app.use("/setting",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, true, next));
     app.route("/setting/").get(this.SettingController.getAllSetting);

@@ -299,38 +299,46 @@ export class OrderInfoController {
 
   }
 
-  public async getAllOrderForToday (req: Request,res: Response) : Promise<void> {
-    log.info("Get all Order for today");
+  public async getAllOrderForOneDay (req: Request,res: Response) : Promise<void> {
+    log.info("Get all Order for one day");
+    
+    var regexp = RegExp("^([0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9])$");
 
-    let today = new Date;
-    let DateToday = today.toISOString().slice(0, 10);
-
-    await OrderInfo.findAll<OrderInfo>({
-      attributes : ['id','id_client','done'],
-      raw: true,
-      include: [
-        {model: User, attributes: ['first_name','last_name']}
-      ],
-      where: {
-        date_order : DateToday
+    if (!regexp.test(req.params.date) || req.params.date.length != 10 ) 
+      {
+            res.status(400).json({ error : "Missing Fields or Bad format" });
+            res.end();
+            log.error("Get All Order for one day : Fail - Missing Fields or Bad format");      
       }
-    }).then((dataAllOrder)=>{
-        if(dataAllOrder.length == 0)
-          {
-            res.status(204).end();
-          }
-      else
-        {
-          res.status(200).json(dataAllOrder).end();
-        }
+    else
+      {
+          await OrderInfo.findAll<OrderInfo>({
+            attributes : ['id','id_client','done'],
+            raw: true,
+            include: [
+              {model: User, attributes: ['first_name','last_name']}
+            ],
+            where: {
+              date_order : req.params.date
+            }
+          }).then((dataAllOrder)=>{
+              if(dataAllOrder.length == 0)
+                {
+                  res.status(204).end();
+                }
+            else
+              {
+                res.status(200).json(dataAllOrder).end();
+              }
 
-    }).catch((error: Error)=>{
-        res.status(500).end();
-        log.error("Get All Order for today : Fail - ERROR");
-        log.error(error);
-    });
+          }).catch((error: Error)=>{
+              res.status(500).end();
+              log.error("Get All Order for one day : Fail - ERROR");
+              log.error(error);
+          });
 
-    res.status(204).end();
-  }
+          res.status(204).end();
+      }
 
+    }
 }

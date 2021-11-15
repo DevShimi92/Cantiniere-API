@@ -81,13 +81,12 @@ export function moduleOrderContent(): void {
                 });
     });  
 
-    it("Get Recap Order for today - Unauthorized", function (done) {
+    it("Get Recap Order for one day - Unauthorized", function (done) {
         this.timeout(60000);
         request(app)
-            .get('/orderRecap')
+            .get('/orderRecap/qsdqs')
             .set('Accept', 'application/json')
-            .set('Authorization', 'Bearer ' + tokenAdmin)
-            .expect(204)
+            .expect(401)
             .end((err) => {
                 if (err) return done(err);
                 done();
@@ -95,13 +94,13 @@ export function moduleOrderContent(): void {
             
     });
 
-    it("Get Recap Order for today - Forbidden", function (done) {
+    it("Get Recap Order for one day - Forbidden", function (done) {
         this.timeout(60000);
         request(app)
-            .get('/orderRecap')
+            .get('/orderRecap/dsqd')
             .set('Accept', 'application/json')
-            .set('Authorization', 'Bearer ' + tokenAdmin)
-            .expect(204)
+            .set('Authorization', 'Bearer ' + token)
+            .expect(403)
             .end((err) => {
                 if (err) return done(err);
                 done();
@@ -109,10 +108,38 @@ export function moduleOrderContent(): void {
             
     });
 
-    it("Get Recap Order for today - Not found", function (done) {
+    it("Get Recap Order for one day - Not found (as page)", function (done) {
         this.timeout(60000);
         request(app)
-            .get('/orderRecap')
+            .get('/orderRecap/')
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + tokenAdmin)
+            .expect(404)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
+
+    it("Get Recap Order for one day - Bad format", function (done) {
+        this.timeout(60000);
+        request(app)
+            .get('/orderRecap/nkdfhfd')
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + tokenAdmin)
+            .expect(400)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+            
+    });
+
+    it("Get Recap Order for one day - Not found", function (done) {
+        this.timeout(60000);
+        request(app)
+            .get('/orderRecap/1990-01-01')
             .set('Accept', 'application/json')
             .set('Authorization', 'Bearer ' + tokenAdmin)
             .expect(204)
@@ -208,12 +235,12 @@ export function moduleOrderContent(): void {
             
     });
 
-    it("Get Recap Order for today - Found", function (done) {
+    it("Get Recap Order for one day - Found", function (done) {
         this.timeout(60000);
         const date = new Date();
         const dateString = date.toISOString().slice(0, 10)
         request(app)
-            .get('/orderRecap')
+            .get('/orderRecap/'+dateString)
             .set('Accept', 'application/json')
             .set('Authorization', 'Bearer ' + tokenAdmin)
             .expect(200)
