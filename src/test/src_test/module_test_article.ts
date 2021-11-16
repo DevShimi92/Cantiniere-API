@@ -459,6 +459,23 @@ export function moduleDeleteArticle(): void {
             });
     });
 
+    it("Delete Article with image - OK", function (done) {
+        this.timeout(60000);
+        const data = {
+            "id" : 3
+        }
+        request(app)
+            .delete('/article')
+            .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + tokenAdmin)
+            .send(data)
+            .expect(204)
+            .end((err) => {
+                if (err) return done(err);
+                done();
+            });
+    }); 
+
     it("Read All Article - Check Delete Article", function (done) {
         this.timeout(60000);
         request(app)

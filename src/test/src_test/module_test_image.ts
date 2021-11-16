@@ -203,4 +203,25 @@ export default function moduleTestImage(): void {
         });
   });
 
+  it("Create article with image - OK", function (done) {
+    this.timeout(60000);
+
+    request(app)
+        .post('/article')
+        .type('form')
+        .set('Accept', 'application/json')
+        .set('Authorization', 'Bearer ' + tokenAdmin)
+        .field( "name",'Coca')
+        .field("code_type_src",1)
+        .field("price" ,2.50)
+        .field("description","null")
+        .attach('img','src/resources/test.png')
+        .expect(201)
+        .end((err) => {
+            if (err) return done(err);
+            done();
+        });
+        
+});
+
 }

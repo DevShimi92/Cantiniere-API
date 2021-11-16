@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { log } from "../config/log_config";
 import { OrderInfo } from "../models/order_info";
-import { OrderContent } from "../models/order_content";
 import { User } from "../models/user";
 import { MailController } from './mail_controller';
 import { SettingController } from './setting_controller';

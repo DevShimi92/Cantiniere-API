@@ -3,7 +3,6 @@ import crypto  from "crypto";
 import { log } from "../config/log_config";
 import { User } from "../models/user";
 import { RefreshToken } from "../models/refresh_token";
-import { SettingController } from './setting_controller';
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
