@@ -10,6 +10,80 @@ import { RestToken } from "../models/rest_token";
 import { MailController } from './mail_controller';
 import { SettingController } from './setting_controller';
 
+
+let errorUpdate : boolean = false;
+let UpdateOk : number = 0;
+
+async function compareAndUpdate(id:number, value:string='', ColToChange:string, money:number=0, cooker:boolean=false) {
+   
+  if((money != 0) && (!isNaN(money)) && (cooker))
+      {
+        await User.update({ [ColToChange] : money }, {
+          where: {
+            id: id
+          }
+        }).then(() => {
+          UpdateOk++;
+        })
+        .catch((err: Error,) => {
+          log.error('Error with field of User : ' + err);
+          errorUpdate=true;
+            });
+      }
+    else if((value != '') && (ColToChange == 'password'))
+      {
+
+          let salt =  await User.findOne<User>({
+            attributes : ['salt'],
+            raw: true,
+            where: {
+              id: id
+            }
+          }).then(function(data) {
+            if(data != null)
+              {
+                return data.salt.toString();
+              }
+              else
+              {
+                log.error("SALT non trouvé");
+                return 'ERROR';
+              }
+          });
+
+          let hash =  await bcrypt.hash(value, salt);
+
+          await User.update({ [ColToChange] : hash }, {
+              where: {
+                id: id
+              }
+            }).then(() => {
+              UpdateOk++;
+            })
+          .catch((err: Error,) => {
+            log.error('Error with field of User : ' + err);
+            errorUpdate=true;
+              });
+
+      }
+    else if(value != '' )
+      {
+        console.log('-Update de '+ColToChange+' avec comme valeur : '+value);
+        await User.update({ [ColToChange] : value }, {
+          where: {
+            id: id
+          }
+        }).then(() => {
+          UpdateOk++;
+        })
+        .catch((err: Error,) => {
+          log.error('Error with field of User : ' + err);
+          errorUpdate=true;
+            });
+      }
+
+}
+
 function randomValueHex (length:number) {
   return crypto.randomBytes(Math.ceil(length/2))
       .toString('hex') // convert to hexadecimal format
@@ -191,104 +265,27 @@ export class UserController {
         }
       else
         {
-          let OK = 0;
-          let Error = 0;
+          const NameOfCol: string[] = ['first_name', 'last_name', 'email', 'money', 'password'];
 
-          if(req.body.first_name != null)
-          {
-            await User.update({ first_name: req.body.first_name }, {
-              where: {
-                id: req.body.id
-              }
-            }).then(() => OK++)
-            .catch((err: Error,) => {
-              Error++;
-              log.error('Error with field first_name of user : ' + err);
-                });
-            }
+          await compareAndUpdate(req.body.id,req.body.first_name,NameOfCol[0]);
+          await compareAndUpdate(req.body.id,req.body.last_name,NameOfCol[1]);
+          await compareAndUpdate(req.body.id,req.body.email,NameOfCol[2]);
+          await compareAndUpdate(req.body.id,undefined,NameOfCol[3],req.body.money,res.locals.cooker);
+          await compareAndUpdate(req.body.id,req.body.password,NameOfCol[4]);
 
-          if(req.body.last_name != null)
-          {
-            await User.update({ last_name: req.body.last_name }, {
-              where: {
-                id: req.body.id
-              }
-            }).then(() => OK++)
-            .catch((err: Error,) => {
-              Error++;
-              log.error('Error with field last_name of user : ' + err);
-                });
-          }
 
-          if(req.body.email != null)
-          {
-            await User.update({ email: req.body.email }, {
-              where: {
-                id: req.body.id
-              }
-            }).then(() => OK++)
-            .catch((err: Error,) => {
-              Error++;
-              log.error('Error with field email of user : ' + err);
-                });
-          }
-
-          if((req.body.money != null) && (!isNaN(req.body.money)) && (res.locals.cooker))
-          {
-            await User.update({ money: req.body.money }, {
-              where: {
-                id: req.body.id
-              }
-            }).then(() => OK++)
-            .catch((err: Error,) => {
-              Error++;
-              log.error('Error with field money of user : ' + err);
-                });
-          }
-
-          if(req.body.password != null)
-          {
-
-            let salt =  await User.findOne<User>({
-              attributes : ['salt'],
-              raw: true,
-              where: {
-                id: req.body.id
-              }
-            }).then(function(data) {
-              if(data != null)
-                {
-                  return data.salt.toString();
-                }
-                else
-                {
-                  log.error("SALT non trouvé");
-                  return 'ERROR';
-                }
-            });
-
-            let hash =  await bcrypt.hash(req.body.password, salt);
-
-            await User.update({ password: hash }, {
-              where: {
-                id: req.body.id
-              }
-            }).then(() => OK++)
-            .catch((err: Error,) => {
-              Error++;
-              log.error('Error with field password of user : ' + err);
-                });
-          }
-
-          if(Error == 0)
+          if(errorUpdate == false)
             {
               res.status(204).end();
               log.info("Update User : OK");
+              UpdateOk=0;
             }
           else
             {
               res.status(409).end();
-              log.warn("Update User : OK with error - "+OK+' update done only');
+              log.warn("Update User : OK with error - "+UpdateOk+' update done only');
+              UpdateOk=0;
+              errorUpdate=false;
             }
 
         }

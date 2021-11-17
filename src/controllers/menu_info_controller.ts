@@ -3,6 +3,29 @@ import { log } from "../config/log_config";
 import { MenuInfo } from "../models/menu_info";
 import { ImageController } from "./image_controller";
 
+let errorUpdate : boolean = false;
+let UpdateOk : number = 0;
+
+async function compareAndUpdate(id:number, value:string, ColToChange:string) {
+
+  if(value != null)
+    {
+      await MenuInfo.update({ [ColToChange] : value }, {
+        where: {
+          id: id
+        }
+      }).then(() => {
+        UpdateOk++;
+      })
+      .catch((err: Error,) => {
+        log.error('Error with field of Menu : ' + err);
+        errorUpdate=true;
+          });
+    }
+
+}
+
+
 export class MenuInfoController {
 
   public async createMenu(req: Request, res: Response) : Promise<void> {
@@ -121,59 +144,26 @@ export class MenuInfoController {
         }
       else
       {
-        let OK = 0;
-        let Err = 0;
+        const NameOfCol: string[] = ['name', 'price_final', 'description'];
 
-        if(req.body.name != null)
-        {
-          await MenuInfo.update({ name: req.body.name }, {
-            where: {
-              id: req.body.id
-            }
-          }).then(() => OK++)
-          .catch((err: Error,) => {
-            Err++;
-            log.error('Error with field name of Menu : ' + err);
-              });
-          }
+        await compareAndUpdate(req.body.id,req.body.name,NameOfCol[0]);
+        await compareAndUpdate(req.body.id,req.body.price_final,NameOfCol[1]);
+        await compareAndUpdate(req.body.id,req.body.description,NameOfCol[2]);
 
-        if(req.body.price_final != null)
-        {
-          await MenuInfo.update({ price_final : req.body.price_final }, {
-            where: {
-              id: req.body.id
-            }
-          }).then(() => OK++)
-          .catch((err: Error,) => {
-            Err++;
-            log.error('Error with field price_final of Menu : ' + err);
-              });
-        }
-
-        if(req.body.description != null)
-        {
-          await MenuInfo.update({ description: req.body.description }, {
-            where: {
-              id: req.body.id
-            }
-          }).then(() => OK++)
-          .catch((err: Error,) => {
-            Err++;
-            log.error('Error with field description of Menu : ' + err);
-              });
-        }
-
-        if(Err == 0)
+        if(errorUpdate == false)
           {
             res.status(204);
             res.end();
             log.info("Update Menu : OK");
+            UpdateOk=0;
           }
         else
           {
             res.status(409);
             res.end();
-            log.warn("Update Menu : OK with error - "+OK+' update done only');
+            log.warn("Update Menu : OK with error - "+UpdateOk+' update done only');
+            UpdateOk=0;
+            errorUpdate=false;
           }
 
       }

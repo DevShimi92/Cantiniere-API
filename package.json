@@ -1,6 +1,6 @@
 {
   "name": "cantiniere_api",
-  "version": "0.15.16",
+  "version": "0.15.17",
   "description": "",
   "main": "server.ts",
   "scripts": {
@@ -37,7 +37,7 @@
     "nodemailer": "^6.6.1",
     "pg": "^8.5.1",
     "pg-hstore": "^2.3.3",
-    "sequelize": "^6.4.0"
+    "sequelize": "^6.9.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

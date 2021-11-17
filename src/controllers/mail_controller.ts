@@ -195,7 +195,7 @@ export class MailController {
       from: process.env.EMAIL_SUPPORT,
       to: emailUser,
       subject: 'Bienvenue',
-      text: "Bienevenue sur le site Cantiniere 2021 !\n\n"+'Nous espérons que vous passez un bon repas dans nos locaux!'
+      text: "Bienevenue sur le site Cantinière 2021 !\n\n"+'Nous espérons que vous passerez un bon repas dans nos locaux !'
     };
   
     sendMail(mailOptions);
@@ -209,8 +209,8 @@ export class MailController {
     var mailOptions = {
       from: process.env.EMAIL_SUPPORT,
       to: emailUser,
-      subject: 'Confirmation de votre commande ',
-      text: "Votre commande a bien été prise en compte !\n\n"+'Vous recevez un email losrsque votre commande sera prete !'
+      subject: 'Confirmation de votre commande',
+      text: "Bonjour,\n Votre commande à bien été prise en compte !\n\n"+'Vous recevez un email lorsque votre commande sera prête !'
     };
   
     sendMail(mailOptions);
@@ -224,8 +224,8 @@ export class MailController {
     var mailOptions = {
       from: process.env.EMAIL_SUPPORT,
       to: emailUser,
-      subject: 'Votre commande est prete a etre retirere',
-      text: "Bonjour votre commande est prete a etre retirer !\n\n"+'Nous espérons que vous passez un bon repas dans nos locaux!'
+      subject: 'Votre commande est prête à être retirée !',
+      text: "Bonjour,\n"+"Votre commande est prête à être retiré !\n\n"+'Nous espérons que vous passerez un bon repas dans nos locaux !'
     };
   
     sendMail(mailOptions);
@@ -238,8 +238,8 @@ export class MailController {
     var mailOptions = {
       from: process.env.EMAIL_SUPPORT,
       to: emailUser,
-      subject: 'Votre commande a été annuler',
-      text: "Votre commande a été annulé!\n\n"+'Nous espérons que vous passez un bon repas dans nos locaux!'
+      subject: 'Votre commande à été annulé',
+      text: "Bonjour,\n"+"Votre commande à été annulé !\n"+"Pour plus d'information, demandez des informations au responsable de la cantine.\n\n"+'Nous espérons vous revoir prochainement dans nos locaux !'
     };
   
     sendMail(mailOptions);

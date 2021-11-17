@@ -3,6 +3,8 @@ import { log } from "../config/log_config";
 import { Article } from "../models/article";
 import { ImageController } from "./image_controller";
 
+let errorUpdate : boolean = false;
+let UpdateOk : number = 0;
 
 async function compareAndUpdate(id:number, value:string, ColToChange:string) {
 
@@ -13,11 +15,11 @@ async function compareAndUpdate(id:number, value:string, ColToChange:string) {
             id: id
           }
         }).then(() => {
-          return true;
+          UpdateOk++;
         })
         .catch((err: Error,) => {
-          log.error('Error with field name of Article : ' + err);
-          return false;
+          log.error('Error with field of Article : ' + err);
+          errorUpdate=true;
             });
       }
 
@@ -133,8 +135,6 @@ export class ArticleController {
         }
       else
       {
-        let OK = 0;
-        let Error = 0;
         const NameOfCol: string[] = ['name', 'code_type_src', 'price', 'picture', 'description'];
 
         await compareAndUpdate(req.body.id,req.body.name,NameOfCol[0]);
@@ -143,17 +143,20 @@ export class ArticleController {
         await compareAndUpdate(req.body.id,req.body.picture,NameOfCol[3]);
         await compareAndUpdate(req.body.id,req.body.description,NameOfCol[4]);
 
-        if(Error == 0)
+        if(errorUpdate == false)
           {
             res.status(204);
             res.end();
             log.info("Update Article : OK");
+            UpdateOk=0;
           }
         else
           {
             res.status(409);
             res.end();
-            log.warn("Update Article : OK with error - "+OK+' update done only');
+            log.warn("Update Article : OK with error - "+UpdateOk+' update done only');
+            UpdateOk=0;
+            errorUpdate=false;
           }
 
       }
