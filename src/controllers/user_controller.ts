@@ -77,7 +77,6 @@ async function updatePassword(id:number,password:string):Promise<void>{
             }
         });
 
-        console.log(password+'----'+salt)
         let hash =  await bcrypt.hash(password, salt);
         
         await User.update({ password: hash }, {
@@ -382,47 +381,48 @@ export class UserController {
             else 
               {
 
-                await RestToken.findOne<RestToken>({
+                let id_client = await RestToken.findOne<RestToken>({
                   attributes : ['id_client','token_Rest'],
                   raw: true,
                   where: {
                     token_Rest: tokenRestPassword
                   }}).then(async function(data) { 
-                  if(data != null)
-                    {
-                      
-                      await updatePassword(data.id_client, req.body.password);
+                    return data?.id_client;
+                  });
 
-                        if(errorUpdate == false)
-                          {
+                if(id_client)
+                  {
 
-                            await RestToken.destroy({
-                              where: {
-                                token_Rest: tokenRestPassword
-                                }
-                            }).then(() => {
-                              log.info('Rest Token delete');
-                            });
+                    await updatePassword(id_client, req.body.password);
 
-                            res.status(200).end();
-                            log.info('Rest Password success for account n° '+data.id_client);
-                            UpdateOk=0;
-                          }
-                        else
-                          {
-                            res.status(401).end();
-                            UpdateOk=0;
-                            errorUpdate=false;
-                          }
+                    if(errorUpdate == false)
+                      {
 
-                    }
-                  else
-                    {
-                      log.warn("Token not found in BDD");
-                      res.status(401).end();
-                    }
+                        await RestToken.destroy({
+                          where: {
+                            token_Rest: tokenRestPassword
+                            }
+                        }).then(() => {
+                          log.info('Rest Token delete');
+                        });
 
-                });
+                        res.status(200).end();
+                        log.info('Rest Password success for account n° '+id_client);
+                        UpdateOk=0;
+                      }
+                    else
+                      {
+                        res.status(401).end();
+                        UpdateOk=0;
+                        errorUpdate=false;
+                      }
+
+                  }
+                else
+                  {
+                    log.warn("Token not found in BDD");
+                    res.status(401).end();
+                  }
 
               }
             });
