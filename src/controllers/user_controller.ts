@@ -95,6 +95,54 @@ async function updatePassword(id:number,password:string):Promise<void>{
 
 }
 
+async function checkDataUserAndProcess(res: Response, tokenRestPassword:string, password:string) {
+
+
+  let id_client = await RestToken.findOne<RestToken>({
+    attributes : ['id_client','token_Rest'],
+    raw: true,
+    where: {
+      token_Rest: tokenRestPassword
+    }}).then(async function(data) { 
+      return data?.id_client;
+    });
+
+  if(id_client)
+  {
+
+        await updatePassword(id_client,password);
+
+        if(errorUpdate == false)
+          {
+
+            await RestToken.destroy({
+              where: {
+                token_Rest: tokenRestPassword
+                }
+            }).then(() => {
+              log.info('Rest Token delete');
+            });
+
+            res.status(200).end();
+            log.info('Rest Password success for account n° '+id_client);
+            UpdateOk=0;
+          }
+        else
+          {
+            res.status(401).end();
+            UpdateOk=0;
+            errorUpdate=false;
+          }
+
+      }
+    else
+      {
+        log.warn("Token not found in BDD");
+        res.status(401).end();
+  }
+  
+}
+
 function randomValueHex (length:number) {
   return crypto.randomBytes(Math.ceil(length/2))
       .toString('hex') // convert to hexadecimal format
@@ -369,7 +417,7 @@ export class UserController {
           tokenRestPassword = tokenRestPassword.slice(7, tokenRestPassword.length);
         }
       
-      if(tokenRestPassword)
+      if(tokenRestPassword !== undefined)
         {
 
                 
@@ -380,50 +428,7 @@ export class UserController {
               } 
             else 
               {
-
-                let id_client = await RestToken.findOne<RestToken>({
-                  attributes : ['id_client','token_Rest'],
-                  raw: true,
-                  where: {
-                    token_Rest: tokenRestPassword
-                  }}).then(async function(data) { 
-                    return data?.id_client;
-                  });
-
-                if(id_client)
-                  {
-
-                    await updatePassword(id_client, req.body.password);
-
-                    if(errorUpdate == false)
-                      {
-
-                        await RestToken.destroy({
-                          where: {
-                            token_Rest: tokenRestPassword
-                            }
-                        }).then(() => {
-                          log.info('Rest Token delete');
-                        });
-
-                        res.status(200).end();
-                        log.info('Rest Password success for account n° '+id_client);
-                        UpdateOk=0;
-                      }
-                    else
-                      {
-                        res.status(401).end();
-                        UpdateOk=0;
-                        errorUpdate=false;
-                      }
-
-                  }
-                else
-                  {
-                    log.warn("Token not found in BDD");
-                    res.status(401).end();
-                  }
-
+                  checkDataUserAndProcess(res,tokenRestPassword!,req.body.password);
               }
             });
         }
