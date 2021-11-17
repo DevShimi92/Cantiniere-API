@@ -137,11 +137,11 @@ export class ArticleController {
         let Error = 0;
         const NameOfCol: string[] = ['name', 'code_type_src', 'price', 'picture', 'description'];
 
-        compareAndUpdate(req.body.id,req.body.name,NameOfCol[0]);
-        compareAndUpdate(req.body.id,req.body.code_type_src,NameOfCol[1]);
-        compareAndUpdate(req.body.id,req.body.price,NameOfCol[2]);
-        compareAndUpdate(req.body.id,req.body.picture,NameOfCol[3]);
-        compareAndUpdate(req.body.id,req.body.description,NameOfCol[4]);
+        await compareAndUpdate(req.body.id,req.body.name,NameOfCol[0]);
+        await compareAndUpdate(req.body.id,req.body.code_type_src,NameOfCol[1]);
+        await compareAndUpdate(req.body.id,req.body.price,NameOfCol[2]);
+        await compareAndUpdate(req.body.id,req.body.picture,NameOfCol[3]);
+        await compareAndUpdate(req.body.id,req.body.description,NameOfCol[4]);
 
         if(Error == 0)
           {
