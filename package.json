@@ -1,6 +1,6 @@
 {
   "name": "cantiniere_api",
-  "version": "0.15.21",
+  "version": "0.15.22",
   "description": "",
   "main": "server.ts",
   "scripts": {

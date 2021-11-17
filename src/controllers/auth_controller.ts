@@ -13,6 +13,31 @@ function randomValueHex (length:number) {
       .slice(0,length).toUpperCase();   // return required number of characters
 }
 
+async function refreshTokenRest(dataUser:any,refresh_token:string) {
+
+  await RefreshToken.findOne({ where: { id_client: dataUser.id } }).then(async (dataRefreshToken) => {
+                  
+    if(dataRefreshToken != null)
+    {
+      await RefreshToken.destroy({
+        where: {
+          id_client: dataUser.id,
+          tokenRefresh: dataRefreshToken.tokenRefresh
+          }
+      });
+    }
+    
+    await RefreshToken.create<RefreshToken>({id_client: dataUser.id, tokenRefresh: refresh_token }).then(() => {
+          //Nothing
+      }).catch((errRefreshToken: Error) => {
+        log.error("Connection to api : Fail - ERROR");
+        log.error(errRefreshToken);
+      });
+
+
+  });
+  
+}
 
 export class AuthController {
   
@@ -47,8 +72,9 @@ export class AuthController {
 
                 if (err || !result ) { 
                   log.error("Connection to api : Fail - Failed identification");
-                  if(err)
-                     { log.error(err); }
+                  log.error('Result : '+result); 
+                  log.error('Erreur : '); 
+                  log.error(err); 
                   res.status(401).end();
                  }
                 else
@@ -66,36 +92,15 @@ export class AuthController {
           
                   let refresh_token = jwt.sign({key_random : randomValueHex(40)},process.env.SECRET_KEY_REFRESH);
                   
-                  await RefreshToken.findOne({ where: { id_client: dataUser.id } }).then(async (dataRefreshToken) => {
-                  
-                    if(dataRefreshToken != null)
-                    {
-                      await RefreshToken.destroy({
-                        where: {
-                          id_client: dataUser.id,
-                          tokenRefresh: dataRefreshToken.tokenRefresh
-                          }
-                      });
-                    }
-                    
-                    await RefreshToken.create<RefreshToken>({id_client: dataUser.id, tokenRefresh: refresh_token }).then(() => {
-                
-                      // res.setHeader('Set-Cookie', cookie.serialize('refresh_token', refresh_token, { httpOnly: true }))
-                      res.status(200).json({
+                  await refreshTokenRest(dataUser,refresh_token);
+
+                  // res.setHeader('Set-Cookie', cookie.serialize('refresh_token', refresh_token, { httpOnly: true }))
+                  res.status(200).json({
                         token: token,
                         refresh_token: refresh_token
                         }).end();
-    
-                      log.info("API connection successful for : " + dataUser.last_name);
-    
-                      }).catch((errRefreshToken: Error) => {
-                        res.status(500).end();
-                        log.error("Connection to api : Fail - ERROR");
-                        log.error(errRefreshToken);
-                      });
 
-
-                  });
+                  log.info("API connection successful for : " + dataUser.last_name);
                   
                 }
               });
