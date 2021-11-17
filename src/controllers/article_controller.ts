@@ -3,6 +3,26 @@ import { log } from "../config/log_config";
 import { Article } from "../models/article";
 import { ImageController } from "./image_controller";
 
+
+async function compareAndUpdate(id:number, value:string, ColToChange:string) {
+
+    if(value != null)
+      {
+        await Article.update({ [ColToChange] : value }, {
+          where: {
+            id: id
+          }
+        }).then(() => {
+          return true;
+        })
+        .catch((err: Error,) => {
+          log.error('Error with field name of Article : ' + err);
+          return false;
+            });
+      }
+
+}
+
 export class ArticleController {
 
   public async createArticle(req: Request, res: Response) : Promise<void> {
@@ -115,71 +135,13 @@ export class ArticleController {
       {
         let OK = 0;
         let Error = 0;
+        const NameOfCol: string[] = ['name', 'code_type_src', 'price', 'picture', 'description'];
 
-        if(req.body.name != null)
-        {
-          await Article.update({ name: req.body.name }, {
-            where: {
-              id: req.body.id
-            }
-          }).then(() => OK++)
-          .catch((err: Error,) => {
-            Error++;
-            log.error('Error with field name of Article : ' + err);
-              });
-          }
-
-        if(req.body.code_type_src != null)
-        {
-          await Article.update({ code_type_src: req.body.code_type_src }, {
-            where: {
-              id: req.body.id
-            }
-          }).then(() => OK++)
-          .catch((err: Error,) => {
-            Error++;
-            log.error('Error with field code_type_src of Article : ' + err);
-              });
-        }
-
-        if(req.body.price != null)
-        {
-          await Article.update({ price: req.body.price }, {
-            where: {
-              id: req.body.id
-            }
-          }).then(() => OK++)
-          .catch((err: Error,) => {
-            Error++;
-            log.error('Error with field price of Article : ' + err);
-              });
-        }
-
-        if(req.body.picture != null)
-        {
-          await Article.update({ picture: req.body.picture }, {
-            where: {
-              id: req.body.id
-            }
-          }).then(() => OK++)
-          .catch((err: Error,) => {
-            Error++;
-            log.error('Error with field picture of Article : ' + err);
-              });
-        }
-
-        if(req.body.description != null)
-        {
-          await Article.update({ description: req.body.description }, {
-            where: {
-              id: req.body.id
-            }
-          }).then(() => OK++)
-          .catch((err: Error,) => {
-            Error++;
-            log.error('Error with field description of Article : ' + err);
-              });
-        }
+        compareAndUpdate(req.body.id,req.body.name,NameOfCol[0]);
+        compareAndUpdate(req.body.id,req.body.code_type_src,NameOfCol[1]);
+        compareAndUpdate(req.body.id,req.body.price,NameOfCol[2]);
+        compareAndUpdate(req.body.id,req.body.picture,NameOfCol[3]);
+        compareAndUpdate(req.body.id,req.body.description,NameOfCol[4]);
 
         if(Error == 0)
           {
@@ -241,4 +203,5 @@ export class ArticleController {
       }
   }
 
+  
 }
