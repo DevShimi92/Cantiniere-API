@@ -2,6 +2,26 @@ import { Request, Response } from "express";
 import { log } from "../config/log_config";
 import jwt from "jsonwebtoken";
 
+function decodeToken(res:Response,decoded:any) {
+    
+    if(typeof decoded !== 'undefined') {
+                        
+        if(decoded.cooker)
+            {
+                res.locals.cooker = decoded.cooker; 
+            }
+
+        log.info("Token of "+decoded.last_name+" : OK ");
+       
+        }
+    else
+        {
+            log.warn("Token OK but data not found");
+            log.warn(decoded);
+        }
+
+}
+
 export class AuthMiddleware {
     
     public async checkJWT (req:Request, res:Response, adminRight:boolean, next:Function):Promise<void> {
@@ -21,21 +41,8 @@ export class AuthMiddleware {
                     log.info("Token not valid");
                     res.status(401).end();
                 } else {
-                    if(typeof decoded !== 'undefined') {
-                        
-                        if(decoded.cooker)
-                            {
-                                res.locals.cooker = decoded.cooker; 
-                            }
-
-                        log.info("Token of "+decoded.last_name+" : OK ");
-                       
-                        }
-                    else
-                        {
-                            log.warn("Token OK but data not found");
-                            log.warn(decoded);
-                        }
+                   
+                    decodeToken(res,decoded);
 
                     if(!adminRight || decoded.cooker)
                         {
