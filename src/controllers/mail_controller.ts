@@ -8,10 +8,25 @@ import { RestToken } from "../models/rest_token";
 
 let mailConfig ;
 
-function randomValueHex (length:number) {
+function randomValueHex (length:number) : string{
   return crypto.randomBytes(Math.ceil(length/2))
       .toString('hex') // convert to hexadecimal format
       .slice(0,length).toUpperCase();   // return required number of characters
+}
+
+function generateRestToken() : string{
+
+  if (process.env.NODE_MAIL_TEST_MODE == 'true'){
+
+    return jwt.sign("FAKETOKEN",process.env.SECRET_KEY_REST_TEST);
+
+  }
+  else {
+
+    return jwt.sign({key_random : randomValueHex(40)},process.env.SECRET_KEY_REST, { expiresIn: 60 *15  });
+    
+  }
+  
 }
 
 if (process.env.NODE_MAIL_TEST_MODE == 'true'){
@@ -135,19 +150,7 @@ export class MailController {
         else
           {
 
-            let rest_token : string;
-
-            if (process.env.NODE_MAIL_TEST_MODE == 'true'){
-
-              rest_token = jwt.sign("FAKETOKEN",process.env.SECRET_KEY_REST_TEST);
-
-            }
-            else {
-
-              rest_token = jwt.sign({key_random : randomValueHex(40)},process.env.SECRET_KEY_REST, { expiresIn: 60 *15  });
-              
-            }
-            
+            let rest_token = generateRestToken();
 
             await RestToken.findOne<RestToken>({
               attributes : ['id_client'],

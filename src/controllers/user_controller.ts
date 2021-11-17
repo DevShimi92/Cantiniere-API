@@ -14,7 +14,14 @@ import { SettingController } from './setting_controller';
 let errorUpdate : boolean = false;
 let UpdateOk : number = 0;
 
-async function compareAndUpdate(id:number, value:string='', ColToChange:string, money:number=0, cooker:boolean=false) {
+let SECRET_KEY : string;
+
+if(process.env.NODE_MAIL_TEST_MODE == 'true')
+      SECRET_KEY=process.env.SECRET_KEY_REST_TEST;
+  else
+      SECRET_KEY=process.env.SECRET_KEY_REST;
+
+async function compareAndUpdate(id:number, value:string='', ColToChange:string, money:number=0, cooker:boolean=false):Promise<void>{
    
   if((money != 0) && (!isNaN(money)) && (cooker))
       {
@@ -30,45 +37,8 @@ async function compareAndUpdate(id:number, value:string='', ColToChange:string, 
           errorUpdate=true;
             });
       }
-    else if((value != '') && (ColToChange == 'password'))
-      {
-
-          let salt =  await User.findOne<User>({
-            attributes : ['salt'],
-            raw: true,
-            where: {
-              id: id
-            }
-          }).then(function(data) {
-            if(data != null)
-              {
-                return data.salt.toString();
-              }
-              else
-              {
-                log.error("SALT non trouvé");
-                return 'ERROR';
-              }
-          });
-
-          let hash =  await bcrypt.hash(value, salt);
-
-          await User.update({ [ColToChange] : hash }, {
-              where: {
-                id: id
-              }
-            }).then(() => {
-              UpdateOk++;
-            })
-          .catch((err: Error,) => {
-            log.error('Error with field of User : ' + err);
-            errorUpdate=true;
-              });
-
-      }
     else if(value != '' )
       {
-        console.log('-Update de '+ColToChange+' avec comme valeur : '+value);
         await User.update({ [ColToChange] : value }, {
           where: {
             id: id
@@ -81,6 +51,48 @@ async function compareAndUpdate(id:number, value:string='', ColToChange:string, 
           errorUpdate=true;
             });
       }
+
+}
+
+async function updatePassword(id:number,password:string):Promise<void>{
+
+  if(password != null)
+      {
+
+      let salt =  await User.findOne<User>({
+          attributes : ['salt'],
+          raw: true,
+          where: {
+            id: id
+          }
+        }).then(function(dataUser) {
+          if(dataUser != null)
+            {
+              return dataUser.salt.toString();
+            }
+            else
+            {
+              log.error("SALT non trouvé");
+              return 'ERROR';
+            }
+        });
+
+        console.log(password+'----'+salt)
+        let hash =  await bcrypt.hash(password, salt);
+        
+        await User.update({ password: hash }, {
+            where: {
+              id: id
+            }
+          }).then(() => {
+            UpdateOk++;
+          })
+          .catch((errUpdate: Error) => {
+              log.error('Error with field password  : ' + errUpdate);
+              errorUpdate=true;
+            });
+
+        }
 
 }
 
@@ -271,7 +283,7 @@ export class UserController {
           await compareAndUpdate(req.body.id,req.body.last_name,NameOfCol[1]);
           await compareAndUpdate(req.body.id,req.body.email,NameOfCol[2]);
           await compareAndUpdate(req.body.id,undefined,NameOfCol[3],req.body.money,res.locals.cooker);
-          await compareAndUpdate(req.body.id,req.body.password,NameOfCol[4]);
+          await updatePassword(req.body.id,req.body.password);
 
 
           if(errorUpdate == false)
@@ -344,11 +356,11 @@ export class UserController {
     log.info("Rest Password");
 
     if (req.body.password == null )
-    {
-          res.status(400).json({ error : 'Missing Fields' });
-          res.end();
-          log.error(" Missing Password");      
-    }
+      {
+            res.status(400).json({ error : 'Missing Fields' });
+            res.end();
+            log.error(" Missing Password");      
+      }
     else
     {
       
@@ -360,12 +372,7 @@ export class UserController {
       
       if(tokenRestPassword)
         {
-          let SECRET_KEY : string;
 
-          if(process.env.NODE_MAIL_TEST_MODE == 'true')
-                SECRET_KEY=process.env.SECRET_KEY_REST_TEST;
-              else
-                SECRET_KEY=process.env.SECRET_KEY_REST;
                 
           jwt.verify(tokenRestPassword, SECRET_KEY, async (err) => {
             if (err) {
@@ -384,47 +391,30 @@ export class UserController {
                   if(data != null)
                     {
                       
-                      let salt =  await User.findOne<User>({
-                        attributes : ['salt'],
-                        raw: true,
-                        where: {
-                          id: data.id_client
-                        }
-                      }).then(function(dataUser) {
-                        if(dataUser != null)
+                      await updatePassword(data.id_client, req.body.password);
+
+                        if(errorUpdate == false)
                           {
-                            return dataUser.salt.toString();
+
+                            await RestToken.destroy({
+                              where: {
+                                token_Rest: tokenRestPassword
+                                }
+                            }).then(() => {
+                              log.info('Rest Token delete');
+                            });
+
+                            res.status(200).end();
+                            log.info('Rest Password success for account n° '+data.id_client);
+                            UpdateOk=0;
                           }
-                          else
+                        else
                           {
-                            log.error("SALT non trouvé");
-                            return 'ERROR';
+                            res.status(401).end();
+                            UpdateOk=0;
+                            errorUpdate=false;
                           }
-                      });
-          
-                      let hash =  await bcrypt.hash(req.body.password, salt);
 
-                      await User.update({ password: hash }, {
-                        where: {
-                          id: data.id_client
-                        }
-                      }).then(async () => {
-
-                        res.status(200).end();
-                        log.info('Rest Password success for account n° '+data.id_client);
-                        await RestToken.destroy({
-                          where: {
-                            token_Rest: tokenRestPassword
-                            }
-                        }).then(() => {
-                          log.info('Rest Token delete');
-                        });
-
-                      })
-                      .catch((errUpdate: Error) => {
-                        res.status(401).end();
-                        log.error('Error with field password  : ' + errUpdate);
-                          });
                     }
                   else
                     {
