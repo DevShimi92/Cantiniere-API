@@ -5,6 +5,49 @@ import { User } from "../models/user";
 import { MailController } from './mail_controller';
 import { SettingController } from './setting_controller';
 
+function erreurToSend(res: Response, dataNotOk:boolean, canOrder:boolean, NBOrderLimit:boolean, thisAccountCanOrder:boolean, canPreOrderIfOn:boolean) {
+
+  if(dataNotOk)
+    {
+
+      if(!canPreOrderIfOn)
+            {
+              log.error("Create Order : Fail - Unauthorized order date ");
+              res.status(403).end();
+            }
+          else
+            {
+              log.error("Create Order : Fail - Data user not found");
+              res.status(403).end();            
+            }
+      
+        }
+  else
+    {
+
+      if(!canOrder)
+          {
+            log.error("Create Order : Fail - Order time exceeded");
+            res.status(403).json({ error : "Order time exceeded" });
+          }
+        else if(!NBOrderLimit)
+          {
+            log.error("Create Order : Fail - Limit Order exceeded ");
+            res.status(403).json({ error : "Limit Order exceeded" });
+          }
+        else if(!thisAccountCanOrder)
+          {
+            log.error("Create Order : Fail - Limit Order for this account exceeded ");
+            res.status(403).json({ error : "Limit Order for this account exceeded" });
+          }
+        else
+          {
+            log.error("Create Order : Fail - Insufficient balance or balance incorrect");
+            res.status(403).json({ error : "Insufficient balance or balance incorrect" });
+          }
+    }
+}
+
 export class OrderInfoController {
 
   public async createOrder(req: Request,res: Response) : Promise<void> {
@@ -71,42 +114,15 @@ export class OrderInfoController {
             }
           else
             {
-              
-              if(!canOrder)
-                {
-                  log.error("Create Order : Fail - Order time exceeded");
-                  res.status(403).json({ error : "Order time exceeded" });
-                }
-              else if(!NBOrderLimit)
-                {
-                  log.error("Create Order : Fail - Limit Order exceeded ");
-                  res.status(403).json({ error : "Limit Order exceeded" });
-                }
-              else if(!thisAccountCanOrder)
-                {
-                  log.error("Create Order : Fail - Limit Order for this account exceeded ");
-                  res.status(403).json({ error : "Limit Order for this account exceeded" });
-                }
-              else
-                {
-                  log.error("Create Order : Fail - Insufficient balance or balance incorrect");
-                  res.status(403).json({ error : "Insufficient balance or balance incorrect" });
-                }
-              
+              erreurToSend(res,false,canOrder, NBOrderLimit, thisAccountCanOrder, canPreOrderIfOn);  
             }
          
         }
         else
         {
-          res.status(403).end();
-          if(!canPreOrderIfOn)
-            {
-              log.error("Create Order : Fail - Unauthorized order date ");
-            }
-          else
-            {
-              log.error("Create Order : Fail - Data user not found");
-            }
+
+          erreurToSend(res,true,canOrder, NBOrderLimit, thisAccountCanOrder, canPreOrderIfOn);    
+       
         }
 
     }

@@ -6,6 +6,79 @@ import { log } from "../config/log_config";
 import { Article } from "../models/article";
 import { MenuInfo } from "../models/menu_info";
 
+
+async function CheckIfExist(res: Response, id_article:number, id_menu:number) {
+
+  if(id_article !=null)
+    {
+
+      await Article.findOne<Article>({
+        raw: true,
+        where: {
+          id : id_article
+        }
+      }).then(function(data) { 
+
+        if(data == null)
+          {
+            res.status(404).json({ error : "Article not found" }).end();
+            log.error("Image Processing : Fail - Article not found"); 
+            ImageController.deleteImage(res);
+          }
+        else
+          {
+
+            ImageController.imageProcessing(id_article,res,true).then(()=>{
+              res.status(204).end();
+                })
+            .catch((error)=>{
+              log.error(error);
+              res.status(500).end();
+            });
+
+          }
+      
+      });
+
+    }
+  else
+    {
+
+        await MenuInfo.findOne<MenuInfo>({
+          raw: true,
+          where: {
+            id : id_menu
+          }
+        }).then(function(data) { 
+
+          if(data == null)
+            {
+              res.status(404).json({ error : "Menu not found" }).end();
+              log.error("Image Processing : Fail - Menu not found"); 
+              ImageController.deleteImage(res);
+            }
+          else
+            {
+
+              ImageController.imageProcessing(id_menu,res,true).then(()=>{
+                res.status(204).end();
+                
+              })
+              .catch((error)=>{
+                log.error(error);
+                res.status(500).end();
+              });
+
+            }
+        
+        });
+
+    }
+
+  
+  
+}
+
 export class ImageController {
 
   public async getImage(req: Request, res: Response) : Promise<void> {
@@ -81,72 +154,8 @@ export class ImageController {
       }
     else
       {
-        if(req.body.id_article !=null)
-          {
 
-            await Article.findOne<Article>({
-              raw: true,
-              where: {
-                id : req.body.id_article
-              }
-            }).then(function(data) { 
-        
-              if(data == null)
-                {
-                  res.status(404).json({ error : "Article not found" }).end();
-                  log.error("Image Processing : Fail - Article not found"); 
-                  ImageController.deleteImage(res);
-                }
-              else
-                {
-    
-                  ImageController.imageProcessing(req.body.id_article,res,true).then(()=>{
-                    res.status(204).end();
-                    
-                  })
-                  .catch((error)=>{
-                    log.error(error);
-                    res.status(500).end();
-                  });
-    
-                }
-            
-            });
-
-          }
-        else
-        {
-
-          await MenuInfo.findOne<MenuInfo>({
-          raw: true,
-          where: {
-            id : req.body.id_menu
-          }
-        }).then(function(data) { 
-    
-          if(data == null)
-            {
-              res.status(404).json({ error : "Menu not found" }).end();
-              log.error("Image Processing : Fail - Menu not found"); 
-              ImageController.deleteImage(res);
-            }
-          else
-            {
-
-              ImageController.imageProcessing(req.body.id_menu,res,true).then(()=>{
-                res.status(204).end();
-                
-              })
-              .catch((error)=>{
-                log.error(error);
-                res.status(500).end();
-              });
-
-            }
-        
-        });
-
-        }  
+        CheckIfExist(res,req.body.id_article,req.body.id_menu);
        
       }
   }
