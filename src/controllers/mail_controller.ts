@@ -175,7 +175,7 @@ export class MailController {
                 from: process.env.EMAIL_SUPPORT,
                 to: req.body.email,
                 subject: 'Lien de réinitialisation de mot de passe',
-                text: 'Voici un lien pour réinitialiser votre mot de passe :\n\n'+process.env.SITE_URL+"rest_password/"+rest_token + "\n\n Ce lien n'est valide que pendant 15 minute."
+                text: 'Voici un lien pour réinitialiser votre mot de passe :\n\n'+process.env.SITE_URL+"rest_password/"+rest_token + "\n\n Ce lien n'est valide que pendant 15 minutes."
               };
 
               sendMail(mailOptions);
@@ -198,7 +198,7 @@ export class MailController {
       from: process.env.EMAIL_SUPPORT,
       to: emailUser,
       subject: 'Bienvenue',
-      text: "Bienevenue sur le site Cantinière 2021 !\n\n"+'Nous espérons que vous passerez un bon repas dans nos locaux !'
+      text: "Bienvenue sur le site Cantinière 2021 !\n\n"+'Nous espérons que vous passerez un bon repas dans nos locaux !'
     };
   
     sendMail(mailOptions);
@@ -213,7 +213,7 @@ export class MailController {
       from: process.env.EMAIL_SUPPORT,
       to: emailUser,
       subject: 'Confirmation de votre commande',
-      text: "Bonjour,\n Votre commande à bien été prise en compte !\n\n"+'Vous recevez un email lorsque votre commande sera prête !'
+      text: "Bonjour,\n Votre commande a bien été prise en compte !\n\n"+'Vous recervez un email lorsque votre commande sera prête !'
     };
   
     sendMail(mailOptions);
@@ -228,7 +228,7 @@ export class MailController {
       from: process.env.EMAIL_SUPPORT,
       to: emailUser,
       subject: 'Votre commande est prête à être retirée !',
-      text: "Bonjour,\n"+"Votre commande est prête à être retiré !\n\n"+'Nous espérons que vous passerez un bon repas dans nos locaux !'
+      text: "Bonjour,\n"+"Votre commande est prête à être retirée !\n\n"+'Nous espérons que vous passerez un bon repas dans nos locaux !'
     };
   
     sendMail(mailOptions);

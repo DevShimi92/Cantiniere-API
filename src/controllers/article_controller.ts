@@ -143,7 +143,7 @@ export class ArticleController {
         await compareAndUpdate(req.body.id,req.body.picture,NameOfCol[3]);
         await compareAndUpdate(req.body.id,req.body.description,NameOfCol[4]);
 
-        if(errorUpdate == false)
+        if(!errorUpdate)
           {
             res.status(204);
             res.end();

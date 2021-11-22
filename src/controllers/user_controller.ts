@@ -112,7 +112,7 @@ async function checkDataUserAndProcess(res: Response, tokenRestPassword:string, 
 
         await updatePassword(id_client,password);
 
-        if(errorUpdate == false)
+        if(!errorUpdate)
           {
 
             await RestToken.destroy({
@@ -333,7 +333,7 @@ export class UserController {
           await updatePassword(req.body.id,req.body.password);
 
 
-          if(errorUpdate == false)
+          if(!errorUpdate)
             {
               res.status(204).end();
               log.info("Update User : OK");

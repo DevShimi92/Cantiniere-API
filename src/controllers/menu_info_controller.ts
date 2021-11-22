@@ -150,7 +150,7 @@ export class MenuInfoController {
         await compareAndUpdate(req.body.id,req.body.price_final,NameOfCol[1]);
         await compareAndUpdate(req.body.id,req.body.description,NameOfCol[2]);
 
-        if(errorUpdate == false)
+        if(!errorUpdate)
           {
             res.status(204);
             res.end();
