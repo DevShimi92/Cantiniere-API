@@ -60,7 +60,7 @@ async function CheckIfExist(res: Response, id_article:number, id_menu:number) {
           else
             {
 
-              ImageController.imageProcessing(id_menu,res,true).then(()=>{
+              ImageController.imageProcessing(id_menu,res,false).then(()=>{
                 res.status(204).end();
                 
               })
