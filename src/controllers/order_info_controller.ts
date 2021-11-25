@@ -208,7 +208,7 @@ export class OrderInfoController {
 
                     await OrderInfo.destroy<OrderInfo>({
                       where: {
-                        id: dataOrder.id_client
+                        id: req.body.id_order
                       }
                     }).then(async ()=>{
 
