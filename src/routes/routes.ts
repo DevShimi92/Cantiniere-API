@@ -1,5 +1,4 @@
 import { Application } from "express";
-
 import { DefaultController } from "../controllers/default_controller";
 import { UserController } from "../controllers/user_controller";
 import { TypeArticleController } from "../controllers/type_article_controller";
@@ -15,6 +14,8 @@ import { ImageController } from "../controllers/image_controller";
 
 import { AuthMiddleware } from "../middlewares/auth";
 import { UploadImageMiddleware } from "../middlewares/upload_image"
+
+import * as express from "express";
 
 export class Routes {
   
@@ -36,6 +37,8 @@ export class Routes {
 
   public routes(app: Application): void {
 
+    app.use('/doc', express.static('apidoc'));
+    
     app.route("/").get(this.DefaultController.index);
     app.route("/login").post(this.AuthController.login);
     app.route("/refresh_token").post(this.AuthController.refreshToken);
