@@ -8,6 +8,7 @@
     "src/**.ts",
     "src/test/**",
     "src/config/**",
+    "apidoc/**",
     "coverage/lcov-report"
   ]
 }

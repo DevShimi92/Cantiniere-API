@@ -40,7 +40,46 @@ async function refreshTokenRest(dataUser:any,refresh_token:string) {
 }
 
 export class AuthController {
-  
+  /**
+   * @apiDefine AuthFatalError
+   *
+   * @apiError (500 Internal Server Error) InternalServerError The server encountered an unexpected error.
+   * 
+   * @apiErrorExample 500-Error-Response:
+   *     HTTP/1.1 500 Internal Server Error
+   */
+
+  /**
+   * @api {post} /login Login
+   * @apiName Login
+   * @apiGroup Authentication
+   *
+   * @apiBody {String} email       Email of account.
+   * @apiBody {String} password    Password of account.
+   * 
+   * @apiSuccess (Success 200) OK Successful identification.
+   * 
+   * @apiSuccessExample {json} Success-Response-with data (example):
+   *     HTTP/1.1 200 OK
+   *     {
+   *       "token": "THEtOKEn",
+   *       "refresh_token": "TheReFResHTokEN"
+   *     }
+   * 
+   * @apiError {String} MissingFields Some fields are missing.
+   * 
+   * @apiErrorExample {json} 400-Error-Response :
+   *     HTTP/1.1 400 Bad Request
+   *     {
+   *       "error": "Missing Fields"
+   *     }
+   * 
+   * @apiError {String} Unauthorized  Account not found or Failed identification.
+   * 
+   * @apiErrorExample {json} 401-Error-Response :
+   *     HTTP/1.1 401 Unauthorized
+   * 
+   */
   public async login(req: Request, res: Response) : Promise<void> {
     log.info("Connection attempt to api");
 
@@ -112,15 +151,47 @@ export class AuthController {
       }
 
   }
-  
-  public loginTest(req: Request, res: Response) : void {
+
+  public loginTest(_req: Request, res: Response) : void {
     console.log("HELL YUEAH");
     res.status(200).json({
       hell: 'yeah'
    }).end();
   }
 
-
+  /**
+   * @api {post} /refresh_token Refresh Token
+   * @apiName RefreshToken
+   * @apiGroup Authentication
+   *
+   * @apiBody {String} id              ID of account.
+   * @apiBody {String} refreshToken    Refresh token of account.
+   * 
+   * @apiSuccess (Success 200) OK Successful identification.
+   * 
+   * @apiSuccessExample {json} Success-Response-with data (example) :
+   *     HTTP/1.1 200 OK
+   *     {
+   *       "token": "THEtOKEn",
+   *       "refresh_token": "TheReFResHTokEN"
+   *     }
+   * 
+   * @apiError {String} MissingFields Some fields are missing.
+   * 
+   * @apiErrorExample {json} 400-Error-Response :
+   *     HTTP/1.1 400 Bad Request
+   *     {
+   *       "error": "Missing Fields"
+   *     }
+   * 
+   * @apiError {String} Forbidden  Token not found. 
+   * 
+   * @apiErrorExample {json} 403-Error-Response :
+   *     HTTP/1.1 403 Forbidden
+   * 
+   * @apiUse AuthFatalError
+   * 
+   */
   public async refreshToken(req: Request, res: Response) : Promise<void> {
     log.info("Refresh token request ...");
 
@@ -182,13 +253,13 @@ export class AuthController {
 
                     }).catch((err: Error) => {
                       res.status(500).end();
-                      log.error("Refresh token : Fail - ERROR Cant found user ");
+                      log.error("Refresh token : Fail - ERROR with user ");
                       log.error(err);
                     });
 
                }).catch((err: Error) => {
                  res.status(500).end();
-                 log.error("Refresh token : Fail - ERROR Cant found tokenRefresh ");
+                 log.error("Refresh token : Fail - ERROR with tokenRefresh ");
                  log.error(err);
                });
 

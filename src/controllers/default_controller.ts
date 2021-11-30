@@ -3,11 +3,11 @@ import { log } from "../config/log_config";
 
 export class DefaultController {
 /**
- * @api {all} / Ping d'api
+ * @api {all} / Ping of api
  * @apiName All
  * @apiGroup Ping
  * 
- * @apiSuccess {String} message Message de retour du ping.
+ * @apiSuccess {String} message Ping return message
  *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK

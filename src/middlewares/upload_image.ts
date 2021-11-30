@@ -8,10 +8,10 @@ export class UploadImageMiddleware {
     public async uploadImage (req:Request, res:Response, next:Function):Promise<void> {
         log.info("Middleware UploadImage");
         const storage = Multer.diskStorage({
-            destination: function (req, file, cb) {
+            destination: function (_req, _file, cb) {
               cb(null, process.env.FOLDER_IMAGE_PATH) 
             },
-            filename: function (req, file, cb) {
+            filename: function (_req, file, cb) {
 
                 fs.stat(process.env.FOLDER_IMAGE_PATH+file.originalname, function(err) { 
                     if (err == null) { 
@@ -33,7 +33,7 @@ export class UploadImageMiddleware {
         
         const upload = Multer({ 
                 storage: storage,
-                fileFilter: (req, file, cb) => {
+                fileFilter: (_req, file, cb) => {
 
                     if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
                         log.info("Image with an authorized format found ");
