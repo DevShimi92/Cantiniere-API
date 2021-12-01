@@ -81,6 +81,45 @@ async function CheckIfExist(res: Response, id_article:number, id_menu:number) {
 
 export class ImageController {
 
+  /**
+   * @apiDefine admin Canteen manager only
+   * Need an account with the Canteen manager access 
+   */
+
+  /**
+   * @api {get} /image Get Image
+   * @apiName GetImage
+   * @apiGroup Image
+   * 
+   * @apiBody {Number} id_article      ID de l'article.
+   * 
+   * @apiSuccess (Moved Permanently 301) MovedPermanently Image found, redirection to the image url.
+   * 
+   * @apiSuccessExample Success-Response:
+   *     HTTP/1.1 301 Moved Permanently
+   * 
+   * @apiError {String} MissingFields Some fields are missing.
+   * 
+   * @apiErrorExample {json} 400-Error-Response:
+   *     HTTP/1.1 400 Bad Request
+   *     {
+   *       "error": "Missing Fields"
+   *     }
+   * 
+   * @apiError {String} NumberOnly	The value <code>id_article</code> is not number.
+   * 
+   * @apiErrorExample {json} 400-Error-Response:
+   *     HTTP/1.1 400 Bad Request
+   *     {
+   *       "error": "Number only"
+   *     }
+   * 
+   * @apiError {String} NotExist	Article or Image not found
+   * 
+   * @apiErrorExample {json} 400-Error-Response:
+   *     HTTP/1.1 404 Not Found
+   * 
+   */
   public async getImage(req: Request, res: Response) : Promise<void> {
     log.info("Get image");
 
@@ -122,8 +161,7 @@ export class ImageController {
 
         if(dataImage){
           
-          res.writeHead(301,{Location: dataImage.picture});
-          res.end();
+          res.writeHead(301,{Location: dataImage.picture}).end();
           log.info("Get image - Redirection Clear");
 
         }
@@ -132,24 +170,67 @@ export class ImageController {
 
   }
 
+  /**
+   * @api {put} /image Put Image
+   * @apiName PutImage
+   * @apiGroup Image
+   * @apiPermission admin
+   * 
+   * @apiBody {Number} [id_article]      ID de l'article.
+   * @apiBody {Number} [id_menu]         ID du menu.
+   * @apiBody {File}   img               Image of article or Menu.
+   * 
+   * @apiSuccess (Success 204) NoContent Image update.
+   * 
+   * @apiSuccessExample Success-Response-Empty :
+   *     HTTP/1.1 204 No Content
+   * 
+   * 
+   * @apiError {String} MissingFields Some fields are missing.
+   * 
+   * @apiErrorExample {json} 400-Error-Response:
+   *     HTTP/1.1 400 Bad Request
+   *     {
+   *       "error": "Missing Fields"
+   *     }
+   * 
+   * @apiError {String} NumberOnly	The value <code>id_article</code> or <code>id_menu</code> is not number.
+   * 
+   * @apiErrorExample {json} 400-Error-Response:
+   *     HTTP/1.1 400 Bad Request
+   *     {
+   *       "error": "Number only"
+   *     }
+   * 
+   * @apiError {String} NotExist Image not found in request.
+   * 
+   * @apiErrorExample {json} 400-Error-Response:
+   *     HTTP/1.1 404 Not Found
+   * 
+   * @apiError (500 Internal Server Error) InternalServerError The server encountered an unexpected error.
+   * 
+   * @apiErrorExample 500-Error-Response :
+   *     HTTP/1.1 500 Internal Server Error
+   * 
+   */
   public async beforeImageProcessing(req: Request, res: Response) : Promise<void> {
-    log.info("Image Processing ...");
-
+    log.info("Before Image Processing ...");
+    
     if(req.body.id_article  == null && req.body.id_menu  == null)
       {
           res.status(400).json({ error : "Missing Fields" }).end();
-          log.error("Image Processing : Fail - Missing Fields"); 
+          log.error("Before Image Processing : Fail - Missing Fields"); 
           ImageController.deleteImage(res);
       }
     else if( (isNaN(req.body.id_article) && req.body.id_article !=null) || (isNaN(req.body.id_menu) && req.body.id_menu !=null))
       {
           res.status(400).json({ error : "Number only" }).end();
-          log.error("Image Processing : Fail - The value is not number"); 
+          log.error("Before Image Processing : Fail - The value is not number"); 
           ImageController.deleteImage(res);
       }
     else if(req.files?.length == 0 || req.files?.length == undefined)
       {
-        log.warn("Image Processing : Image not found");
+        log.warn("Before Image Processing : Image not found");
         res.status(404).end();
       }
     else
@@ -211,7 +292,7 @@ export class ImageController {
 
                       })
                     .catch((err: Error,) => {
-                        log.error('Image Processing - Error with field picture of Article : ' + err);
+                        log.error('Image Processing - Error with field picture of MenuInfo : ' + err);
                         ImageController.deleteImage(res);
                         return reject(err);
                       });
@@ -226,7 +307,6 @@ export class ImageController {
 
 
   }
-
 
   static async deleteImage(res: Response): Promise<void> {
     fs.unlink(res.locals.path, function (err) {

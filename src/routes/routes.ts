@@ -48,8 +48,8 @@ export class Routes {
     app.route("/setting/hour_limit").get(this.SettingController.getHourLimit);
     
 
-    app.use("/login_test",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, false, next));
-    app.route("/login_test").post(this.AuthController.loginTest);
+    app.use("/middleware_test",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, false, next));
+    app.route("/middleware_test").post(this.AuthController.middlewareTest);
 
 
     app.route("/user").post(this.UserController.createUser);

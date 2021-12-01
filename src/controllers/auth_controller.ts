@@ -152,10 +152,10 @@ export class AuthController {
 
   }
 
-  public loginTest(_req: Request, res: Response) : void {
-    console.log("HELL YUEAH");
+  public middlewareTest(_req: Request, res: Response) : void {
+    console.log("Test middleware : OK");
     res.status(200).json({
-      hell: 'yeah'
+      test: 'OK'
    }).end();
   }
 

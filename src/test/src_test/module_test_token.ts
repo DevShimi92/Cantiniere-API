@@ -79,7 +79,7 @@ export default function moduleToken(): void {
   it("Login method - Try without the token", function (done) {
     this.timeout(60000);
     request(app)
-        .post('/login_test')
+        .post('/middleware_test')
         .set('Accept', 'application/json')
         .expect(401)
         .end((err) => {
@@ -92,7 +92,7 @@ export default function moduleToken(): void {
   it("Login method - Try with the bad token", function (done) {
     this.timeout(60000);
     request(app)
-        .post('/login_test')
+        .post('/middleware_test')
         .set('Accept', 'application/json')
         .set('Authorization', 'Bearer ' + 'dqfqisduhyfbdusguhsfuhb')
         .expect(401)
@@ -106,10 +106,10 @@ export default function moduleToken(): void {
   it("Login method - Try with the good token", function (done) {
     this.timeout(60000);
     request(app)
-        .post('/login_test')
+        .post('/middleware_test')
         .set('Accept', 'application/json')
         .set('Authorization', 'Bearer ' + token)
-        .expect(200,{ hell: 'yeah'})
+        .expect(200,{ test: 'OK'})
         .end((err) => {
           if (err) return done(err);
           done();

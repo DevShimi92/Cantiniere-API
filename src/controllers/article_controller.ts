@@ -140,16 +140,28 @@ export class ArticleController {
    * @apiSuccess {String}   data.name             Name of article.    
    * @apiSuccess {Number}   data.code_type_src    Code type used for this article.   
    * @apiSuccess {Number}   data.price            Price of article.   
-   * @apiSuccess {String}   [data.picture]        Picture of article.  
-   * @apiSuccess {String}   [data.description]    Description of article.
+   * @apiSuccess {String}   data.picture          Picture of article.  
+   * @apiSuccess {String}   data.description      Description of article.
    * 
    * @apiSuccessExample Success-Response-with data (example) :
    *     HTTP/1.1 200 OK
-   *     [
-   *        { "id" : 1 ,"name": 'Coca-cola', "code_type_src" : 1, "price": 1.5, "picture" : null , "description": null},
-   *        { "id" : 2 ,"name": 'Baguette', "code_type_src" : 2, "price": 1, "picture" : "https://urlToPictureOFaPain.com/image/baguette.jpeg" , "description": "Ceci est une baguette / This is a baguette"}
-   *     ]
+   *     [{ 
+   *             "id" : 1 ,
+   *             "name": 'Coca-cola', 
+   *             "code_type_src" : 1, 
+   *             "price": 1.5, 
+   *             "picture" : null , 
+   *             "description": null
+   *       },
+   *      {      "id" : 2 ,
+   *             "name": 'Baguette', 
+   *             "code_type_src" : 2, 
+   *             "price": 1, 
+   *             "picture" : "https://urlToPictureOFaPain.com/image/baguette.jpeg" , 
+   *             "description": "Ceci est une baguette / This is a baguette"
+   *       }]
    * 
+   * @apiUse ArticleFatalError
    */
   public async getAllArticle(_req: Request,res: Response) : Promise<void> {
     log.info("Get all article");
@@ -170,8 +182,11 @@ export class ArticleController {
 
       log.info("Get all article : OK");
     
+    }).catch((err: Error) => {
+      res.status(500).end();
+      log.error("Get all article : Fail - ERROR");
+      log.error(err);
     });
-
   }
 
   /**

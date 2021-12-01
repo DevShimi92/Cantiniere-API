@@ -71,6 +71,29 @@ function sendMail ( mailOptions : object ) : void {
 
 export class MailController {
 
+  /**
+   * @api {post} /mail Mail
+   * @apiName PostMail
+   * @apiGroup Mail
+   * 
+   * @apiBody {String} subject    Subject of message.
+   * @apiBody {String} message    Content of message.
+   * @apiBody {Number} [id]       ID Client.
+   * 
+   * @apiSuccess (Success 200) OK Message of report send.
+   * 
+   * @apiSuccessExample Success-Response:
+   *     HTTP/1.1 200 Created
+   * 
+   * @apiError {String} MissingFields Some fields are missing.
+   * 
+   * @apiErrorExample {json} 400-Error-Response:
+   *     HTTP/1.1 400 Bad Request
+   *     {
+   *       "error": "Missing Fields"
+   *     }
+   * 
+   */
   public report(req: Request, res: Response) : void {
 
     if (req.body.subject == null || req.body.message == null)
@@ -125,6 +148,22 @@ export class MailController {
   
   }
 
+  /**
+   * @api {post} /forgot_password Forgot Password
+   * @apiName PostForgotPassword
+   * @apiGroup Mail
+   * @apiDescription This request will always return 200 OK to prevent finding an email exiting or not in the database by abusing this request.
+   * 
+   * @apiBody {String} email      Email of client.
+   * 
+   * @apiSuccess (Success 200) OK_Fake Missing email.
+   * @apiSuccess (Success 200) OK_Fake_2 Email not found in base.
+   * @apiSuccess (Success 200) OK Email send.
+   * @apiSuccessExample Success-Response:
+   *     HTTP/1.1 200 Created
+   * 
+   * 
+   */
   public async forgotPasswordMail(req: Request, res: Response) : Promise<void>{
 
     if (req.body.email == null)
