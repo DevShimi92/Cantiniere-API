@@ -21,7 +21,7 @@ if(process.env.NODE_MAIL_TEST_MODE == 'true')
   else
       SECRET_KEY=process.env.SECRET_KEY_REST;
 
-async function compareAndUpdate(id:number, value:string='', ColToChange:string, money:number=0, cooker:boolean=false):Promise<void>{
+async function compareAndUpdate(id:number, ColToChange:string,value:string='', money:number=0, cooker:boolean=false):Promise<void>{
    
   if((money != 0) && (!isNaN(money)) && (cooker))
       {
@@ -129,7 +129,7 @@ async function checkDataUserAndProcess(res: Response, tokenRestPassword:string, 
           }
         else
           {
-            res.status(401).end();
+            res.status(500).end();
             UpdateOk=0;
             errorUpdate=false;
           }
@@ -151,14 +151,62 @@ function randomValueHex (length:number) {
 
 export class UserController {
 
+  /**
+   * @apiDefine admin Canteen manager only
+   * Need an account with the Canteen manager access 
+   */
+
+  /**
+   * @apiDefine UserFatalError
+   *
+   * @apiError (500 Internal Server Error) InternalServerError The server encountered an unexpected error.
+   * 
+   * @apiErrorExample 500-Error-Response :
+   *     HTTP/1.1 500 Internal Server Error
+   */
+
+  /**
+   * @api {post} /user Create User
+   * @apiName PostUser
+   * @apiGroup User
+   * 
+   * @apiBody {String} last_name  Last name of user.
+   * @apiBody {String} first_name First name of user.
+   * @apiBody {String} email      Email of user.
+   * @apiBody {String} password   Password of user.
+   * 
+   * @apiSuccess (Success 201) {String} token Token of User.
+   * @apiSuccess (Success 201) {String} refresh_token Refresh token of User.
+   * 
+   * @apiSuccessExample {json} Success-Response:
+   *     HTTP/1.1 201 Created
+   *     {
+   *       token : "TheToken",
+   *       refresh_token : "TheRefreshToken" 
+   *     }
+   * 
+   * @apiError {String} MissingFields Some fields are missing.
+   * 
+   * @apiErrorExample {json} 400-Error-Response:
+   *     HTTP/1.1 400 Bad Request
+   *     {
+   *       "error": "Missing Fields"
+   *     }
+   * 
+   * @apiError AlreadyExist User already exist.
+   * 
+   * @apiErrorExample 409-Error-Response :
+   *     HTTP/1.1 409 Conflict
+   * 
+   * @apiUse UserFatalError
+   */
   public async createUser(req: Request, res: Response) : Promise<void> {
 
     log.info("Create User");
 
     if (req.body.last_name == null || req.body.first_name == null || req.body.email == null || req.body.password == null )
       {
-            res.status(400).json({ error : 'Missing Fields' });
-            res.end();
+            res.status(400).json({ error : 'Missing Fields' }).end();
             log.error("Create User : Fail - Missing Fields");      
       }
     else
@@ -175,8 +223,7 @@ export class UserController {
           
         if (emailFound.length > 0)
             {
-              res.status(409);
-              res.end();
+              res.status(409).end();
               log.error("Create User : Fail - Account already exist");      
             }
         else
@@ -251,11 +298,43 @@ export class UserController {
       }
     
   }
-  
-  public async getAllUser(req: Request,res: Response) : Promise<void> {
+
+  /**
+   * @api {get} /user Get all User
+   * @apiName GetAllUser
+   * @apiGroup User
+   * @apiPermission admin 
+   * 
+   * @apiSuccess (Success 204) NoContent Reponse empty because data is not found in base.
+   * 
+   * @apiSuccessExample Success-Response-Empty :
+   *     HTTP/1.1 204 No Content
+   * 
+   * @apiSuccess {Object[]} data                  List of User (Array of Objects).
+   * @apiSuccess {Number}   data.id               ID of User.
+   * @apiSuccess {String}   data.first_name       First name  of User.    
+   * @apiSuccess {String}   data.last_name        Last name of User.   
+   * @apiSuccess {Number}   data.money            Money of User.  
+   * 
+   * @apiSuccessExample Success-Response-with data (example) :
+   *     HTTP/1.1 200 OK
+   *     [{ 
+   *            "id": 1, 
+   *            "first_name": 'Louis', 
+   *            "last_name": 'PASTATA', 
+   *            "money": 200, 
+   *      },
+   *      { 
+   *            "id": 2, 
+   *            "first_name": 'Claire', 
+   *            "last_name": 'MAMAISON', 
+   *            "money": 100, 
+   *      }]
+   * 
+   */
+  public async getAllUser(_req: Request,res: Response) : Promise<void> {
     log.info("Get all User");
-    if(res.locals.cooker)
-      {
+ 
           await User.findAll<User>({
             attributes : ['id','first_name','last_name','money'],
             where: {
@@ -279,29 +358,66 @@ export class UserController {
             log.info("Get all User : OK");
           
           });
-      }
-    else
-      {
-        log.warn("Get all User : ERROR - User not admin");
-        res.status(403).end();
-      }
-    
-
   }
 
+  /**
+   * @api {put} /user Put User 
+   * @apiName PutUser
+   * @apiGroup User
+   *  
+   * @apiBody {Number} id            ID of User.
+   * @apiBody {String} [first_name]  First name of user.
+   * @apiBody {Number} [last_name]   Last name of user.
+   * @apiBody {String} [email]       Email of user.
+   * @apiBody {String} [password]    Password of user.
+   * @apiBody {String} [money]       Money of user. **Need admin access for update this**.
+   *  
+   * @apiSuccess (Success 204) NoContent Update of user done.
+   * 
+   * @apiSuccessExample Success-Response :
+   *     HTTP/1.1 204 No Content
+   * 
+   * @apiError {string} MissingFields The value <code>id</code> is missing.
+   * 
+   * @apiErrorExample {json} 400-Error-Response :
+   *     HTTP/1.1 400 Bad Request
+   *     {
+   *       "error": "Missing Fields"
+   *     }
+   * 
+   * @apiError {string} NumberOnly The value <code>id</code> is not number.
+   * 
+   * @apiErrorExample {json} 400-Error-Response :
+   *     HTTP/1.1 400 Bad Request
+   *     {
+   *       "error": "Number only"
+   *     }
+   * 
+   * @apiError NotExist User not exist.
+   * 
+   * @apiErrorExample 404-Error-Response :
+   *     HTTP/1.1 404 Not Found
+   *    { 
+   *      "error" : "Account not exist"
+   *    }
+   * 
+   * @apiError Conflict Some Fields can't update.
+   * 
+   * @apiErrorExample 409-Error-Response :
+   *     HTTP/1.1 409 Conflict
+   *
+   */
   public async updateUser(req: Request, res: Response) : Promise<void> {
     log.info("Update User");
 
     if ( req.body.id == null )
       {
-            res.status(400).json({ error : "Missing Fields" });
-            res.end();
+            res.status(400).json({ error : "Missing Fields" }).end();
             log.error("Update User : Fail - Missing Fields");      
       }
     else if (isNaN(req.body.id))
       {
-            res.status(400).json({ error : "Number only" });
-            res.end();
+            res.status(400).json({ error : "Number only" }).end();
             log.error("Update User : Fail - The value is not number"); 
       }
     else
@@ -318,18 +434,17 @@ export class UserController {
 
       if (idSearch.length == 0)
         {
-          res.status(404).json({ error : 'Account not exist' });
-          res.end();
+          res.status(404).json({ error : 'Account not exist' }).end();
           log.error("Update User : Fail - Account not exist");      
         }
       else
         {
           const NameOfCol: string[] = ['first_name', 'last_name', 'email', 'money', 'password'];
 
-          await compareAndUpdate(req.body.id,req.body.first_name,NameOfCol[0]);
-          await compareAndUpdate(req.body.id,req.body.last_name,NameOfCol[1]);
-          await compareAndUpdate(req.body.id,req.body.email,NameOfCol[2]);
-          await compareAndUpdate(req.body.id,undefined,NameOfCol[3],req.body.money,res.locals.cooker);
+          await compareAndUpdate(req.body.id,NameOfCol[0],req.body.first_name);
+          await compareAndUpdate(req.body.id,NameOfCol[1],req.body.last_name);
+          await compareAndUpdate(req.body.id,NameOfCol[2],req.body.email);
+          await compareAndUpdate(req.body.id,NameOfCol[3],undefined,req.body.money,res.locals.cooker);
           await updatePassword(req.body.id,req.body.password);
 
 
@@ -353,28 +468,63 @@ export class UserController {
 
   }
 
+  /**
+   * @api {delete} /user Delete User 
+   * @apiName DeleteUser
+   * @apiGroup User
+   * @apiPermission admin
+   *  
+   * @apiBody {Number} id                ID of user.
+   * 
+   * @apiSuccess (Success 204) NoContent User deleted.
+   * 
+   * @apiSuccessExample Success-Response :
+   *     HTTP/1.1 204 No Content
+   * 
+   * @apiError {string} MissingFields The value <code>id</code> is missing.
+   * 
+   * @apiErrorExample {json} 400-Error-Response :
+   *     HTTP/1.1 400 Bad Request
+   *     {
+   *       "error": "Missing Fields"
+   *     }
+   * 
+   * @apiError {string} NumberOnly The value <code>id</code> is not number.
+   * 
+   * @apiErrorExample {json} 400-Error-Response :
+   *     HTTP/1.1 400 Bad Request
+   *     {
+   *       "error": "Number only"
+   *     }
+   * 
+   * @apiError NotExist User not exist.
+   * 
+   * @apiErrorExample 404-Error-Response :
+   *     HTTP/1.1 404 Not Found
+   * 
+   * @apiUse UserFatalError
+   * 
+   */
   public async deleteUser(req: Request,res: Response) : Promise<void> {
     log.info("Delete User");
 
     if ( req.body.id == null )
       {
-            res.status(400).json({ error : "Missing Fields" });
-            res.end();
+            res.status(400).json({ error : "Missing Fields" }).end();
             log.error("Delete User : Fail - Missing Fields");      
       }
     else if (isNaN(req.body.id))
       {
-            res.status(400).json({ error : "Number only" });
-            res.end();
+            res.status(400).json({ error : "Number only" }).end();
             log.error("Delete User : Fail - The value is not number"); 
       }
-    else if(res.locals.cooker)
+    else 
       {
         await User.destroy<User>({
           where: {
             id: req.body.id
           }
-        }).then(function(dataUser) {  // dataUser beacause sonarcloud logic
+        }).then(function(dataUser) { 
           if(dataUser == 0)
             {
               res.status(404).end();
@@ -392,21 +542,42 @@ export class UserController {
           log.error(err);
         });
       }
-    else
-      {
-        res.status(403).end();
-        log.error("Delete User : Fail - User is not Admin");
-      }
   }
 
+  /**
+   * @api {post} /rest_password Rest password
+   * @apiName RestPassword
+   * @apiGroup User
+   *  
+   * @apiBody {String} password    New password of user.
+   * 
+   * @apiSuccess (Success 200) OK User update done.
+   * 
+   * @apiSuccessExample Success-Response :
+   *     HTTP/1.1 200 OK
+   * 
+   * @apiError {string} MissingFields The value <code>password</code> is missing.
+   * 
+   * @apiErrorExample {json} 400-Error-Response :
+   *     HTTP/1.1 400 Bad Request
+   *     {
+   *       "error": "Missing Password"
+   *     }
+   * 
+   * @apiError Unauthorized Token not valid, expired or not found
+   * 
+   * @apiErrorExample 401-Error-Response :
+   *     HTTP/1.1 401 Unauthorized
+   * 
+   * @apiUse UserFatalError
+   */
   public async restPassword(req: Request,res: Response) : Promise<void> {
     log.info("Rest Password");
 
     if (req.body.password == null )
       {
-            res.status(400).json({ error : 'Missing Fields' });
-            res.end();
-            log.error(" Missing Password");      
+            res.status(400).json({ error : 'Missing Fields' }).end();
+            log.error("Missing Password");      
       }
     else
     {

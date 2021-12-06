@@ -258,7 +258,7 @@ export default function moduleSetting(): void {
             totalOrderLimitDay :"15",
             totalOrderLimitAccountDay:"2",
             canPreOrder:"true"
-    })
+            })
         .end((err) => {
             if (err) return done(err);
             done();

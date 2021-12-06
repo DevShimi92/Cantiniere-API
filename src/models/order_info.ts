@@ -42,11 +42,11 @@ export class OrderInfo extends Model {
         defaultValue: Sequelize.fn('now'),
       },
       sold_before_order: {
-        type: new DataTypes.INTEGER,
+        type: new DataTypes.FLOAT,
         allowNull: false,
       },
       total: {
-        type: new DataTypes.INTEGER,
+        type: new DataTypes.FLOAT,
         allowNull: false,
       },
       done: {

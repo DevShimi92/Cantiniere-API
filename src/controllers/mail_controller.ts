@@ -252,7 +252,7 @@ export class MailController {
       from: process.env.EMAIL_SUPPORT,
       to: emailUser,
       subject: 'Confirmation de votre commande',
-      text: "Bonjour,\n Votre commande a bien été prise en compte !\n\n"+'Vous recervez un email lorsque votre commande sera prête !'
+      text: "Bonjour,\n Votre commande a bien été prise en compte !\n\n"+'Vous recevrez un email lorsque votre commande sera prête !'
     };
   
     sendMail(mailOptions);
@@ -280,8 +280,8 @@ export class MailController {
     var mailOptions = {
       from: process.env.EMAIL_SUPPORT,
       to: emailUser,
-      subject: 'Votre commande à été annulé',
-      text: "Bonjour,\n"+"Votre commande à été annulé !\n"+"Pour plus d'information, demandez des informations au responsable de la cantine.\n\n"+'Nous espérons vous revoir prochainement dans nos locaux !'
+      subject: 'Votre commande a été annulée',
+      text: "Bonjour,\n"+"Votre commande a été annulé !\n"+"Pour plus d'informations, renseignez-vous auprès du responsable de la cantine.\n\n"+'Nous espérons vous revoir prochainement dans nos locaux !'
     };
   
     sendMail(mailOptions);

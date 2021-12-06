@@ -54,8 +54,9 @@ export class Routes {
 
     app.route("/user").post(this.UserController.createUser);
     app.use("/user",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, false, next));
-    app.route("/user").get(this.UserController.getAllUser);
     app.route("/user").put(this.UserController.updateUser);
+    app.use("/user",(req, res, next) => this.AuthMiddleware.checkJWT(req, res, true, next));
+    app.route("/user").get(this.UserController.getAllUser);
     app.route("/user").delete(this.UserController.deleteUser);
 
 

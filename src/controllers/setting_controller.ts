@@ -6,6 +6,20 @@ import { OrderInfo } from "../models/order_info";
 
 export class SettingController {
 
+  /**
+   * @apiDefine admin Canteen manager only
+   * Need an account with the Canteen manager access 
+   */
+
+  /**
+   * @apiDefine SettingError
+   *
+   * @apiError (500 Internal Server Error) InternalServerError The server encountered an unexpected error.
+   * 
+   * @apiErrorExample 500-Error-Response :
+   *     HTTP/1.1 500 Internal Server Error
+   */
+
   static async checkHourLimit() : Promise<boolean> {
     log.info("Check hour Limit");
 
@@ -68,7 +82,20 @@ export class SettingController {
     });
   }
 
-  public async getHourLimit(req: Request,res: Response) : Promise<void> {
+  /**
+   * @api {get} /setting/hour_limit Get Hour Limit
+   * @apiName GetHourLimit 
+   * @apiGroup Setting
+   * 
+   * @apiSuccess {String} hour_limit Hour limit.
+   * 
+   * @apiSuccessExample {json} Success-Response:
+   *     HTTP/1.1 200 OK
+   *     {
+   *       hour_limit : "18:00:00"
+   *     }
+   */
+  public async getHourLimit(_req: Request,res: Response) : Promise<void> {
 
     log.info("Get hour Limit route");
     let hour_limit = await SettingController.getHourLimit();
@@ -76,22 +103,53 @@ export class SettingController {
 
   }
   
+  /**
+   * @api {put} /setting/hour_limit Put Hour Limit
+   * @apiName PutHourLimit 
+   * @apiGroup Setting
+   * @apiPermission admin
+   * 
+   * @apiBody {String} hour_limit  New hour limit.
+   * 
+   * @apiSuccess OK Hour limit update.
+   * 
+   * @apiSuccessExample Success-Response:
+   *     HTTP/1.1 200 OK
+   * 
+   * @apiError {String} MissingFields The fields <code>hour_limit</code> are missing.
+   * 
+   * @apiErrorExample {json} 400-Error-Response:
+   *     HTTP/1.1 400 Bad Request
+   *     {
+   *       "error": "Missing Fields"
+   *     }
+   * 
+   * @apiError {String} NumberOnly	The value <code>hour_limit</code> is not formated.
+   * 
+   * @apiErrorExample {json} 400-Error-Response:
+   *     HTTP/1.1 400 Bad Request
+   *     {
+   *       "error": "Not formated"
+   *     }
+   * 
+   * @apiUse SettingError
+   * 
+   */
   public async updateHourLimit(req: Request,res: Response) : Promise<void> {
 
     log.info("Update hour Limit");
 
-    var regexp = RegExp("^([0-1]?[0-9]:[0-9][0-9]:[0-9][0-9])$|^(2[0-3]:[0-9][0-9]:[0-9][0-9])$");
-
+    let exp = '^([0-1]?\\d:\\d\\d:\\d\\d)$|^(2[0-3]:\\d\\d:\\d\\d)$';
+    let regexp = new RegExp (exp);
+    
     if ( req.body.hour_limit == null ) 
       {
-            res.status(400).json({ error : "Missing Fields" });
-            res.end();
+            res.status(400).json({ error : "Missing Fields" }).end();
             log.error("Update hour Limit : Fail - Missing Fields");      
       }
     else if (!regexp.test(req.body.hour_limit) || req.body.hour_limit.length != 8)
       {
-            res.status(400).json({ error : "Not formated" });
-            res.end();
+            res.status(400).json({ error : "Not formated" }).end();
             log.error("Update hour Limit : Fail - The value is not formated "); 
       }
     else
@@ -188,19 +246,49 @@ export class SettingController {
 
   }
 
+  /**
+   * @api {put} /setting/order_total_limit Put Total Order Limit Day
+   * @apiName PutTotalOrderLimitDay
+   * @apiGroup Setting
+   * @apiPermission admin
+   * 
+   * @apiBody {String} nb_limit_per_day  New Total Order Limit Day.
+   * 
+   * @apiSuccess OK Total Order Limit Day update.
+   * 
+   * @apiSuccessExample Success-Response:
+   *     HTTP/1.1 200 OK
+   * 
+   * @apiError {String} MissingFields The fields <code>nb_limit_per_day</code> are missing.
+   * 
+   * @apiErrorExample {json} 400-Error-Response:
+   *     HTTP/1.1 400 Bad Request
+   *     {
+   *       "error": "Missing Fields"
+   *     }
+   * 
+   * @apiError {String} NumberOnly	The value <code>nb_limit_per_day</code> is not a number.
+   * 
+   * @apiErrorExample {json} 400-Error-Response:
+   *     HTTP/1.1 400 Bad Request
+   *     {
+   *       "error": "Number only"
+   *     }
+   * 
+   * @apiUse SettingError
+   * 
+   */
   public async updateTotalOrderLimitDay (req: Request,res: Response) : Promise<void> {
     log.info("Update Total order limit ");
 
     if ( req.body.nb_limit_per_day == null ) 
       {
-            res.status(400).json({ error : "Missing Fields" });
-            res.end();
+            res.status(400).json({ error : "Missing Fields" }).end();
             log.error("Update Total order limit : Fail - Missing Fields");      
       }
     else if (isNaN(req.body.nb_limit_per_day))
       {
-            res.status(400).json({ error : "Number only" });
-            res.end();
+            res.status(400).json({ error : "Number only" }).end();
             log.error("Update Total order limit : Fail - The value is not a number "); 
       }
     else
@@ -286,19 +374,49 @@ export class SettingController {
 
   }
 
+  /**
+   * @api {put} /setting/order_total_limit_account Put Total Order Limit Account Per Day
+   * @apiName PutTotalOrderLimitAccountPerDay
+   * @apiGroup Setting
+   * @apiPermission admin
+   * 
+   * @apiBody {String} nb_limit_per_account Total Order Limit Account Per Day.
+   * 
+   * @apiSuccess OK Total Order Limit Account Per Day update.
+   * 
+   * @apiSuccessExample Success-Response:
+   *     HTTP/1.1 200 OK
+   * 
+   * @apiError {String} MissingFields The fields <code>nb_limit_per_account</code> are missing.
+   * 
+   * @apiErrorExample {json} 400-Error-Response:
+   *     HTTP/1.1 400 Bad Request
+   *     {
+   *       "error": "Missing Fields"
+   *     }
+   * 
+   * @apiError {String} NumberOnly	The value <code>nb_limit_per_account</code> is not a number.
+   * 
+   * @apiErrorExample {json} 400-Error-Response:
+   *     HTTP/1.1 400 Bad Request
+   *     {
+   *       "error": "Number only"
+   *     }
+   * 
+   * @apiUse SettingError
+   * 
+   */
   public async updateTotalOrderLimitAccountPerDay (req: Request,res: Response) : Promise<void> {
     log.info("Update Total order limit per account");
 
     if ( req.body.nb_limit_per_account == null ) 
       {
-            res.status(400).json({ error : "Missing Fields" });
-            res.end();
+            res.status(400).json({ error : "Missing Fields" }).end();
             log.error("Update Total order limit per account : Fail - Missing Fields");      
       }
     else if (isNaN(req.body.nb_limit_per_account))
       {
-            res.status(400).json({ error : "Number only" });
-            res.end();
+            res.status(400).json({ error : "Number only" }).end();
             log.error("Update Total order limit per account : Fail - The value is not a number "); 
       }
       else
@@ -338,11 +456,11 @@ export class SettingController {
         }
       });
       
-      if(PreOrderValue == true)
+      if(PreOrderValue)
         {
           return true;
         }
-      else if(PreOrderValue == false && orderDate == undefined)
+      else if(!PreOrderValue && orderDate == undefined)
         {
           return true;
         }
@@ -375,19 +493,49 @@ export class SettingController {
 
   }
 
+  /**
+   * @api {put} /setting/pre_order Put Pre Order
+   * @apiName PutPreOrder
+   * @apiGroup Setting
+   * @apiPermission admin
+   * 
+   * @apiBody {boolean} order_in_advance Pre Order enable or disable.
+   * 
+   * @apiSuccess OK Status Pre Order update.
+   * 
+   * @apiSuccessExample Success-Response:
+   *     HTTP/1.1 200 OK
+   * 
+   * @apiError {String} MissingFields The fields <code>order_in_advance</code> are missing.
+   * 
+   * @apiErrorExample {json} 400-Error-Response:
+   *     HTTP/1.1 400 Bad Request
+   *     {
+   *       "error": "Missing Fields"
+   *     }
+   * 
+   * @apiError {String} NumberOnly	The value <code>order_in_advance</code> is not a boolean.
+   * 
+   * @apiErrorExample {json} 400-Error-Response:
+   *     HTTP/1.1 400 Bad Request
+   *     {
+   *       "error": "Boolean only"
+   *     }
+   * 
+   * @apiUse SettingError
+   * 
+   */
   public async updatePreOrder (req: Request,res: Response) : Promise<void> {
     log.info("Update Pre order");
 
     if ( req.body.order_in_advance == null ) 
       {
-            res.status(400).json({ error : "Missing Fields" });
-            res.end();
+            res.status(400).json({ error : "Missing Fields" }).end();
             log.error("Update Pre order : Fail - Missing Fields");      
       }
     else if (typeof req.body.order_in_advance  != "boolean")
       {
-            res.status(400).json({ error : "Boolean only" });
-            res.end();
+            res.status(400).json({ error : "Boolean only" }).end();
             log.error("Update Pre order : Fail - The value is not a boolean "); 
       }
       else
@@ -410,7 +558,28 @@ export class SettingController {
 
   }
 
-  public async getAllSetting (req: Request,res: Response) : Promise<void> {
+  /**
+   * @api {get} /setting/ Get All Setting
+   * @apiName GetAllSetting
+   * @apiGroup Setting
+   * @apiPermission admin
+
+   * @apiSuccess {Object}   data                             Current setting (Objects of string).
+   * @apiSuccess {String}   data.hourlimit                   Hour limit.
+   * @apiSuccess {String}   data.totalOrderLimitDay          Limit of order per day.
+   * @apiSuccess {String}   data.totalOrderLimitAccountDay   Total of order limit per account per day.
+   * @apiSuccess {String}   data.canPreOrder                 Current status of Pre Order.
+   * 
+   * @apiSuccessExample {json} Success-Response:
+   *     HTTP/1.1 200 OK
+   *     { 
+   *         hourlimit : "18:00:00",
+   *         totalOrderLimitDay :"15",
+   *         totalOrderLimitAccountDay:"2",
+   *         canPreOrder:"true"
+   *      }
+   */
+  public async getAllSetting (_req: Request,res: Response) : Promise<void> {
     log.info("Get all setting ");
 
     let hourlimit = await SettingController.getHourLimit();

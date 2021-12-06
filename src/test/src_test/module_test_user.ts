@@ -374,7 +374,8 @@ export function moduleDeleteUser(): void {
         request(app)
             .delete('/user')
             .set('Accept', 'application/json')
-            .set('Authorization', 'Bearer ' + token)
+            .set('Authorization', 'Bearer ' + tokenAdmin)
+
             .expect(400)
             .end((err) => {
                 if (err) return done(err);
@@ -424,7 +425,7 @@ export function moduleDeleteUser(): void {
         request(app)
             .delete('/user')
             .set('Accept', 'application/json')
-            .set('Authorization', 'Bearer ' + token)
+            .set('Authorization', 'Bearer ' + tokenAdmin)
             .send(data)
             .expect(400,{ error : "Number only" })
             .end((err) => {
