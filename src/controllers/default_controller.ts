@@ -12,7 +12,7 @@ export class DefaultController {
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {
- *       "message": "Shindra-Online-API"
+ *       "message": "Cantiniere-API"
  *     }
  */
   public index(req: Request, res: Response) : void {
