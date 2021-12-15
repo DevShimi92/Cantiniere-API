@@ -18,7 +18,7 @@ export class DefaultController {
   public index(req: Request, res: Response) : void {
     log.info("Ping on api");
     res.status(200).json({
-       message: "Cantiniere-API"
+       message: "Cantiniere-API-2"
     });
   }
 
