@@ -15,7 +15,7 @@ export function moduleTypeArticle(): void {
         
         const login = {
             "email": 'emailE@POemail.com',
-            "password": '12345',
+            "password": 'Test92I*-',
             };
 
         request(app)

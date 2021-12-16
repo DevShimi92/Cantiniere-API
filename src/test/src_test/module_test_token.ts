@@ -60,7 +60,7 @@ export default function moduleToken(): void {
     this.timeout(60000);
     const data = {
       "email":  'emailE@POemail.com',
-      "password": '12345',
+      "password": 'Test92I*-',
       }
     request(app)
         .post('/login')

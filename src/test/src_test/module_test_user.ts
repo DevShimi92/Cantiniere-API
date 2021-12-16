@@ -40,7 +40,7 @@ export function moduleUser(): void {
             });
         }); 
 
-    it("Create User - Value too loong", function (done) {
+    it("Create User - Value too loong / Password not secure", function (done) {
             this.timeout(60000);
             const data = {
                 "last_name": 'Name',
@@ -52,7 +52,7 @@ export function moduleUser(): void {
                 .post('/user')
                 .send(data)
                 .set('Accept', 'application/json')
-                .expect(500)
+                .expect(400,{ error : "Password not secure"})
                 .end((err) => {
                     if (err) return done(err);
                     done();
@@ -65,7 +65,7 @@ export function moduleUser(): void {
             "last_name": 'Name',
             "first_name": 'FirstName',
             "email":  'email@email.com',
-            "password": '1234',
+            "password": 'Test92*-',
         }
         request(app)
             .post('/user')
@@ -135,7 +135,7 @@ export function moduleUser(): void {
             "last_name": 'Name',
             "first_name": 'FirstName',
             "email":  'email@email.com',
-            "password": '1234',
+            "password": 'Test92*-',
         }
         request(app)
             .post('/user')
@@ -267,7 +267,7 @@ export function moduleUser(): void {
             "last_name": 'avvv',
             "first_name": 'zz',
             "email":  'emailE@POemail.com',
-            "password": '12345',
+            "password": 'Test92I*-',
         }
         request(app)
             .put('/user')

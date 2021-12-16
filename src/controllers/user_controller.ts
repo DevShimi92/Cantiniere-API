@@ -56,7 +56,7 @@ async function compareAndUpdate(id:number, ColToChange:string,value:string='', m
 
 async function updatePassword(id:number,password:string):Promise<void>{
 
-  if(password != null)
+  if(password != null && !securePasswordCheck(password))
       {
 
       let salt =  await User.findOne<User>({
@@ -149,6 +149,20 @@ function randomValueHex (length:number) {
       .slice(0,length).toUpperCase();   // return required number of characters
 }
 
+function securePasswordCheck (password:string):boolean {
+
+  let exp = RegExp("^(?=(.*[a-z]))(?=(.*[A-Z]))(?=(.*[\\d]))(?=(.*[!@#$%^&*()\-__+.]){1,}).{8,}$");
+  let regexp = new RegExp (exp);
+
+  if(!regexp.test(password))
+    {
+      log.error('Password not secure !');
+      return true
+    }
+  else
+    return false
+}
+
 export class UserController {
 
   /**
@@ -192,6 +206,14 @@ export class UserController {
    *     {
    *       "error": "Missing Fields"
    *     }
+   *
+   * @apiError {String} PasswordNotSecure The password is not secure (Need a password with a length of 8 characters minimum which contains an upper case, a lower case, a number and a special character).
+   * 
+   * @apiErrorExample {json} 400-Error-Response:
+   *     HTTP/1.1 400 Bad Request
+   *     {
+   *       "error": "Password not secure"
+   *     }
    * 
    * @apiError AlreadyExist User already exist.
    * 
@@ -208,6 +230,11 @@ export class UserController {
       {
             res.status(400).json({ error : 'Missing Fields' }).end();
             log.error("Create User : Fail - Missing Fields");      
+      }
+    else if(securePasswordCheck(req.body.password))
+      {
+            res.status(400).json({ error : 'Password not secure' }).end();
+            log.error("Create User : Fail - Password not secure");     
       }
     else
       {
