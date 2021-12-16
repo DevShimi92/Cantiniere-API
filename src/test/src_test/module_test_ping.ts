@@ -7,7 +7,7 @@ export default function moduleTestPing(): void {
     request(app)
         .get('/')
         .set('Accept', 'application/json')
-        .expect(200,{message: "Cantiniere-API-2"}, done);
+        .expect(200,{message: "Cantiniere-API-22"}, done);
         
 });
 }
