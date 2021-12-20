@@ -1,5 +1,6 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../config/database";
+import { User } from "./user";
 
 export interface RestTokenInterface {
     id_client: number;
@@ -30,3 +31,10 @@ export class RestToken extends Model {
     }
   );
 
+  RestToken.belongsTo(User, {
+    foreignKey: {
+      name: 'id_client'
+    },
+    targetKey:'id',
+    constraints:false
+  });

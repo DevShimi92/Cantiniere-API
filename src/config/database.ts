@@ -28,17 +28,17 @@ export const sequelize  = new Sequelize(process.env.DATABASE_URL,{
 });
 
 sequelize.authenticate().then(() => {
-    log.info('Connexion a la base réussi ! ');
+    log.info('Connection to the base successful !');
     
     }).catch(err => {
-    log.error('Erreur lors de la connexion à la base de donnée !');
+    log.error('Error while connecting to the database !');
     log.error(err);
   });
 
   sequelize.sync().then(() => {
-    log.info('Synchronisation de la base réussi !');
+    log.info('Database synchronization successful !');
     
     }).catch(err => {
-    log.error('Erreur lors de la synchronisation de la base de donnée !');
+    log.error('Error during database synchronization! ');
     log.error(err);
   });

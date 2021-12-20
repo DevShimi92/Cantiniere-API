@@ -1,5 +1,6 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../config/database";
+import { User } from "./user";
 
 export interface RefreshTokenInterface {
     id_client: number;
@@ -30,3 +31,10 @@ export class RefreshToken extends Model {
     }
   );
 
+  RefreshToken.belongsTo(User, {
+    foreignKey: {
+      name: 'id_client'
+    },
+    targetKey:'id',
+    constraints:false
+  });
