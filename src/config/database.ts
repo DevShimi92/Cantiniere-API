@@ -39,6 +39,6 @@ sequelize.authenticate().then(() => {
     log.info('Database synchronization successful !');
     
     }).catch(err => {
-    log.error('Error during database synchronization! ');
+    log.error('Error during database synchronization !');
     log.error(err);
   });

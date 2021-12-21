@@ -552,8 +552,7 @@ export class OrderInfoController {
   public async getAllOrderForOneDay (req: Request,res: Response) : Promise<void> {
     log.info("Get all Order for one day");
     
-    let exp = RegExp("^([\\d][\\d][\\d][\\d]-[\\d][\\d]-[\\d][\\d])$");
-    let regexp = new RegExp (exp);
+    let regexp = /^(\d{4}-)(\d{2}-)(\d{2})$/;
 
     if (!regexp.test(req.params.date) || req.params.date.length != 10 ) 
       {
