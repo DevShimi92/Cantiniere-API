@@ -151,7 +151,7 @@ function randomValueHex (length:number) {
 
 function securePasswordCheck (password:string):boolean {
 
-  let regexp = /^(?=(.*[a-z]))(?=(.*[A-Z]))(?=(.*[\d]))(?=(.*[!@#$%^&*()\-__+.])+).{8,}$/;
+  let regexp = /^(?=(.*[a-z]))(?=(.*[A-Z]))(?=(.*[\d]))(?=(.*[!@#$%^&*()\-_+.])+).{8,}$/;
 
   if(!regexp.test(password))
     {
