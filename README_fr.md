@@ -1,6 +1,6 @@
 <p align="center">
 <h1 align="center">Cantiniere_API</h1>
-<h4 align="center">API of the School project "Cantinière"</h4>
+<h4 align="center">API du projet d'école "Cantinière"</h4>
 </p>
 
 <p align="center">
@@ -18,13 +18,13 @@
 </p>
 <br>
 
-[Version Française](https://github.com/DevShimi92/Cantiniere-API/blob/main/README_fr.md)
+[English version](https://github.com/DevShimi92/Cantiniere-API/blob/main/README.md)
 
 ## Description
 
 ## Installation
 
-## Usage
+## Utilisation
 
 ## License
 [MIT](https://github.com/DevShimi92/Cantiniere-API/blob/main/LICENSE)
