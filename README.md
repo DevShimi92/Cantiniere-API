@@ -22,9 +22,60 @@
 
 ## Description
 
-## Installation
+Cantiniere_API is as its name suggests, an api-rest. Created as part of a school project, this API is hosted on [Heroku](https://cantiniere-api.herokuapp.com/). This one can be used via the [site](https://cantiniere-website.herokuapp.com/home) of the same project (See the [git](https://github.com/DevShimi92/Cantiniere-website) for more info).
+
+## Installation & Setup
+
+You will need Node.js 16 and Postgresql 13 minimum.
+
+A [Cloudinary](https://cloudinary.com/) account (to use image storage space) will also be required.
+
+To install, all you need is:
+
+```console
+npm install
+npm run build
+```
+
+Then go to the `.env` file to configure the api.
+
+### Required
+
+```Shell
+# Url of database postgres. Example : postgresql://user:password@localhost:port/dbname
+DATABASE_URL=
+
+# Site address
+SITE_URL=
+
+# Identifiant of admin (cooker)
+COOKER_DEFAUT_EMAIL=  
+COOKER_DEFAUT_PASSWORD=
+
+# Secret key for token and rest token of api
+SECRET_KEY=
+SECRET_KEY_REFRESH=
+
+# Link to Cloudinary Storage. Example : cloudinary://000000000000:string_of_characters
+CLOUDINARY_URL=
+```
+For sending emails, fill in the corresponding fields :
+```Shell
+SECRET_KEY_REST=
+HOST_SMTP_URL_TEST=
+SMTP_PORT_TEST=
+EMAIL_SUPPORT_TEST=
+PASSWORD_SUPPORT_TEST=
+```
+
+
+### Other settings
+
+See comments in [.env](https://github.com/DevShimi92/Cantiniere-API/blob/main/.env) file for details on other settings.
 
 ## Usage
+
+To see how to use the api, see the [documentation](https://cantiniere-api.herokuapp.com/doc).
 
 ## License
 [MIT](https://github.com/DevShimi92/Cantiniere-API/blob/main/LICENSE)

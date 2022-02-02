@@ -6,7 +6,7 @@ dotenv.config();
 
 let sslOptions;
 
-if (process.env.SSL_OPTION == "Local")
+if (process.env.SSL_OPTION == "false")
   {
     sslOptions=false;
   }

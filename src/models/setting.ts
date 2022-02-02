@@ -56,9 +56,9 @@ Setting.findAll<Setting>({
   }).then(function(data) {
     if(data.length == 0)
         {
-          log.warn("Paramètre d'api non trouvé ! Création de paramètre par défaut");
+          log.warn("API parameter not found! Creation of default parameter....");
           Setting.create();
-          log.warn('Paramètre par défaut créé');
+          log.warn('Default parameter created');
         }
   });
   

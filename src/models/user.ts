@@ -83,17 +83,17 @@ export interface UserInterface {
 
       if( ( data.length == 0 ) && process.env.API_TEST == 'false')
         {
-          log.warn('Compte admin non trouvé, création du compte....');
+          log.warn('Admin account not found, creation of admin account in progress....');
           let saltRounds = 10 ;
           let salt =  await bcrypt.genSalt(saltRounds);
           let password = process.env.COOKER_DEFAUT_PASSWORD;
           let hash =  await bcrypt.hash(password,  salt);
           User.create({ first_name: 'Cantiniere', last_name: 'Responsable', email: process.env.COOKER_DEFAUT_EMAIL, password: hash, salt: salt, cooker: true });
-          log.warn('Compte admin crée');
+          log.warn('Admin account created');
         }
       else if ( process.env.API_TEST == 'true' )
         {
-          log.warn('API EN MODE TEST');
+          log.warn('API IN TEST MODE');
           process.env.NODE_MAIL_TEST_MODE = 'true';
         }
       
