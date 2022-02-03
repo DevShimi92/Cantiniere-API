@@ -65,7 +65,8 @@ jobs:
         SMTP_PORT_TEST: ${{ secrets.SMTP_PORT_TEST }}
         EMAIL_SUPPORT_TEST: ${{ secrets.EMAIL_SUPPORT_TEST }}
         PASSWORD_SUPPORT_TEST: ${{ secrets.PASSWORD_SUPPORT_TEST }}        
-        
+        SSL_OPTION: ${{ secrets.SSL_OPTION }}     
+
     - name: Send to SonarCloud 
       uses: sonarsource/sonarcloud-github-action@master
       with:
